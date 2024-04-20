@@ -2,22 +2,23 @@ import React from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient"
-
 //ATRIBUTS QUE ACEPTA
 
-//width - anchura del boto
-//texto - text del boto
 
-const BotonDegradadoAzul = (props:any) =>{
+//texto - text del boto
+//Color - Objecte en dos propietats, color1 i color2
+//onPress - Funció que se gastará en el onPress
+
+const BotonDegradado = (props:any) =>{
 
         return(
 
-                <Pressable style={{width:parseInt(props.width), alignSelf:"center"}}>
+                <Pressable onPress={props.onPress} style={{alignSelf:"center"}}>
                     <LinearGradient
                         // Button Linear Gradient
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
-                        colors={['#4e54c8', '#8f94fb']}
+                        colors={[props.color.color1, props.color.color2]}
                         style={styles.fondoDegradado}>
                         <Text style={styles.texto}>{props.texto}</Text>
                     </LinearGradient>
@@ -29,15 +30,17 @@ const BotonDegradadoAzul = (props:any) =>{
 }
 
 
-export default BotonDegradadoAzul
+export default BotonDegradado
 
 const styles = StyleSheet.create({
 
 
     fondoDegradado: {
-        padding: 20,
+        paddingHorizontal:60,
+        paddingVertical:22.5,
         alignItems: 'center',
         borderRadius: 22,
+        borderCurve: "continuous"
     },
 
     texto: {

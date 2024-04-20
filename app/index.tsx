@@ -2,27 +2,39 @@ import { LinearGradient } from "expo-linear-gradient"
 import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native"
 import MaskedView from '@react-native-masked-view/masked-view';
 import TextoDegradadoAzul from "../components/TextoDegradadoAzul"
-import BotonDegradadoAzul from "../components/BotonDegradadoAzul"
-import FieldDegradadoAzul from "@/components/FieldDegradadoAzul";
+import BotonDegradado from "../components/BotonDegradado"
+import FieldDegradado from "@/components/FieldDegradado";
+import Colors from "@/constants/Colors";
+import { useState } from "react";
 
 const UserLogin = () => {
 
+    //Variables del login
+    const [email, setEmail] = useState("")
+    const manejarEmail = (texto:string) => {setEmail(texto)}
+
+
+
+    function clickEntrar(){
+
+        Alert.alert(email)
+
+    }
+
     return <SafeAreaView style={{ flex: 1 }}>
+        
         <View style={styles.contenedorPrincipal}>
             <View style={styles.cajaLogo}>
                 <Image style={styles.logo} source={require("../assets/images/logos/logoDegradat.png")} />
 
                 <TextoDegradadoAzul style={styles.subtituloLogo}>Mantente al tanto</TextoDegradadoAzul>
-               
-              
             </View>
 
             <View style={styles.cajaFormulario}>
 
-                {/*Boto en degradat*/}
-                <BotonDegradadoAzul width="200" texto="Entrar"/>
-                <FieldDegradadoAzul texto="email"/>
-
+                <FieldDegradado onChangeText = {manejarEmail} width={280} color={Colors.DegradatMorat} placeholder="Email"/>
+                <BotonDegradado onPress = {clickEntrar} color={Colors.DegradatMorat} texto="Entrar"/>
+                
             </View>
         </View>
     </SafeAreaView>
@@ -58,8 +70,6 @@ const styles = StyleSheet.create({
     },
     cajaFormulario: {
         flex: 4,
-        borderColor: "red",
-        borderWidth: 1
     },
 
 

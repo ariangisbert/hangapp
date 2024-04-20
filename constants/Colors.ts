@@ -16,4 +16,19 @@ export default {
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
   },
-};
+
+  //COLORS
+
+  //Degradats
+
+  //Morat
+
+  DegradatMorat : {
+  
+    color1:'#4e54c8',
+    color2:'#8f94fb'
+
+  }
+}
+
+
