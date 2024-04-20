@@ -11,7 +11,7 @@ const FieldDegradado= (props:any)=>{
     //width - anchura del boto
     //placeholder - placeholder
     //onChangeText - Li pasem una funció, es a dir un manejador que cambiará el valor de la variable en el conext de la pantalla on creem este component.
-
+    //autoComplete - Torna el tipo de text que se autocompletara
     const [texto, setTexto] = useState("")
 
     return (
@@ -26,11 +26,15 @@ const FieldDegradado= (props:any)=>{
                             <TextInput
                                 style={styles.input}
                                 placeholder = {props.placeholder}
+                                placeholderTextColor={"#ffffffb5"}
                                 value={texto}
+                                secureTextEntry = {props.secureTextEntry?true:false} 
                                 onChangeText={(nuevoTexto)=> {
                                     setTexto(nuevoTexto)
                                     props.onChangeText(nuevoTexto)}}
-                                    autoCorrect={false}
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                autoComplete={props.autoComplete}
                             />
 
                     </LinearGradient>
@@ -46,7 +50,7 @@ const styles = StyleSheet.create({
 
     fondoDegradado: {
         
-        paddingHorizontal:60,
+        paddingHorizontal:20,
         paddingVertical:22.5,
         alignItems: 'center',
         borderRadius: 22,
@@ -58,6 +62,8 @@ const styles = StyleSheet.create({
         color:"white",
         fontSize: 15,
         fontWeight: "500",
+        width:"100%",
+        textAlign:"center"
 
     }
 

@@ -1,82 +1,15 @@
-import { LinearGradient } from "expo-linear-gradient"
-import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native"
-import MaskedView from '@react-native-masked-view/masked-view';
-import TextoDegradadoAzul from "../components/TextoDegradadoAzul"
-import BotonDegradado from "../components/BotonDegradado"
-import FieldDegradado from "@/components/FieldDegradado";
-import Colors from "@/constants/Colors";
-import { useState } from "react";
+import { Redirect } from "expo-router"
 
-const UserLogin = () => {
+const index = () =>{
 
-    //Variables del login
-    const [email, setEmail] = useState("")
-    const manejarEmail = (texto:string) => {setEmail(texto)}
+    return(
 
-
-
-    function clickEntrar(){
-
-        Alert.alert(email)
-
-    }
-
-    return <SafeAreaView style={{ flex: 1 }}>
+        <Redirect href={"/UserRegistro"}></Redirect>
         
-        <View style={styles.contenedorPrincipal}>
-            <View style={styles.cajaLogo}>
-                <Image style={styles.logo} source={require("../assets/images/logos/logoDegradat.png")} />
+    )
 
-                <TextoDegradadoAzul style={styles.subtituloLogo}>Mantente al tanto</TextoDegradadoAzul>
-            </View>
-
-            <View style={styles.cajaFormulario}>
-
-                <FieldDegradado onChangeText = {manejarEmail} width={280} color={Colors.DegradatMorat} placeholder="Email"/>
-                <BotonDegradado onPress = {clickEntrar} color={Colors.DegradatMorat} texto="Entrar"/>
-                
-            </View>
-        </View>
-    </SafeAreaView>
-
+   
 
 }
 
-
-
-const styles = StyleSheet.create({
-
-    contenedorPrincipal: {
-        flex: 1,
-        paddingHorizontal: 20,
-        paddingVertical: 40
-    },
-    cajaLogo: {
-        alignItems: "center",
-        flex: 1,
-    },
-    logo: {
-
-        flex: 1,
-        resizeMode: "center",
-        width: "100%"
-
-    },
-    subtituloLogo: {
-
-        fontWeight: "500",
-        fontSize: 18
-
-    },
-    cajaFormulario: {
-        flex: 4,
-    },
-
-
-
-
-
-
-})
-
-export default UserLogin
+export default index

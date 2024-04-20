@@ -50,7 +50,7 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={DefaultTheme}>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="UserRegistro" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );
