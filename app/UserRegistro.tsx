@@ -6,6 +6,7 @@ import BotonDegradado from "../components/BotonDegradado"
 import FieldDegradado from "@/components/FieldDegradado";
 import Colors from "@/constants/Colors";
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 
 
@@ -13,27 +14,7 @@ import { useState, useEffect } from "react";
 
 const UserRegistro = () => {
 
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-        useEffect(() => {
-            const keyboardDidShowListener = Keyboard.addListener(
-            'keyboardDidShow',
-            () => {
-                setKeyboardVisible(true); // or some other action
-            }
-            );
-            const keyboardDidHideListener = Keyboard.addListener(
-            'keyboardDidHide',
-            () => {
-                setKeyboardVisible(false); // or some other action
-            }
-            );
-
-        return () => {
-        keyboardDidHideListener.remove();
-        keyboardDidShowListener.remove();
-        };
-    }, []);
+    
 
     //Variables del registro
 
@@ -47,7 +28,7 @@ const UserRegistro = () => {
 
     //Apellidos
     const [apellidos, setApellidos] = useState("")
-    const manejarApellidos = (texto:string) =>{setNombre(texto)}
+    const manejarApellidos = (texto:string) =>{setApellidos(texto)}
  
     //Contraseña
     const [password, setPassword] = useState("")
@@ -59,9 +40,106 @@ const UserRegistro = () => {
 
   
 
-    function clickEntrar(){
+    async function clickEntrar(){
 
-        Alert.alert(email)
+        //Comprobem els errors.
+
+        let todoCorrecto = true
+        let errors = []
+
+
+        //Nom
+        if(nombre.length==0||nombre===""){
+
+            todoCorrecto=false
+            errors.push("Introduce tu nombre.")
+
+        }else{
+            if(/\d/.test(nombre)==true){
+
+                todoCorrecto=false
+                errors.push("Tu nombre no puede contener números.")
+
+            }
+        }   
+
+        //Cognom
+
+        if(apellidos.length==0||apellidos===""){
+
+            todoCorrecto=false
+            errors.push("Introduce tu apellido.")
+
+        }else{
+
+                if(/\d/.test(apellidos)==true){
+
+                    todoCorrecto=false
+                    errors.push("Tu apellido no puede contener números.")
+                
+                }
+         }
+        
+
+        //Email siga correcte
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+        if(reg.test(email)==false){
+
+            todoCorrecto=false
+            errors.push("Introduce un email válido.")
+
+        }
+
+        //Contraseñes
+        if(password.length<6){
+
+            todoCorrecto=false
+            errors.push("Tu contraseña debe tener al menos 6 caracteres.")
+
+        }else{
+
+            //Si no conicidixen les contraseñes
+            if(password!==repeatPassword){
+
+                todoCorrecto=false
+                errors.push("Las contraseñas no coniciden")
+
+
+            }
+
+
+        }
+
+        if(todoCorrecto==false){
+
+            Alert.alert(errors.join("\n"))
+
+            return
+
+        }
+
+        //Si esta tot be registrem al usuari
+        const { data, error } = await supabase.auth.signUp(
+            {
+            email: email,
+            password: password,
+            options:{ data:{
+                nombre:nombre,
+                apellidos:apellidos
+                }
+             }
+          }
+        )
+        
+
+
+
+         if(error){
+         Alert.alert(error.message)
+         }
+        
+        
 
     }
 
