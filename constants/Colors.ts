@@ -28,7 +28,17 @@ export default {
     color1:'#4e54c8',
     color2:'#8f94fb'
 
+  },
+
+  //Rosa
+
+  DegradatRosa:{
+    color1:"#885EE2",
+    color2:"#F98FFB"
+
   }
+
+
 }
 
 

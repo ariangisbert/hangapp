@@ -4,7 +4,7 @@ const index = () =>{
 
     return(
 
-        <Redirect href={"/UserRegistro"}></Redirect>
+        <Redirect href={"/UserLogin"}></Redirect>
         
     )
 

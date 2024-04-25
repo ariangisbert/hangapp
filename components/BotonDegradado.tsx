@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
     fondoDegradado: {
         paddingHorizontal:60,
-        paddingVertical:22.5,
+        paddingVertical:23.4,
         alignItems: 'center',
         borderRadius: 22,
         borderCurve: "continuous"

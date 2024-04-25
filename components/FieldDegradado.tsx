@@ -51,11 +51,11 @@ const styles = StyleSheet.create({
     fondoDegradado: {
         
         paddingHorizontal:20,
-        paddingVertical:22.5,
+        height:65,
         alignItems: 'center',
         borderRadius: 22,
-        borderCurve: "continuous"
-        
+        borderCurve: "continuous",
+        display:"flex"
     },
     input:{
         
@@ -63,7 +63,9 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "500",
         width:"100%",
-        textAlign:"center"
+        textAlign:"center",
+        height:"100%"
+
 
     }
 
