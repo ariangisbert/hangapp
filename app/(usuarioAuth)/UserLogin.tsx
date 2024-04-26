@@ -55,12 +55,12 @@ const UserLogin = () => {
         //Si nia un error parem
         if(error){
 
-            Alert.alert(error.message)
+            Alert.alert("Email o contraseña incorrectos")
             return
 
         }
         
-        console.log(data)
+        router.push("/loginCorrecto")
 
 
     }
@@ -107,7 +107,7 @@ const UserLogin = () => {
                     <View style={styles.elementoFormulario}>
                         
                            
-                            <BotonDegradado onPress={()=>{router.navigate("/UserRegistro")}} color={Colors.DegradatRosa} texto="Zona administrador"/>
+                            <BotonDegradado onPress={()=>{router.navigate("/UserRegistro")}} color={Colors.DegradatRosa} texto="Zona Asociaciones"/>
                             
                         
                     </View>
