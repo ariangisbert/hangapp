@@ -42,8 +42,12 @@ const SeleccionarMunicipio = () => {
   return (
     <SafeAreaView>
 
-      <Text>{provincias.map(i=>i?.nombre_provincia ??"Nombre no disponible").join("\n")}</Text>
-      <Picker></Picker>
+      {/* <Text>{provincias.map(i=>i?.nombre_provincia ??"Nombre no disponible").join("\n")}</Text> */}
+      <Picker selectedValue={provinciaSeleccionada}>
+
+        {provincias.map())}
+      
+      </Picker>
     </SafeAreaView>
   );
 
