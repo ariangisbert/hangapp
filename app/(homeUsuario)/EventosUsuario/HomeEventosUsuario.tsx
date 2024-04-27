@@ -4,13 +4,17 @@ import { View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconoTabFesta from "../../../assets/iconos/IconoTabFesta"
 import { Stack } from 'expo-router';
+import { useHeaderHeight } from "@react-navigation/elements"
 
-const EventosUsuario = () => {
+const HomeEventosUsuario = () => {
+
+  const alturaHeader = useHeaderHeight()
+
   return (
     <SafeAreaView>
-      <Text>Login correcto</Text>
+      <Text></Text>
     </SafeAreaView>
   );
 };
 
-export default EventosUsuario;
+export default HomeEventosUsuario;

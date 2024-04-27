@@ -6,7 +6,7 @@ function SvgComponent(props) {
     <Svg
       xmlns="http://www.w3.org/2000/svg"
       
-      viewBox="0 0 200 200"
+      viewBox="-9.9 0 205 180"
       {...props}
     >
       <G fillOpacity={0.85}>

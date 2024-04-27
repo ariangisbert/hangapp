@@ -6,7 +6,7 @@ const MyComponent = () => {
   return (
     <Stack>
 
-        <Stack.Screen  name="HomeEventosUsuario"options={{headerLargeTitle:true, title:"Eventos próximos", headerStyle:{backgroundColor:"transparent"}}}/>
+        <Stack.Screen  name="HomeRifasUsuario"options={{headerLargeTitle:true, title:"Rifas", headerStyle:{backgroundColor:"transparent"}}}/>
 
 
     </Stack>
