@@ -27,6 +27,7 @@ const SeleccionarMunicipio = () => {
 
   const {usuario} = useAuth()
 
+  //Actualitzem el poble
   async function clickConfirmar(){
 
     const {error} = await supabase.from("profiles").update({municipio_defecto: municipioSeleccionado}).eq("id", usuario.id)
