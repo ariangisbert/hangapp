@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient"
@@ -8,12 +8,14 @@ import { LinearGradient } from "expo-linear-gradient"
 //texto - text del boto
 //Color - Objecte en dos propietats, color1 i color2
 //onPress - Funció que se gastará en el onPress
+//disabled - Si esta desactivat
 
 const BotonDegradado = (props:any) =>{
 
+   
         return(
 
-                <Pressable onPress={props.onPress} style={{alignSelf:"center"}}>
+                <Pressable onPress={props.onPress} disabled={props.disabled} style={{alignSelf:"center", opacity:props.disabled?0.7:1}}>
                     <LinearGradient
                         // Button Linear Gradient
                         start={{ x: 0, y: 0 }}

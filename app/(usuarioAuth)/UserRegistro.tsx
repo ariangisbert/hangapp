@@ -142,7 +142,8 @@ const UserRegistro = () => {
             Alert.alert(error.message)
         }else{
 
-            router.push("/loginCorrecto")
+            await supabase.auth.signInWithPassword({email, password})
+            router.navigate("/")
 
         }
 

@@ -13,7 +13,6 @@ const UserLogin = () => {
 
     ///////LOGICA
 
-
     //Variables del login
 
     //Email
@@ -60,7 +59,7 @@ const UserLogin = () => {
 
         }
         
-        router.push("/loginCorrecto")
+        router.navigate("/")
 
 
     }
@@ -106,10 +105,8 @@ const UserLogin = () => {
                     {/*Boto pa anar a la zona administrador  */}
                     <View style={styles.elementoFormulario}>
                         
-                           
                             <BotonDegradado onPress={()=>{router.navigate("/UserRegistro")}} color={Colors.DegradatRosa} texto="Zona Asociaciones"/>
                             
-                        
                     </View>
                     
 
