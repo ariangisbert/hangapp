@@ -36,6 +36,16 @@ export default {
     color1:"#885EE2",
     color2:"#F98FFB"
 
+  },
+
+
+  //Colors per a els elements del flatList de eventos.
+  MoradoElemento:{
+
+    colorFondo:"#DFE0F7",
+    colorTitulo:"#4F55C9"
+
+
   }
 
 
