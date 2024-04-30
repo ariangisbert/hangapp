@@ -15,6 +15,8 @@ import { router } from 'expo-router';
 
 const SeleccionarMunicipio = () => {
   
+  const {usuario, setUsuario} = useAuth()
+
   //Provincias
   const [provincias, setProvincias] = useState<Provincia[]|[null]>([null]) //Hook en el objecte provincias
   const [cargandoProvincias, setCargandoProvincias] = useState(true)
@@ -25,7 +27,7 @@ const SeleccionarMunicipio = () => {
   const [municipioSeleccionado, setMunicipioSeleccionado] = useState()
   const [municipiosCargados, setMunicipiosCargados] = useState(false)
 
-  const {usuario} = useAuth()
+
 
   //Actualitzem el poble
   async function clickConfirmar(){
@@ -38,6 +40,10 @@ const SeleccionarMunicipio = () => {
 
     }else{
 
+      //Actualisem el usuari en local per a no fer un altra query a la base de datos
+
+
+      setUsuario({...usuario,municipio_defecto:municipioSeleccionado})
 
       router.push("/(homeUsuario)")
 

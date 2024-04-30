@@ -14,7 +14,7 @@ const UserLogin = () => {
     ///////LOGICA
 
     //Variables del login
-
+    
     //Email
     const [email, setEmail] = useState("")
     const manejarEmail = (texto: string) => { setEmail(texto) }
@@ -59,7 +59,7 @@ const UserLogin = () => {
 
         }
         
-        router.navigate("/")
+        router.replace("/")
 
 
     }

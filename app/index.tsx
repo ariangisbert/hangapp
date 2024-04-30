@@ -25,11 +25,13 @@ const index = () =>{
 
             
         }else{
+
+            console.log(usuario)
             //Comprobem si te un poble per defecte
             //Si no el te el redirigim a seleccionar municipi
             if(usuario){//Per a evitar errors, si hi ha una sesio pero no hi ha un usuari mos torna al login
 
-
+                
                 if(usuario.municipio_defecto==null){
                 return  <Redirect href={"/SeleccionarMunicipio"}></Redirect>
                 }else{ 

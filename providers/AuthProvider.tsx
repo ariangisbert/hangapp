@@ -1,12 +1,14 @@
 import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+import { Alert } from "react-native";
 
 type AuthData = {
     usuario:any
     session : Session |null
     cargando:boolean
     cargandoUsuario:boolean
+    setUsuario: any
 }
 
 //Inicialitzem el context en null
@@ -15,7 +17,8 @@ const AuthContext = createContext<AuthData>({
     session:null,
     cargando:true,
     usuario:null,
-    cargandoUsuario:true
+    cargandoUsuario:true,
+    setUsuario:null
 
 })
 
@@ -26,6 +29,7 @@ export default function AuthProvider({children}:PropsWithChildren){
     const [cargandoUsuario, setCargandoUsuario] = useState(true)
     const [usuario, setUsuario] = useState(null) //Hook que gastarem per a llegir els datos de el usuari que está en la sesió
 
+
     useEffect(()=>{
 
         const conseguirSesio = async ()=>{
@@ -35,8 +39,6 @@ export default function AuthProvider({children}:PropsWithChildren){
             
             
             setCargando(false)
-
-            
        
        
         }
@@ -56,21 +58,27 @@ export default function AuthProvider({children}:PropsWithChildren){
         
         const recibirUsuario = async ()=>{
 
-            if(session){
+            if(session!==null){
 
-                const {data} = await supabase
+                setCargandoUsuario(true)
+                const {data, error} = await supabase
                     .from("profiles")
                     .select("*")
                     .eq("id", session.user.id)
                     .single()
     
+                if(error){
+
+                    Alert.alert(error.message)
+
+                }else{ 
                 setUsuario(data)  
+                }
+
                 setCargandoUsuario(false)
                 
             }
             
-                
-
         }
 
         recibirUsuario()
@@ -78,7 +86,8 @@ export default function AuthProvider({children}:PropsWithChildren){
 
     },[session])
 
-    return <AuthContext.Provider value = {{session,cargando, usuario, cargandoUsuario}}>{children}</AuthContext.Provider>
+
+    return <AuthContext.Provider value = {{session,cargando, usuario, cargandoUsuario, setUsuario}}>{children}</AuthContext.Provider>
 
 }
 

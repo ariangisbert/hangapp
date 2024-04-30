@@ -5,9 +5,9 @@ import { View, Text } from 'react-native';
 
 const MyComponent = () => {
   return (
-    <Stack>
+    <Stack >
 
-        <Stack.Screen name="HomeEventosUsuario"options={{ headerShown:false}}/>
+        <Stack.Screen name="HomeEventosUsuario"options={{contentStyle:{backgroundColor:"white"}, headerShown:false}}/>
 
 
     </Stack>

@@ -49,7 +49,7 @@ function RootLayoutNav() {
   return (
 
       <AuthProvider>
-        <Stack screenOptions={{ headerShown: false, }}>
+        <Stack screenOptions={{ headerShown: false,  }}>
           <Stack.Screen name="index"></Stack.Screen>
         </Stack>
       </AuthProvider>

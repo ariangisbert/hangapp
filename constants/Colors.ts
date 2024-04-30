@@ -46,6 +46,13 @@ export default {
     colorTitulo:"#4F55C9"
 
 
+  },
+  RojoElemento:{
+
+    colorFondo:"#F7DFDF",
+    colorTitulo:"#B94E4E"
+
+
   }
 
 

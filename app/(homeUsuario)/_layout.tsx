@@ -1,10 +1,10 @@
 import { Tabs } from "expo-router";
-import IconoTabFesta from "../../assets/iconos/IconoTabFesta"
+import IconoTabFesta from "../../assets/iconos/iconoTabFesta"
 import IconoTabRifes from "../../assets/iconos/IconoTabRifes"
 import IconoTabPersona from "../../assets/iconos/IconoTabPersona"
 export default function TabLayout() {
     return (
-      <Tabs screenOptions={{ tabBarActiveTintColor: '#4e54c8', headerShown:false, tabBarStyle:{backgroundColor:"transparent", elevation:0 }, tabBarLabelStyle:{paddingBottom:3.5}}}>
+      <Tabs screenOptions={{ tabBarActiveTintColor: '#4e54c8', headerShown:false, tabBarStyle:{elevation:0 }, tabBarLabelStyle:{paddingBottom:3.5}}}>
         
         {/* Per a que no se mostre */}
         <Tabs.Screen name="index" options={{href:null}}></Tabs.Screen> 
