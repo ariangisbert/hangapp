@@ -1,9 +1,11 @@
 import { Evento } from '@/assets/types';
 import React from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, Pressable } from 'react-native';
 import ImagenRemotaLogoAsociacion from './ImagenRemotaLogoAsociacion';
 import Colors from '@/constants/Colors';
 import { numeroAMes } from "../constants/funciones"
+import { router } from 'expo-router';
+import MiniCuadradoVerde from './MiniCuadradoVerde';
 
 interface ElementoEventoProps {
     evento: Evento | null,
@@ -36,37 +38,43 @@ const ElementoEvento: React.FC<ElementoEventoProps> = ({ evento }) => { //Pa que
     //Ara agarrem el mes
     let mes = numeroAMes(evento?.fecha_evento.split("-")[1])
     //I fem la fecha
-    let fecha
-    console.log(mes)
+    let fecha=evento?.fecha_evento.split("-")[2]+" "+mes+" "+evento?.fecha_evento.split("-")[0]
+
 
     //DISENY
     return (
-        <View style={[styles.contenedorElemento, { backgroundColor: color.colorFondo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.525, elevation: 2 }]}>
-
+        <Pressable onPress={()=>router.push({pathname:`/EventosUsuario/[id_evento]`, params:{id_evento:evento?.id_evento, colorFondo : color.colorFondo, colorTexto: color.colorTitulo}}as any)} style={[styles.contenedorElemento, { backgroundColor: color.colorFondo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.525, elevation: 2 }]}>
+           
             {/* Parte izquierdas */}
             <View style={styles.contenedorIzquierda}>
+                
                 {/* Titulo i gratuidad */}
-                <View style={[styles.contenedorVertical, { justifyContent: "flex-end" }]}>
+                <View style={{ alignItems: "flex-end",flex:1, flexDirection:"row", columnGap:10}}>
                     <Text style={[styles.titulo, { color: color.colorTitulo }]}>{evento?.titulo_evento}</Text>
+                    
+                    {/* Cuadraet verd gratis */}
+                    {evento?.gratis_evento==true? 
+                        <MiniCuadradoVerde/>: null
+                    }
                 </View>
-
+            
                 {/* Mini descripcion */}
                 <View style={{ justifyContent: "center", flex: Platform.OS === "ios" ? 1.22 : 1 }}>
                     <Text style={[styles.subtexto, { color: color.colorTitulo }]} numberOfLines={1}>{evento?.mini_descripcion_evento}</Text>
                 </View>
 
-
-                <View style={[styles.contenedorVertical, { flexDirection: "row" }]}>
-                    <View style={{ flex: 0.7, borderWidth: 1 }}>
+                {/* Hora fecha y publico */}
+                <View style={{flex:0.9,flexDirection: "row" }}>
+                    <View style={{ flex: 0.30, flexShrink:0,flexBasis:13 }}>
                         <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{evento?.hora_evento.substring(0, 5)}</Text>
                     </View>
 
-                    <View style={{ flex: 1.5, borderWidth: 1 }}>
-                        <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{evento?.fecha_evento}</Text>
+                    <View style={{ flex: 1.55, alignItems:"center"}}>
+                        <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{fecha}</Text>
                     </View>
 
-                    <View style={{ flex: 1, borderWidth: 1 }}>
-                        <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{evento?.titulo_evento}</Text>
+                    <View style={{ flex: 0.95, paddingLeft:0.2}}>
+                        <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{evento?.publico_evento}</Text>
                     </View>
 
 
@@ -80,8 +88,9 @@ const ElementoEvento: React.FC<ElementoEventoProps> = ({ evento }) => { //Pa que
             </View>
 
 
-            {/* <Text>{evento?.asociaciones?.logo_asociacion}</Text> */}
-        </View>
+           
+            
+        </Pressable>
     );
 };
 
@@ -113,11 +122,6 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
 
-    contenedorVertical: {
-
-        flex: 1,
-
-    },
     imagenLogoAsociacion: {
 
         flex: 1,
@@ -135,12 +139,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         opacity: 0.7
     },
-    miniContenedorHorizontal: {
-
-        flex: 1,
-        borderWidth: 2,
-
-    }
 
 })
 

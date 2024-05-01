@@ -6,55 +6,55 @@ export function numeroAMes(numeroMes){
 
         case("1"):
         case("01"):
-            mes="ENE"
+            mes="enero"
             break
 
         case("2"):
         case("02"):
-            mes="FEB"
+            mes="febrero"
             break
 
         case("3"):
         case("03"):
-            mes="MAR"
+            mes="marzo"
             break
 
         case("4"):
         case("04"):
-            mes="ABR"
+            mes="abril"
             break    
 
         case("5"):
         case("05"):
-            mes="MAY"
+            mes="mayo"
             break     
             
         case("6"):
         case("06"):
-            mes="JUN"
+            mes="junio"
             break  
 
         case("7"):
         case("07"):
-            mes="JUL"
+            mes="julio"
             break  
 
         case("8"):
         case("08"):
-            mes="AGO"
+            mes="agosto"
             break  
 
         case("9"):
         case("9"):
-            mes="SEP"
+            mes="septiembre"
             break  
 
         case("10"):
-            mes="OCT"
+            mes="octubre"
             break  
 
         case("11"):
-            mes="NOV"
+            mes="noviebre"
             break 
 
         case("12"):
@@ -62,7 +62,7 @@ export function numeroAMes(numeroMes){
         break 
 
         default:
-            mes="ENE"
+            mes="diciembre"
 
     }
 
