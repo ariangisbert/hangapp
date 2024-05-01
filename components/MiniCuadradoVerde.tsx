@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
         borderCurve:"continuous", 
         paddingHorizontal:5, 
         paddingVertical:0.5,
-        marginBottom:1.7
+        marginBottom:1.7,
+        width:55,
 
     },
     texto:{

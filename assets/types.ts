@@ -27,7 +27,8 @@ export type Evento = {
     gratis_evento:boolean,
     color_evento:string,
     logo_asociacion:string,
-    asociaciones:any
+    asociaciones:any,
+    ubicacion_evento:string
 
 }
 

@@ -141,7 +141,6 @@ const HomeEventosUsuario = () => {
         )}
       />
       <View style={{marginBottom:20}}>
-        <Text>{nombreMuncipio.nombre_municipio}</Text>
       <Button onPress={salir} title='Salir'></Button>
       </View>
         <LinearGradient
