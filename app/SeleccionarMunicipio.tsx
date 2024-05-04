@@ -16,7 +16,7 @@ import { router } from 'expo-router';
 const SeleccionarMunicipio = () => {
   
   const {usuario, setUsuario} = useAuth()
-
+  
   //Provincias
   const [provincias, setProvincias] = useState<Provincia[]|[null]>([null]) //Hook en el objecte provincias
   const [cargandoProvincias, setCargandoProvincias] = useState(true)

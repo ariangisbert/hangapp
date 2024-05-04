@@ -12,16 +12,19 @@ import { useAuth } from '@/providers/AuthProvider';
 import ElementoEvento from '@/components/ElementoEvento';
 import { LinearGradient } from 'expo-linear-gradient';
 import { err } from 'react-native-svg';
+import { useEventos } from '@/api/eventos';
 
 const HomeEventosUsuario = () => {
 
+  let dateHoy =  new Date()
+  let fechaActual = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
 
-  const {usuario, cargandoUsuario,setUsuario} = useAuth() //Carreguem el usuari
+  const {usuario, cargandoUsuario} = useAuth() //Carreguem el usuari
 
   //Hooks de eventos
   const [eventos, setEventos] = useState<Evento[]|[null]>([])
   const [cargandoEventos, setCargandoEventos] = useState(true)
-  const [nombreMuncipio, setNombreMunicipio] = useState<any>("a")
+  const [nombreMuncipio, setNombreMunicipio] = useState<any>("")
   const [cargandoMunicipio, setCargandoMunicipio] = useState(true)
 
 
@@ -45,34 +48,46 @@ const HomeEventosUsuario = () => {
   }
 
   //Carreguem els eventos
-  useEffect(()=>{
+  // useEffect(()=>{
 
-    const recibirEventos = async ()=>{
+  //   const recibirEventos = async ()=>{
 
-      const {data, error} = await supabase.from("eventos")
-      .select("*, asociaciones(logo_asociacion)")
-      .eq("id_municipio",usuario.municipio_defecto)//Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+  //     const {data, error} = await supabase.from("eventos")
+  //     .select("*, asociaciones(logo_asociacion)")//Seleccionem els eventos i els logos de les asocicions
+  //     .eq("id_municipio",usuario.municipio_defecto). //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+  //     gte("fecha_evento", fechaActual)//Que tinguen lloc en un futur
+  //     .order("fecha_evento") //I els ordenem de mes propers a mes llunyans
 
-        if(error){
-          Alert.alert(error.message)
-        }else{
-          setEventos(data)
-        }
-
-
-        setCargandoEventos(false)
-
-    }
-
-    if(usuario!==null){
-
-      recibirEventos()
-
-    }
+  //       if(error){
+  //         Alert.alert(error.message)
+  //       }else{
+  //         setEventos(data)
+  //       }
 
 
+  //       setCargandoEventos(false)
 
-  },[]) // Quan se carregue el usuari se execurá este useEffect
+  //   }
+
+  //   if(usuario!==null){
+
+  //     recibirEventos()
+
+  //   }
+
+
+
+  // },[]) // Quan se carregue el usuari se execurá este useEffect
+
+  const {data, isLoading, error} = useEventos(usuario.municipio_defecto)
+ 
+  if(isLoading){
+
+    return<ActivityIndicator></ActivityIndicator>
+
+  }
+
+  console.log(data)
 
    //Carreguem el nom del municipi
    useEffect(()=>{

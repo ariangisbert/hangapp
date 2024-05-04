@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import AuthProvider from '@/providers/AuthProvider';
+import QueryProvider from '@/providers/QueryProvider';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,9 +50,11 @@ function RootLayoutNav() {
   return (
 
       <AuthProvider>
-        <Stack screenOptions={{ headerShown: false,  }}>
-          <Stack.Screen name="index"></Stack.Screen>
-        </Stack>
+        <QueryProvider>
+          <Stack screenOptions={{ headerShown: false}}>
+            <Stack.Screen name="index"></Stack.Screen>
+          </Stack>
+        </QueryProvider>
       </AuthProvider>
 
   );

@@ -61,7 +61,7 @@ const DetallesEvento = () => {
     let fecha=evento?.fecha_evento.split("-")[2]+" "+mes+" "+evento?.fecha_evento.split("-")[0]
 
     return (
-      <SafeAreaView style={{backgroundColor:colorFondo, flex:1, paddingHorizontal:42,} as any}>
+      <SafeAreaView style={{backgroundColor:colorFondo+"",paddingBottom:8, flex:1, paddingHorizontal:42}}>
         <Stack.Screen options={{headerTintColor:colorTexto as any ,contentStyle:{backgroundColor:colorFondo}as any}}/>
 
         {/* Contenedor título */}
@@ -70,7 +70,7 @@ const DetallesEvento = () => {
         </View>
 
         {/* Contenedor Imagen */}
-        <View style={{flexGrow:3, justifyContent:"center", alignItems:"center", }}>
+        <View style={{flexGrow:2.8, justifyContent:"center", alignItems:"center",shadowOpacity:0.7, shadowColor:"#a3a3a3", shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
          
            {/* ContenedorInteriorImagen */}
           <View style={{flex:1}}>
@@ -121,7 +121,7 @@ const DetallesEvento = () => {
         </View>
 
         {/* Contenedor boton */}
-        <View style={{flexGrow:0.1,flexBasis:70,  justifyContent:"center"}}>
+        <View style={{flexGrow:0.1,flexBasis:60,  justifyContent:"flex-end"}}>
           <Boton texto="Notificar asistencia" color={colorTexto+""}></Boton>
         </View>
         
@@ -141,7 +141,6 @@ const styles = StyleSheet.create({
     resizeMode:"contain",
     borderRadius:18,
     
-
   }
 
 })
