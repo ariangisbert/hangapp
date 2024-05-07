@@ -3,18 +3,20 @@ import { supabase } from '../../lib/supabase';
 import { Evento } from '@/assets/types';
 
 
-export const useEventos = (id_municipio:any) => {
+export const useListaEventos = (id_municipio:any) => {
   
     let dateHoy =  new Date()
     let fechaActual = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
+
+    let horaActual = (dateHoy.getHours()+":"+dateHoy.getMinutes()+":00")
 
     return useQuery<Evento[]>({
     queryKey: ['eventos'],
     queryFn: async () => {
       const { data, error } = await supabase.from("eventos")
       .select("*, asociaciones(logo_asociacion)")//Seleccionem els eventos i els logos de les asocicions
-      .eq("id_municipio",id_municipio). //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
-      gte("fecha_evento", fechaActual)//Que tinguen lloc en un futur
+      .eq("id_municipio",id_municipio) //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+      .or(`fecha_evento.gt.${fechaActual},and(fecha_evento.eq.${fechaActual},hora_evento.gt.${horaActual})`)//Filtra soles els eventos que estiguen en hora i dia futur
       .order("fecha_evento");
 
       if (error) {
@@ -24,3 +26,4 @@ export const useEventos = (id_municipio:any) => {
     },
   });
 };
+

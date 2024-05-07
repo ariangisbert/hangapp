@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
   headerContainer: {
     height: 100, // Altura adecuada para un encabezado grande
     justifyContent: "flex-end",
-    paddingHorizontal:20, 
+    paddingHorizontal:20,
+    alignSelf:"flex-start"
   },
   headerText: {
     fontSize: 34, // Tamaño de texto grande para Large Title

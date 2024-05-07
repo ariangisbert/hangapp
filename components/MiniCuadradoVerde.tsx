@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const MiniCuadradoVerde = () => {
+//props que acepta
+//texto
+//grande - boolean
+const MiniCuadradoVerde = (props:any) => {
   return (
-    <View style={styles.contenedorPrincipal}>
-        <Text style={styles.texto}>Gratis</Text>
+    <View style={[styles.contenedorPrincipal, {paddingVertical:props.grande?1.9:0.5, width:props.grande?null:55}]}>
+        <Text style={[styles.texto, {fontSize:props.grande?16:14}]}>{props.texto}</Text>
     </View>
   );
 };
@@ -18,10 +21,8 @@ const styles = StyleSheet.create({
         backgroundColor:"#6CC142",
         borderRadius:5, 
         borderCurve:"continuous", 
-        paddingHorizontal:5, 
-        paddingVertical:0.5,
+        paddingHorizontal:6, 
         marginBottom:1.7,
-        width:55,
 
     },
     texto:{

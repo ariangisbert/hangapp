@@ -1,3 +1,5 @@
+import { Float } from "react-native/Libraries/Types/CodegenTypes"
+
 export type Municipio = {
 
     id_municipio: number,
@@ -29,6 +31,20 @@ export type Evento = {
     logo_asociacion:string,
     asociaciones:any,
     ubicacion_evento:string
+
+}
+
+export type Rifa = {
+
+    id: number,
+    titulo:string,
+    descripcion:string,
+    fecha:string,
+    id_asociacion:number,
+    id_municipio:number,
+    imagen:any,
+    precio:Float,
+    asociaciones:any,
 
 }
 

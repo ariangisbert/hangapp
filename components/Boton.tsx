@@ -9,14 +9,14 @@ import { LinearGradient } from "expo-linear-gradient"
 //color - Objecte en el color del fondo
 //onPress - Funció que se gastará en el onPress
 //disabled - Si esta desactivat
-
+//flex - Per a ferlo flex i llevarli el padding
 const Boton = (props:any) =>{
 
    
         return(
 
-                <Pressable onPress={props.onPress} disabled={props.disabled} style={{alignSelf:"center", opacity:props.disabled?0.7:1}}>
-                    <View style={[styles.fondoDegradado, {backgroundColor:props.color+""}]}>
+                <Pressable onPress={props.onPress} disabled={props.disabled} style={{flex:1,justifyContent:"center", opacity:props.disabled?0.7:1}}>
+                    <View style={[styles.fondoDegradado, {backgroundColor:props.color+"", paddingHorizontal:props.flex?0:60}]}>
                         <Text style={styles.texto}>{props.texto}</Text>
                     </View>
                 </Pressable>
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         paddingVertical:23.4,
         alignItems: 'center',
         borderRadius: 22,
-        borderCurve: "continuous"
+        borderCurve: "continuous",
     },
 
     texto: {

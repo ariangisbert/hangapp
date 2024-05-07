@@ -12,26 +12,17 @@ import { useAuth } from '@/providers/AuthProvider';
 import ElementoEvento from '@/components/ElementoEvento';
 import { LinearGradient } from 'expo-linear-gradient';
 import { err } from 'react-native-svg';
+import { recibirListaRifas } from '@/api/rifas';
+import { recibirNombreMunicipio } from '@/api/municipios';
+import ElementoRifa from '@/components/ElementoRifa';
 
 const HomeRifasUsuario = () => {
 
-  let dateHoy =  new Date()
-  let fechaActual = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
-
   const {usuario, cargandoUsuario} = useAuth() //Carreguem el usuari
-
-  //Hooks de eventos
-  const [eventos, setEventos] = useState<Evento[]|[null]>([])
-  const [cargandoEventos, setCargandoEventos] = useState(true)
-  const [nombreMuncipio, setNombreMunicipio] = useState<any>("a")
-  const [cargandoMunicipio, setCargandoMunicipio] = useState(true)
-
-
   const alturaSafe = useSafeAreaInsets().top
 
 
   //RECARREGUEM EL USUARI
-
   //Esperem a que se carreguen els usuaris
   if(cargandoUsuario){
 
@@ -46,89 +37,20 @@ const HomeRifasUsuario = () => {
     
   }
 
-  //Carreguem els eventos
-  useEffect(()=>{
+  //Carreguem rifes i municipi
+  const {data:rifas, isLoading:cargandoRifas, error:errorRifas} = recibirListaRifas(usuario.municipio_defecto)
+  const {data:nombreMunicipio, isLoading:cargandoMunicipio, error:errorMunicipio} = recibirNombreMunicipio(usuario.municipio_defecto)
 
-    const recibirEventos = async ()=>{
+  //Si nia un error tirem paca arrere
+  if(errorRifas||errorMunicipio){
 
-      const {data, error} = await supabase.from("eventos")
-      .select("*, asociaciones(logo_asociacion)")//Seleccionem els eventos i els logos de les asocicions
-      .eq("id_municipio",usuario.municipio_defecto). //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
-      gte("fecha_evento", fechaActual)//Que tinguen lloc en un futur
-      .order("fecha_evento") //I els ordenem de mes propers a mes llunyans
-
-        if(error){
-          Alert.alert(error.message)
-        }else{
-          setEventos(data)
-        }
-
-
-        setCargandoEventos(false)
-
-    }
-
-    if(usuario!==null){
-
-      recibirEventos()
-
-    }
-
-
-
-  },[]) // Quan se carregue el usuari se execurá este useEffect
-
-   //Carreguem el nom del municipi
-   useEffect(()=>{
-
-    const recibirMunicipios = async ()=>{
-
-      const {data, error} = await supabase.from("municipios")
-      .select("nombre_municipio")
-      .eq("id_municipio",usuario.municipio_defecto).single()//Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
-
-        if(error){
-          Alert.alert(error.message)
-        }else{
-          setNombreMunicipio(data)
-        }
-        setCargandoMunicipio(false)
-
-    }
-
-    if(usuario!==null){
-
-      recibirMunicipios()
-
-    }
-
-
-
-  },[]) // Quan se carregue el usuari se execurá este useEffect
-
-
-
-  //Esperem a que se carreguen els eventos i el municipi
-  if(cargandoEventos||cargandoMunicipio){
-
-   return <ActivityIndicator></ActivityIndicator>
+    router.back()
 
   }
+  //Esperem a que se carreguen els eventos i el municipi
+  if(cargandoRifas||cargandoMunicipio){
 
-  async function salir(){
-
-    const {error} = await supabase.auth.signOut()
-
-    if(error){
-
-      Alert.alert(error.message)
-
-    }else{
-
-      router.replace("/UserLogin")
-
-    }
-
+   return <ActivityIndicator></ActivityIndicator>
 
   }
 
@@ -139,14 +61,11 @@ const HomeRifasUsuario = () => {
       
       <CabeceraDegradado title="Rifas"></CabeceraDegradado>
       <View style={styles.contenedorListaRifas}>
-       {/* <FlatList style={{overflow:"visible",paddingHorizontal:20, } } data={eventos}
+       <FlatList style={{overflow:"visible",paddingHorizontal:20, } } data={rifas}
         renderItem={({item, index, separators}) => (
-          <ElementoEvento evento={item}></ElementoEvento>
+          <ElementoRifa rifa={item}></ElementoRifa>
         )}
-      /> */}
-      <View style={{marginBottom:20}}>
-      <Button onPress={salir} title='Salir'></Button>
-      </View>
+      />
         <LinearGradient
           colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
           style={styles.fadeTop}
@@ -172,6 +91,9 @@ const styles = StyleSheet.create({
     paddingTop:27,
     overflow:"hidden"
     
+  },
+  contenedorListaLoteria:{
+
     
 
   },

@@ -54,7 +54,7 @@ const ElementoEvento: React.FC<ElementoEventoProps> = ({ evento }) => { //Pa que
                     
                     {/* Cuadraet verd gratis */}
                     {evento?.gratis_evento==true? 
-                        <MiniCuadradoVerde/>: null
+                        <MiniCuadradoVerde texto={"Gratis"}/>: null
                     }
                 </View>
             
@@ -84,7 +84,7 @@ const ElementoEvento: React.FC<ElementoEventoProps> = ({ evento }) => { //Pa que
 
             {/* Parte derecha */}
             <View style={styles.contenedorDerecha}>
-                <ImagenRemotaLogoAsociacion style={styles.imagenLogoAsociacion} fallback="../assets.images.fallbackLogoAsociacion.png" ruta={"logopng.png"}></ImagenRemotaLogoAsociacion>
+                <ImagenRemotaLogoAsociacion style={styles.imagenLogoAsociacion} fallback="../assets.images.fallbackLogoAsociacion.png" ruta={evento?.asociaciones.logo_asociacion}></ImagenRemotaLogoAsociacion>
             </View>
 
 
