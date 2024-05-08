@@ -19,7 +19,7 @@ const BotonMasMenos = (props:any) => {
                 <Text style={[styles.textoSimbolo, {lineHeight:34.1, fontSize:31}]}>-</Text>
             </Pressable>
 
-            <View style={[styles.contenedorCentral,{backgroundColor:color.colorFondo}]}>
+            <View style={[styles.contenedorCentral,{backgroundColor:color.colorFondo, borderColor:color.colorTitulo}]}>
                 <Text adjustsFontSizeToFit numberOfLines={1} style={{fontSize:31, fontWeight:"600", textAlign:"center", color:color.colorTitulo}}>{props.valor}</Text>
             </View>
 
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
         borderTopWidth: 5,
         borderBottomWidth:5,
         justifyContent:"center",
-        borderColor:Colors.MoradoElemento.colorTitulo,
     },
 
     contenedorLateral:{

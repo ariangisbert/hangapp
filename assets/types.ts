@@ -57,6 +57,7 @@ export type Loteria = {
     id_municipio:number,
     numero:number,
     precio:Float,
-    color:string
+    color:string,
+    asociaciones:any
 }
 

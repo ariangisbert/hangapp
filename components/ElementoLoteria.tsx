@@ -46,7 +46,7 @@ const ElementoLoteria: React.FC<ElementoLoteriaProps> = ({ loteria }) => { //Pa 
 
     //DISENY
     return (
-        <Pressable onPress={()=>router.push({pathname:`/RifasUsuario/[id_loteria]`, params:{id:loteria?.id, colorFondo : color.colorFondo, colorTexto: color.colorTitulo}}as any)} style={[styles.contenedorElemento, { backgroundColor: color.colorTitulo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.2, elevation: 2 }]}>
+        <Pressable onPress={()=>router.navigate({pathname:`/RifasUsuario/Loteria`, params:{id:loteria?.id, colorPasado:loteria?.color}}as any)} style={[styles.contenedorElemento, { backgroundColor: color.colorTitulo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.2, elevation: 2 }]}>
            <View style={styles.contenedorTitulo}>
                 <Text style={styles.titulo}>{loteria?.titulo}</Text>
            </View>

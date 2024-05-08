@@ -34,7 +34,7 @@ export const recibirLoteria = (id:any)=>{
     queryKey: ['loteria', id],
     queryFn: async () => {
       const { data, error } = await supabase.from("loteria")
-      .select("*")//Seleccionem els eventos i els logos de les asocicions
+      .select("*,asociaciones(nombre_asociacion)")//Seleccionem els eventos i els logos de les asocicions
       .eq("id",id).single() //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari
 
       if (error) {
