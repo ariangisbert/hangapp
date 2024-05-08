@@ -48,3 +48,15 @@ export type Rifa = {
 
 }
 
+export type Loteria = {
+
+    id: number,
+    titulo:string,
+    fecha:string,
+    id_asociacion:number,
+    id_municipio:number,
+    numero:number,
+    precio:Float,
+    color:string
+}
+

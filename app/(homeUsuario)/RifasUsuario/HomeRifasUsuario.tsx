@@ -15,6 +15,8 @@ import { err } from 'react-native-svg';
 import { recibirListaRifas } from '@/api/rifas';
 import { recibirNombreMunicipio } from '@/api/municipios';
 import ElementoRifa from '@/components/ElementoRifa';
+import { recibirListaLoteria } from '@/api/loteria';
+import ElementoLoteria from '@/components/ElementoLoteria';
 
 const HomeRifasUsuario = () => {
 
@@ -40,25 +42,25 @@ const HomeRifasUsuario = () => {
   //Carreguem rifes i municipi
   const {data:rifas, isLoading:cargandoRifas, error:errorRifas} = recibirListaRifas(usuario.municipio_defecto)
   const {data:nombreMunicipio, isLoading:cargandoMunicipio, error:errorMunicipio} = recibirNombreMunicipio(usuario.municipio_defecto)
-
+  const {data:loterias, isLoading:cargandoLoterias, error:errorLoteria} = recibirListaLoteria(usuario.municipio_defecto)
   //Si nia un error tirem paca arrere
-  if(errorRifas||errorMunicipio){
+  if(errorRifas||errorMunicipio||errorLoteria){
 
     router.back()
 
   }
   //Esperem a que se carreguen els eventos i el municipi
-  if(cargandoRifas||cargandoMunicipio){
+  if(cargandoRifas||cargandoMunicipio||cargandoLoterias){
 
    return <ActivityIndicator></ActivityIndicator>
 
   }
-
  
 
   return (
     <View style={{flex:1, marginTop: Platform.OS==="ios"? alturaSafe:20, backgroundColor:"white"}}>
       
+      {/* RIFA */}
       <CabeceraDegradado title="Rifas"></CabeceraDegradado>
       <View style={styles.contenedorListaRifas}>
        <FlatList style={{overflow:"visible",paddingHorizontal:20, } } data={rifas}
@@ -75,8 +77,35 @@ const HomeRifasUsuario = () => {
           colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
           style={styles.fadeBottom}
         />
-
+        
       </View>
+      {/* LOTERIA */}
+      <CabeceraDegradado mediaAltura title="Loteria"></CabeceraDegradado>
+      
+          <View style={styles.contenedorListaLoteria}>
+            <FlatList showsHorizontalScrollIndicator={false}  contentContainerStyle={{paddingHorizontal:20}} horizontal style={{overflow:"hidden", marginTop:-9}} data={loterias}
+              renderItem={({item, index, separators}) => (
+                <ElementoLoteria loteria={item}></ElementoLoteria>
+              )}
+            />
+
+            <LinearGradient
+
+            start={{ x: -1, y: 1 }}
+            end={{ x: 1, y: 1 }}
+              colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
+              style={styles.fadeLeft}
+            />
+
+            <LinearGradient
+
+              start={{ x:0, y: 1 }}
+              end={{ x: 2, y: 1 }}
+              colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
+              style={styles.fadeRight}
+        />  
+      </View>
+
     </View>
   );
 };
@@ -89,12 +118,13 @@ const styles = StyleSheet.create({
 
     flex:1,
     paddingTop:27,
-    overflow:"hidden"
+    overflow:"hidden",
     
   },
   contenedorListaLoteria:{
 
-    
+     flexBasis:180,
+     overflow:"visible",
 
   },
   fadeTop: {
@@ -110,6 +140,21 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 40, // Ajusta la altura según necesidad
+  },
+
+  fadeLeft: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: 20, // Ajusta la altura según necesidad
+  },
+  fadeRight: {
+    position: 'absolute',
+    bottom: 0,
+    top: 0,
+    right: 0,
+    width: 20, // Ajusta la altura según necesidad
   },
 
 

@@ -52,6 +52,11 @@ export default {
     colorFondo:"#F7DFDF",
     colorTitulo:"#B94E4E"
 
+  },
+  VerdeElemento:{
+
+    colorFondo:"#E5F7DF",
+    colorTitulo:"#5D8550",
 
   }
 

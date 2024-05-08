@@ -8,7 +8,8 @@ const MyComponent = () => {
 
         <Stack.Screen  name="HomeRifasUsuario"options={{ contentStyle:{backgroundColor:"white"}, title:"Rifas", headerShown:false}}/>
         <Stack.Screen name="[id]" options={{ headerBackTitleVisible:false,headerTransparent:true,headerShadowVisible:false, title:""}}/>
-
+        <Stack.Screen name="[id_loteria]" options={{ headerBackTitleVisible:false,headerTransparent:true,headerShadowVisible:false, title:""}}/>
+        
     </Stack>
   );
 };
