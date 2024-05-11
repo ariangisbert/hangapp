@@ -30,7 +30,7 @@ const ElementoRifa: React.FC<ElementoRifaProps> = ({ rifa }) => { //Pa que lo qu
 
     //DISENY
     return (
-        <Pressable onPress={()=>router.push({pathname:`/RifasUsuario/[id]`, params:{id:rifa?.id}}as any)} style={[styles.contenedorElemento, { backgroundColor: color.colorFondo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.525, elevation: 2 }]}>
+        <Pressable onPress={()=>router.navigate({pathname:`/RifasUsuario/[id]`, params:{id:rifa?.id}}as any)} style={[styles.contenedorElemento, { backgroundColor: color.colorFondo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.525, elevation: 2 }]}>
            
             {/* Parte izquierdas */}
             <View style={styles.contenedorIzquierda}>

@@ -45,7 +45,7 @@ const SeleccionarMunicipio = () => {
 
       setUsuario({...usuario,municipio_defecto:municipioSeleccionado})
 
-      router.push("/(homeUsuario)")
+      router.replace("/(homeUsuario)")
 
     }
 

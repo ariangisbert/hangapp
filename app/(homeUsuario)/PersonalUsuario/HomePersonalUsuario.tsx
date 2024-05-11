@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-const PersonalUsuario = () => {
+const HomePersonalUsuario = () => {
   return (
     <View>
       <Text>My Component</Text>
@@ -9,4 +9,4 @@ const PersonalUsuario = () => {
   );
 };
 
-export default PersonalUsuario;
+export default HomePersonalUsuario;

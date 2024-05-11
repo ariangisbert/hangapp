@@ -12,6 +12,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "assets/iconos/IconoTabFesta.tsx"  ]
+    "expo-env.d.ts",
+    "assets/iconos/IconoTabFesta.tsx",
+    "assets/iconos/IconoChevronBaix.jsx"
+  ]
 }

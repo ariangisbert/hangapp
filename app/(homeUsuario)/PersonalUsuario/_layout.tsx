@@ -4,9 +4,9 @@ import { View, Text } from 'react-native';
 
 const MyComponent = () => {
   return (
-    <Stack>
+    <Stack screenOptions={{contentStyle:{backgroundColor:"white"}}}>
 
-        <Stack.Screen  name="index"options={{headerLargeTitle:true, title:"Zona personal", headerStyle:{backgroundColor:"transparent"}}}/>
+        <Stack.Screen  name="HomePersonalUsuario"options={{headerLargeTitle:true, title:"Zona personal", headerStyle:{backgroundColor:"transparent"}}}/>
 
 
     </Stack>

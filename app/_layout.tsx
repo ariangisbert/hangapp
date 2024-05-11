@@ -5,7 +5,6 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
-import { useColorScheme } from '@/components/useColorScheme';
 import AuthProvider from '@/providers/AuthProvider';
 import QueryProvider from '@/providers/QueryProvider';
 
@@ -51,8 +50,10 @@ function RootLayoutNav() {
 
       <AuthProvider>
         <QueryProvider>
-          <Stack screenOptions={{ headerShown: false}}>
-            <Stack.Screen name="index"></Stack.Screen>
+          <Stack screenOptions={{ contentStyle:{backgroundColor:"white"}}}>
+            <Stack.Screen name="index" options={{headerShown: false,}}></Stack.Screen>
+            <Stack.Screen name="SeleccionarMunicipio" options={{ animation:"none",headerShown: false,}}></Stack.Screen>
+            <Stack.Screen name="(homeUsuario)" options={{headerShown: false,}}></Stack.Screen>
           </Stack>
         </QueryProvider>
       </AuthProvider>

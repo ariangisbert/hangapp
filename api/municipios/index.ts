@@ -9,7 +9,7 @@ export const recibirNombreMunicipio = (id_municipio:number) => {
     queryKey: ['municipios', id_municipio],
     queryFn: async () => {
       const { data, error } = await supabase.from("municipios")
-      .select("nombre_municipio")//Seleccionem nom del municipi
+      .select("*")//Seleccionem nom del municipi
       .eq("id_municipio",id_municipio).single();
 
       if (error) {
@@ -18,4 +18,21 @@ export const recibirNombreMunicipio = (id_municipio:number) => {
       return data;
     },
   });
+};
+
+export const recibirMunicipioyProvincia = (id_municipio:number) => {
+  
+  return useQuery<any>({
+  queryKey: ['municipios', id_municipio],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("municipios")
+    .select("*, provincias(nombre_provincia)")//Seleccionem nom del municipi
+    .eq("id_municipio",id_municipio).single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  },
+});
 };

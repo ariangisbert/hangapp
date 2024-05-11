@@ -57,7 +57,7 @@ const DetallesLoteria = () => {
       
       return <ActivityIndicator >
         {/* Pa que mentres se carreguen tinga igual el color de fondo */}
-        <Stack.Screen options={{headerTintColor:colorTexto+"",contentStyle:{backgroundColor:colorFondo}as any}}/> 
+        <Stack.Screen options={{headerTintColor:colorTexto+""}}/> 
         
       </ActivityIndicator>
 

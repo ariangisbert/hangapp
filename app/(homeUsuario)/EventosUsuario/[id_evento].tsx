@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, Text, Alert, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { err } from 'react-native-svg';
 
@@ -62,6 +63,7 @@ const DetallesEvento = () => {
 
     return (
       <SafeAreaView style={{backgroundColor:colorFondo+"", flex:1, paddingHorizontal:42}}>
+      
         <Stack.Screen options={{headerTintColor:colorTexto as any ,contentStyle:{backgroundColor:colorFondo}as any}}/>
 
         {/* Contenedor título */}
@@ -124,8 +126,7 @@ const DetallesEvento = () => {
         <View style={{flexGrow:0.71,paddingVertical:6, alignItems:"center", justifyContent:"center"}}>
           <Boton texto="Notificar asistencia" color={colorTexto+""}></Boton>
         </View>
-        
-
+      
       </SafeAreaView>
   );
 };

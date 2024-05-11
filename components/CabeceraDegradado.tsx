@@ -9,7 +9,7 @@ import TextoDegradado from "./TextoDegradado"; // Asegúrate de que la importaci
 
 const CabeceraDegradado = (props:any) => {
   return (
-    <View style={[styles.headerContainer,{height:props.mediaAltura?50:100}]}>
+    <View style={[styles.headerContainer,{height:props.mediaAltura?50:50}]}>
       <TextoDegradado 
         children={props.title}
         color={{ color1: Colors.DegradatMorat.color1, color2: Colors.DegradatMorat.color2 }} // Ejemplo de colores de degradado

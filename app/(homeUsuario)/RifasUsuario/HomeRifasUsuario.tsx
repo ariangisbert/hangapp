@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Platform, FlatList, Alert, ActivityIndicator, TouchableHighlight, Button } from 'react-native';
+import { View, Text, StyleSheet, Platform, FlatList, Alert, ActivityIndicator, TouchableHighlight, Button, Pressable, LayoutAnimation } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, Stack, router } from 'expo-router';
 import { useHeaderHeight } from "@react-navigation/elements"
@@ -13,16 +13,17 @@ import ElementoEvento from '@/components/ElementoEvento';
 import { LinearGradient } from 'expo-linear-gradient';
 import { err } from 'react-native-svg';
 import { recibirListaRifas } from '@/api/rifas';
-import { recibirNombreMunicipio } from '@/api/municipios';
+import { recibirMunicipioyProvincia, recibirNombreMunicipio } from '@/api/municipios';
 import ElementoRifa from '@/components/ElementoRifa';
 import { recibirListaLoteria } from '@/api/loteria';
 import ElementoLoteria from '@/components/ElementoLoteria';
+import IconoChevronBaix from '@/assets/iconos/IconoChevronBaix';
 
 const HomeRifasUsuario = () => {
 
   const {usuario, cargandoUsuario} = useAuth() //Carreguem el usuari
   const alturaSafe = useSafeAreaInsets().top
-
+  const [expandidoMunicipio, setExpandidoMunicipio] = useState(false);
 
   //RECARREGUEM EL USUARI
   //Esperem a que se carreguen els usuaris
@@ -41,7 +42,7 @@ const HomeRifasUsuario = () => {
 
   //Carreguem rifes i municipi
   const {data:rifas, isLoading:cargandoRifas, error:errorRifas} = recibirListaRifas(usuario.municipio_defecto)
-  const {data:nombreMunicipio, isLoading:cargandoMunicipio, error:errorMunicipio} = recibirNombreMunicipio(usuario.municipio_defecto)
+  const {data:municipio, isLoading:cargandoMunicipio, error:errorMunicipio} = recibirMunicipioyProvincia(usuario.municipio_defecto)
   const {data:loterias, isLoading:cargandoLoterias, error:errorLoteria} = recibirListaLoteria(usuario.municipio_defecto)
   //Si nia un error tirem paca arrere
   if(errorRifas||errorMunicipio||errorLoteria){
@@ -56,11 +57,20 @@ const HomeRifasUsuario = () => {
 
   }
  
+  function clickMunicipio() {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut,
+                                  ()=>router.push("/SeleccionarMunicipio"));
+    setExpandidoMunicipio(!expandidoMunicipio);
+};
 
   return (
     <View style={{flex:1, marginTop: Platform.OS==="ios"? alturaSafe:20, backgroundColor:"white"}}>
       
       {/* RIFA */}
+      <Pressable onPress={clickMunicipio} style={[styles.contenedorNombreMunicipio, {height:expandidoMunicipio?850:50}]}>
+        <Text style={styles.textoMunicipio}>{municipio.nombre_municipio}, {municipio.provincias.nombre_provincia}</Text>
+        <IconoChevronBaix style={{marginBottom:5}}/>
+      </Pressable>
       <CabeceraDegradado title="Rifas"></CabeceraDegradado>
       <View style={styles.contenedorListaRifas}>
        <FlatList style={{overflow:"visible",paddingHorizontal:20, } } data={rifas}
@@ -123,9 +133,10 @@ const styles = StyleSheet.create({
   },
   contenedorListaLoteria:{
 
-     flexBasis:180,
+     flexBasis:177,
      overflow:"visible",
-
+     
+     
   },
   fadeTop: {
     position: 'absolute',
@@ -156,6 +167,22 @@ const styles = StyleSheet.create({
     right: 0,
     width: 20, // Ajusta la altura según necesidad
   },
+
+  contenedorNombreMunicipio: {
+
+    height: 50,
+    paddingHorizontal: 20,
+    alignItems: "flex-end",
+    paddingBottom: 1.8,
+    flexDirection:"row",
+    columnGap:3,
+  },
+  textoMunicipio: {
+
+    fontWeight: "600",
+    fontSize: 20,
+    color: "#212121"
+  }
 
 
 
