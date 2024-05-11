@@ -50,7 +50,7 @@ function RootLayoutNav() {
 
       <AuthProvider>
         <QueryProvider>
-          <Stack screenOptions={{ contentStyle:{backgroundColor:"white"}}}>
+          <Stack screenOptions={{ headerShown:false,contentStyle:{backgroundColor:"white"}}}>
             <Stack.Screen name="index" options={{headerShown: false,}}></Stack.Screen>
             <Stack.Screen name="SeleccionarMunicipio" options={{ animation:"none",headerShown: false,}}></Stack.Screen>
             <Stack.Screen name="(homeUsuario)" options={{headerShown: false,}}></Stack.Screen>

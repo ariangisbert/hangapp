@@ -100,7 +100,7 @@ const HomeEventosUsuario = () => {
         <View style={{ marginBottom: 20 }}>
           <Button onPress={salir} title='Salir'></Button>
         </View>
-       
+        
         <LinearGradient
           colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
           style={styles.fadeTop}
