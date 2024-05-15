@@ -67,7 +67,7 @@ const ElementoEvento: React.FC<ElementoEventoProps> = ({ evento }) => { //Pa que
 
                     {/* Hora fecha y publico */}
                     <View style={{flex:0.9,flexDirection: "row" }}>
-                        <View style={{ flex: 0.30, flexShrink:0,flexBasis:14 }}>
+                        <View style={{ flex: 0.35, flexShrink:0,flexBasis:14 }}>
                             <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{evento?.hora_evento.substring(0, 5)}</Text>
                         </View>
 
@@ -75,7 +75,7 @@ const ElementoEvento: React.FC<ElementoEventoProps> = ({ evento }) => { //Pa que
                             <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{fecha}</Text>
                         </View>
 
-                        <View style={{ flex: 0.95, paddingLeft:0.2}}>
+                        <View style={{ flex: 1.0, paddingLeft:0.2}}>
                             <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{evento?.publico_evento}</Text>
                         </View>
 

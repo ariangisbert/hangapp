@@ -129,7 +129,8 @@ const UserRegistro = () => {
                 options: {
                     data: {
                         nombre: nombre,
-                        apellidos: apellidos
+                        apellidos: apellidos,
+                        grupo:"USER"
                     }
                 }
             }

@@ -101,7 +101,7 @@ const HomePersonalUsuario = () => {
       <View  style={[styles.contenedorNombreMunicipio, {height:50}]}>
         <Text style={styles.textoMunicipio}>{usuario.nombre} {usuario.apellidos}</Text>
       </View>
-      <CabeceraDegradado color={Colors.DegradatMorat} title="Zona personal"></CabeceraDegradado>
+      <CabeceraDegradado color={Colors.DegradatRosa} title="Zona personal"></CabeceraDegradado>
 
       {/* Contenedor email y municipio */}
       <View style={styles.contenedorDatos}>

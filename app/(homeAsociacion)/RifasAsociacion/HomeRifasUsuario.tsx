@@ -72,7 +72,7 @@ const HomeRifasUsuario = () => {
         <Text style={styles.textoMunicipio}>{municipio.nombre_municipio}, {municipio.provincias.nombre_provincia}</Text>
         <IconoChevronBaix style={{marginBottom:5}}/>
       </Pressable>
-      <CabeceraDegradado color={Colors.DegradatMorat}  title="Rifas"></CabeceraDegradado>
+      <CabeceraDegradado color={Colors.DegradatRosa} title="Rifas"></CabeceraDegradado>
       <View style={styles.contenedorListaRifas}>
        <FlatList style={{overflow:"visible",paddingHorizontal:20, } } data={rifas}
         renderItem={({item, index, separators}) => (
@@ -91,7 +91,7 @@ const HomeRifasUsuario = () => {
         
       </View>
       {/* LOTERIA */}
-      <CabeceraDegradado color={Colors.DegradatMorat} title="Loteria"></CabeceraDegradado>
+      <CabeceraDegradado color={Colors.DegradatRosa} mediaAltura title="Loteria"></CabeceraDegradado>
       
           <View style={styles.contenedorListaLoteria}>
             <FlatList showsHorizontalScrollIndicator={false}  contentContainerStyle={{paddingHorizontal:20}} horizontal style={{overflow:"hidden", marginTop:-9}} data={loterias}

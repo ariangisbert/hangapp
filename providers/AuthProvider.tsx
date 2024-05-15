@@ -37,7 +37,6 @@ export default function AuthProvider({children}:PropsWithChildren){
             const {data:{session}} = await supabase.auth.getSession() //Agarrem la sesio, decostruim el data en una sessio
             setSession(session) //I la clavem en el hook
             
-            
             setCargando(false)
        
        
@@ -77,6 +76,8 @@ export default function AuthProvider({children}:PropsWithChildren){
 
                 setCargandoUsuario(false)
                 
+            }else{
+                setCargandoUsuario(false)
             }
             
         }

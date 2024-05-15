@@ -12,17 +12,17 @@ import { useAuth } from '@/providers/AuthProvider';
 import ElementoEvento from '@/components/ElementoEvento';
 import { LinearGradient } from 'expo-linear-gradient';
 import { err } from 'react-native-svg';
-import { useListaEventos } from '@/api/eventos';
+import { useListaEventos, useListaEventosByAsociacion } from '@/api/eventos';
 import { recibirMunicipioyProvincia, recibirNombreMunicipio } from '@/api/municipios';
 import { recibirNombreProvincia } from '@/api/provincias';
 import IconoChevronBaix from "../../../assets/iconos/IconoChevronBaix"
 import { AnimatedText } from 'react-native-reanimated/lib/typescript/reanimated2/component/Text';
 import Animated from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
-const HomeEventosUsuario = () => {
+import { recibirAsociacion } from '@/api/asociaciones';
+const HomeEventosAsociacion = () => {
 
   const { usuario, cargandoUsuario } = useAuth() //Carreguem el usuari
-  const [expandidoMunicipio, setExpandidoMunicipio] = useState(false);
   const alturaSafe = useSafeAreaInsets().top
 
   //Esperem a que se carreguen els usuaris
@@ -32,30 +32,32 @@ const HomeEventosUsuario = () => {
 
   }
 
-  //Comprovem que tinga un poble per defecto, si no el te el enviem a que trie poble
-  if (usuario.municipio_defecto == null) {
+  //Si el usuari no es una asociacio el tornem al principi
+  if (usuario.grupo!=="ASOCIACION") {
 
-    return <Redirect href={"/SeleccionarMunicipio"} />
+    supabase.auth.signOut()
+    return <Redirect href={"/"} />
 
   }
 
   //READS
-  const { data: eventos, isLoading: cargandoEventos, error: errorEventos } = useListaEventos(usuario.municipio_defecto)
-  const { data: municipio, isLoading: cargandoMunicipio, error: errorMunicipio } = recibirMunicipioyProvincia(parseInt(usuario.municipio_defecto))
-  //const {data:nombreProvincia, isLoading:cargandoProvincia, error:errorProvincia} = recibirNombreProvincia(usuario.municipio_defecto)
+  const {data:asociacion, isLoading:cargandoAsociacion, error:errorAsociacion} = recibirAsociacion(usuario.id)
+  const { data: eventos, isLoading: cargandoEventos, error: errorEventos } = useListaEventosByAsociacion(asociacion?.id_asociacion, cargandoAsociacion)
+  
 
 
 
 
-  if (cargandoEventos || cargandoMunicipio) {
+  if (cargandoEventos||cargandoAsociacion) {
 
     return <ActivityIndicator></ActivityIndicator>
 
   }
 
-  if (errorMunicipio || errorEventos) {
+  if (errorEventos||errorAsociacion) {
     router.back
   }
+  console.log(asociacion)
 
 
 
@@ -77,21 +79,22 @@ const HomeEventosUsuario = () => {
 
   }
 
-  function clickMunicipio() {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut,
-                                  ()=>router.push("/SeleccionarMunicipio"));
-    setExpandidoMunicipio(!expandidoMunicipio);
-};
-
 
   return (
     <View style={{ flex: 1, marginTop: Platform.OS === "ios" ? alturaSafe : 20, backgroundColor: "white" }}>
-      {/* Contenedor nombre municipio */}
-      <Pressable onPress={clickMunicipio} style={[styles.contenedorNombreMunicipio, {height:expandidoMunicipio?850:50}]}>
-        <Text style={styles.textoMunicipio}>{municipio.nombre_municipio}, {municipio.provincias.nombre_provincia}</Text>
-        <IconoChevronBaix style={{marginBottom:5}}/>
-      </Pressable>
-      <CabeceraDegradado color={Colors.DegradatMorat} title="Eventos próximos"></CabeceraDegradado>
+     
+     {/* Cabecera */}
+      <View style={{flexDirection:"row",justifyContent:"space-between", alignItems:"flex-end"}}>
+      <CabeceraDegradado color={Colors.DegradatRosa} alto title="Mis eventos"></CabeceraDegradado>
+
+        {/* Boton para añadir evento */}
+        <Pressable onPress={()=>router.push("/EventosAsociacion/CrearEvento")} style={{ marginRight:20}}>
+          <Text style={{color:"#DC82F5", fontSize:48, marginBottom:-6.5,fontWeight:"300" }}>+</Text>
+        </Pressable>
+      </View>
+
+
+
       <View style={styles.contenedorListaEventos}>
         <FlatList style={{ overflow: "visible", paddingHorizontal: 20, }} data={eventos}
           renderItem={({ item, index, separators }) => (
@@ -117,7 +120,7 @@ const HomeEventosUsuario = () => {
   );
 };
 
-export default HomeEventosUsuario;
+export default HomeEventosAsociacion;
 
 const styles = StyleSheet.create({
 

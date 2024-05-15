@@ -61,3 +61,13 @@ export type Loteria = {
     asociaciones:any
 }
 
+export type Asociacion={
+
+    id_asociacion:number,
+    id:any,
+    logo_asociacion:string,
+    id_municipio:number,
+    nombre_asociacion:string
+    
+}
+

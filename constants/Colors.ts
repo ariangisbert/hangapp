@@ -37,6 +37,7 @@ export default {
     color2:"#F98FFB"
 
   },
+  ColorRosaNeutro:"#BC77EE",
 
 
   //Colors per a els elements del flatList de eventos.

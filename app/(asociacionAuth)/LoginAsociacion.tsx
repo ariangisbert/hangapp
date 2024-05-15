@@ -1,27 +1,69 @@
 import { LinearGradient } from "expo-linear-gradient"
-import { Alert, Button, Image, Keyboard, Pressable, SafeAreaView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
+import { ActivityIndicator, Alert, Button, Image, Keyboard, Pressable, SafeAreaView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
 import MaskedView from '@react-native-masked-view/masked-view';
 import TextoDegradado from "../../components/TextoDegradado"
 import BotonDegradado from "../../components/BotonDegradado"
 import FieldDegradado from "@/components/FieldDegradado";
 import Colors from "@/constants/Colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, router } from "expo-router";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/providers/AuthProvider";
 
-const UserLogin = () => {
+const LoginAsociacion = () => {
 
     ///////LOGICA
 
     //Variables del login
     
     //Email
+
     const [email, setEmail] = useState("")
     const manejarEmail = (texto: string) => { setEmail(texto) }
 
     //Contraseña
     const [password, setPassword] = useState("")
     const manejarPassword = (texto: string) => setPassword(texto)
+
+    const {session, cargando:cargandoSesion, usuario, cargandoUsuario, setUsuario} = useAuth()
+
+    useEffect(()=>{
+
+
+        if(usuario!==null){
+
+            if(usuario.grupo==="ASOCIACION"){
+
+                router.replace("/")
+
+            }else{
+
+                Alert.alert("No existe una asociacion con esas credenciales")
+                supabase.auth.signOut()
+                setUsuario(null)
+
+            }
+        }else{
+            console.log("no usuario")
+        }
+
+        
+
+
+    }, [usuario])
+
+
+    if(cargandoSesion||cargandoUsuario){
+        
+        return<ActivityIndicator></ActivityIndicator>
+    }
+
+    
+    
+
+
+        
+    
 
     async function clickEntrar() {
 
@@ -59,9 +101,6 @@ const UserLogin = () => {
 
         }
         
-        router.replace("/")
-
-
     }
 
 
@@ -74,30 +113,29 @@ const UserLogin = () => {
 
             <View style={styles.contenedorPrincipal}>
                 <View style={styles.cajaLogo}>
-                    <Image style={styles.logo} source={require("../../assets/images/logos/logoDegradat.png")} />
+                    <Image style={styles.logo} source={require("../../assets/images/logos/logoAsociaciones.png")} />
 
-                    <TextoDegradado color={Colors.DegradatMorat} style={styles.subtituloLogo}>Mantente al tanto</TextoDegradado>
-                </View>
+                  </View>
 
                 <View style={styles.cajaFormulario}>
                    
                     <View style={styles.elementoFormulario}>
-                    <FieldDegradado onChangeText={manejarEmail} width={280} color={Colors.DegradatMorat} placeholder="Email" />
+                    <FieldDegradado onChangeText={manejarEmail} width={280} color={Colors.DegradatRosa} placeholder="Email" />
                     </View>
 
                     <View style={styles.elementoFormulario}>
-                    <FieldDegradado secureTextEntry onChangeText={manejarPassword} width={280} color={Colors.DegradatMorat} placeholder="Contraseña" />
+                    <FieldDegradado secureTextEntry onChangeText={manejarPassword} width={280} color={Colors.DegradatRosa} placeholder="Contraseña" />
                     </View>
 
                     <View style={styles.elementoFormulario}>
-                    <BotonDegradado onPress={clickEntrar} color={Colors.DegradatMorat} texto="Entrar" />
+                    <BotonDegradado onPress={clickEntrar} color={Colors.DegradatRosa} texto="Entrar" />
                     </View>
 
                     {/* Boto pa anar a registrarse */}
                     <View style={styles.elementoFormulario}>
                         <Link href={"/UserRegistro"} asChild>
                             <Pressable>
-                                <TextoDegradado color={Colors.DegradatMorat} style={styles.subtituloLogo}>No tienes cuenta? Registrarse</TextoDegradado>
+                                <TextoDegradado color={Colors.DegradatRosa} style={styles.subtituloLogo}>Solicitar afiliación</TextoDegradado>
                             </Pressable>
                         </Link>
                     </View>
@@ -105,7 +143,7 @@ const UserLogin = () => {
                     {/*Boto pa anar a la zona administrador  */}
                     <View style={styles.elementoFormulario}>
                         
-                            <BotonDegradado onPress={()=>{router.navigate("/LoginAsociacion")}} color={Colors.DegradatRosa} texto="Zona Asociaciones"/>
+                            <BotonDegradado onPress={()=>{router.navigate("/UserLogin")}} color={Colors.DegradatMorat} texto="Zona Usuario"/>
                             
                     </View>
                     
@@ -159,4 +197,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default UserLogin
+export default LoginAsociacion
