@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Platform, Pressable, LayoutAnimation } from 're
 import ImagenRemotaLogoAsociacion from './ImagenRemotaLogoAsociacion';
 import Colors from '@/constants/Colors';
 import Animated from 'react-native-reanimated';
-import { numeroAMes } from "../constants/funciones"
+import { asignarColor, numeroAMes } from "../constants/funciones"
 import { router } from 'expo-router';
 import MiniCuadradoVerde from './MiniCuadradoVerde';
 
@@ -22,20 +22,9 @@ const ElementoEvento: React.FC<ElementoEventoProps> = ({ evento }) => { //Pa que
 
     //Comprovem el color que te
 
-    let color
+    let color = asignarColor(evento?.color_evento)
 
-    switch (evento?.color_evento) {
-
-        case ("morado"):
-            color = Colors.MoradoElemento
-            break;
-        case ("rojo"):
-            color = Colors.RojoElemento
-            break
-        default:
-            color = Colors.MoradoElemento
-
-    }
+    
 
     //Ara agarrem el mes
     let mes = numeroAMes(evento?.fecha_evento.split("-")[1])

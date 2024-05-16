@@ -1,3 +1,5 @@
+import Colors from "./Colors"
+
 export function numeroAMes(numeroMes){
 
     let mes = ""
@@ -142,4 +144,41 @@ export function numeroAMesShort(numeroMes){
     return mes
 
 
+}
+
+export function asignarColor(colorDado){
+
+    let color
+
+    switch (colorDado) {
+
+        case ("morado"):
+            color = Colors.MoradoElemento
+            break;
+        case ("rojo"):
+            color = Colors.RojoElemento
+            break
+        case ("verde"):
+            color = Colors.VerdeElemento
+            break
+        case ("naranja"):
+            color = Colors.NaranjaElemento
+            break    
+        case ("azul"):
+        color = Colors.AzulElemento
+        break            
+        default:
+            color = Colors.MoradoElemento
+
+    }
+
+    return color
+
+}
+
+
+
+export function fechaAString(date){
+
+   return(date.split("-")[2]+" "+numeroAMesShort(date.split("-")[1])+" "+date.split("-")[0])
 }
