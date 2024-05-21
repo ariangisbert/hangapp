@@ -26,8 +26,9 @@ const FieldBordePequenoRosa = (props:any) => {
       onFocus={()=>setEnfocado(true)}  
       placeholderTextColor={"#7D6D89"} 
       autoCorrect={false} 
+      multiline= {props.multiline}
       placeholder={props.placeholder} 
-      style={{borderWidth:enfocado?2:1.5, paddingHorizontal:10, fontSize:17, color:"#2D2D2D", backgroundColor:"#FCF0FE", borderColor:enfocado?"#BC77EE":"#DEC5F0",borderRadius:13, textAlign:"center", fontWeight:"600", borderCurve:"continuous",  height:props.altura, ...props.style, shadowColor:"#E3C6F8", shadowOffset:{height:1.4}, shadowOpacity:0.5, shadowRadius:1}}/>
+      style={{borderWidth:enfocado?2:1.5, paddingHorizontal:10, fontSize:17, color:"#2D2D2D", backgroundColor:"#FCF0FE", borderColor:enfocado?"#BC77EE":"#DEC5F0",borderRadius:14, textAlign:"center", fontWeight:"600", borderCurve:"continuous",  height:props.altura, ...props.style, shadowColor:"#E3C6F8", shadowOffset:{height:1.4}, shadowOpacity:0.5, shadowRadius:1}}/>
     
   );
 };

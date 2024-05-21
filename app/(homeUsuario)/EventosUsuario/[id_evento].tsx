@@ -76,7 +76,7 @@ const DetallesEvento = () => {
          
            {/* ContenedorInteriorImagen */}
           <View style={{flex:1}}>
-             <ImagenRemotaEvento style={styles.imagenEvento} ruta='evento.jpg' fallback='../../../assets/images/fallbackLogoAsociacion.png'></ImagenRemotaEvento>
+             <ImagenRemotaEvento style={styles.imagenEvento} ruta={evento?.imagen_evento} fallback='../../../assets/images/fallbackLogoAsociacion.png'></ImagenRemotaEvento>
               
           </View>
         </View>

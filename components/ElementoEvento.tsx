@@ -11,11 +11,11 @@ import MiniCuadradoVerde from './MiniCuadradoVerde';
 interface ElementoEventoProps {
     evento: Evento | null,
 }
-
-//El unic prop que acepta es un evento, el qual te tots els atributs de la tabla de eventos més el logo de les asociacioms
+//Props que acepta
+//evento, el qual te tots els atributs de la tabla de eventos més el logo de les asociacioms
 //Al fer la consulta mos tornen un objecte asociaciones dins del evento i dins de este està la ruta de la imatge
 //Fallback es la imatge que gastarem si no carrega
-
+//Acepta el prop 
 const ElementoEvento: React.FC<ElementoEventoProps> = ({ evento }) => { //Pa que lo que se pase siga de tipo evento
 
     

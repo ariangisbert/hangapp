@@ -62,8 +62,8 @@ export default {
   },
   NaranjaElemento:{
 
-    colorFondo:"#FFDFC9",
-    colorTitulo:"#D95900",
+    colorFondo:"#FFE4D1",
+    colorTitulo:"#DC630E",
 
   },
   AzulElemento:{

@@ -20,10 +20,13 @@ import { AnimatedText } from 'react-native-reanimated/lib/typescript/reanimated2
 import Animated from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
 import { recibirAsociacion } from '@/api/asociaciones';
+import ElementoEventoAsociacion from '@/components/ElementoEventoAsociacion';
+import { BlurView } from 'expo-blur';
 const HomeEventosAsociacion = () => {
 
   const { usuario, cargandoUsuario } = useAuth() //Carreguem el usuari
   const alturaSafe = useSafeAreaInsets().top
+  const [eventoAmpliado, setEventoAmpliado] = useState<any>(null)
 
   //Esperem a que se carreguen els usuaris
   if (cargandoUsuario) {
@@ -55,9 +58,9 @@ const HomeEventosAsociacion = () => {
   }
 
   if (errorEventos||errorAsociacion) {
+    
     router.back
   }
-  console.log(asociacion)
 
 
 
@@ -79,6 +82,20 @@ const HomeEventosAsociacion = () => {
 
   }
 
+  function manejarEventoAmpliado(id_evento:any){
+
+    setEventoAmpliado(id_evento)
+    
+
+  }
+
+  function desampliarEvento(){
+
+    setEventoAmpliado(null)
+
+  }
+
+
 
   return (
     <View style={{ flex: 1, marginTop: Platform.OS === "ios" ? alturaSafe : 20, backgroundColor: "white" }}>
@@ -95,10 +112,10 @@ const HomeEventosAsociacion = () => {
 
 
 
-      <View style={styles.contenedorListaEventos}>
+      <Pressable onPress={desampliarEvento} style={styles.contenedorListaEventos}>
         <FlatList style={{ overflow: "visible", paddingHorizontal: 20, }} data={eventos}
           renderItem={({ item, index, separators }) => (
-            <ElementoEvento evento={item}></ElementoEvento>
+            <ElementoEventoAsociacion ampliado={eventoAmpliado?eventoAmpliado===item.id_evento:false} borroso={eventoAmpliado?eventoAmpliado!==item.id_evento:false} pulsacionLarga={manejarEventoAmpliado} evento={item}></ElementoEventoAsociacion>
           )}
         />
         <View style={{ marginBottom: 20 }}>
@@ -115,7 +132,9 @@ const HomeEventosAsociacion = () => {
           style={styles.fadeBottom}
         />
 
-      </View>
+        
+
+      </Pressable>
     </View>
   );
 };

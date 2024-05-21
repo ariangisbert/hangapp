@@ -21,7 +21,7 @@ import Animated from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
 const HomeEventosUsuario = () => {
 
-  const { usuario, cargandoUsuario } = useAuth() //Carreguem el usuari
+  const { usuario, cargandoUsuario, setUsuario } = useAuth() //Carreguem el usuari
   const [expandidoMunicipio, setExpandidoMunicipio] = useState(false);
   const alturaSafe = useSafeAreaInsets().top
 
@@ -71,7 +71,7 @@ const HomeEventosUsuario = () => {
     } else {
 
       router.replace("/UserLogin")
-
+      setUsuario(null)
     }
 
 

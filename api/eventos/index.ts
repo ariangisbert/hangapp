@@ -51,3 +51,40 @@ export const useListaEventosByAsociacion = (id_asociacion:any, cargandoAsociacio
 },);
 };
 
+export const useInsertEvento = () =>{
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn(data: Omit<Evento, 'id'>) {
+      const { error } = await supabase.from('eventos').insert({
+        titulo_evento: data.titulo_evento,
+        mini_descripcion_evento: data.mini_descripcion_evento,
+        descripcion_evento: data.descripcion_evento,
+        ubicacion_evento: data.ubicacion_evento,
+        fecha_evento: data.fecha_evento,
+        hora_evento: data.hora_evento,
+        id_asociacion: data.id_asociacion,
+        id_municipio: data.id_municipio,
+        imagen_evento: data.imagen_evento,
+        publico_evento:data.publico_evento,
+        gratis_evento:true,
+        color_evento:data.color_evento
+
+      });
+
+      if (error) {
+        throw error
+      }
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries(["eventos"] as any);
+    },
+    onError(error) {
+      console.log(error.message);
+    },
+  });
+
+
+}
+
