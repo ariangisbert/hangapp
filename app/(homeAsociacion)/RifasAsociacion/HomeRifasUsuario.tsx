@@ -91,7 +91,7 @@ const HomeRifasUsuario = () => {
         
       </View>
       {/* LOTERIA */}
-      <CabeceraDegradado color={Colors.DegradatRosa} mediaAltura title="Loteria"></CabeceraDegradado>
+      <CabeceraDegradado color={Colors.DegradatRosa} mediaAltura title="Lotería"></CabeceraDegradado>
       
           <View style={styles.contenedorListaLoteria}>
             <FlatList showsHorizontalScrollIndicator={false}  contentContainerStyle={{paddingHorizontal:20}} horizontal style={{overflow:"hidden", marginTop:-9}} data={loterias}

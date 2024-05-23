@@ -88,3 +88,28 @@ export const useInsertEvento = () =>{
 
 }
 
+export const useEliminarEvento = ()=>{
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn(id:number) {
+      
+      const { error } = await supabase.from('eventos').delete().eq("id_evento",id);
+
+      if (error) {
+        throw error
+      }
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries(["eventos"] as any);
+    },
+    onError(error) {
+      console.log(error.message);
+    },
+  });
+
+
+
+}
+

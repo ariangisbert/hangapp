@@ -1,3 +1,4 @@
+import { comprobarAsistencia, useInsertAsistencia } from '@/api/asistencias';
 import { Evento } from '@/assets/types';
 import Boton from '@/components/Boton';
 import ImagenRemotaEvento from '@/components/ImagenRemotaEvento';
@@ -5,6 +6,7 @@ import MiniCuadradoVerde from '@/components/MiniCuadradoVerde';
 import TextoDegradado from '@/components/TextoDegradado';
 import { numeroAMes } from '@/constants/funciones';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/providers/AuthProvider';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, Text, Alert, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
@@ -16,10 +18,15 @@ import { err } from 'react-native-svg';
 const DetallesEvento = () => {
 
     const {id_evento, colorFondo, colorTexto} = useLocalSearchParams()
+    const {mutate:insertarAsistencia} = useInsertAsistencia()
 
     //CARREGUEM ELS EVENTOS
+    const {usuario, cargandoUsuario} = useAuth()
     const [evento, setEvento] = useState<Evento|null>(null)
     const [cargandoEvento, setCargandoEvento] = useState(true)
+    const [cargandoInsert, setCargandoInsert] = useState(false)
+    const {data:asiste, isLoading: cargandoAsistencia, error:errorAsistencia} = comprobarAsistencia(evento?.id_evento,usuario.id, cargandoEvento, cargandoUsuario)
+
 
     useEffect(()=>{
 
@@ -46,12 +53,20 @@ const DetallesEvento = () => {
     },[])
 
 
-    if(cargandoEvento){
+    if(cargandoEvento||cargandoAsistencia||cargandoUsuario){
 
       return <ActivityIndicator >
         <Stack.Screen options={{headerTintColor:colorTexto as any ,contentStyle:{backgroundColor:colorFondo}as any}}/>
 
       </ActivityIndicator>
+
+    }
+
+    
+
+    function clickNotificar(){
+      setCargandoInsert(true)
+      insertarAsistencia({id_evento:evento?.id_evento,id_usuario: usuario.id}, {onSuccess:()=>setCargandoInsert(false)})
 
     }
 
@@ -124,7 +139,7 @@ const DetallesEvento = () => {
 
         {/* Contenedor boton */}
         <View style={{flexGrow:0.71,paddingVertical:6, alignItems:"center", justifyContent:"center"}}>
-          <Boton texto="Notificar asistencia" color={colorTexto+""}></Boton>
+          <Boton cargando={cargandoInsert} onPress={clickNotificar} disabled={asiste} texto={asiste?"Asistencia notificada":"Notificar asistencia"} color={colorTexto+""}></Boton>
         </View>
       
       </SafeAreaView>

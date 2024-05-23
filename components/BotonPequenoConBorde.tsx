@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, Pressable, StyleSheet, View, ActivityIndicator } from "react-native";
+import { Text, Pressable, StyleSheet, View, LayoutAnimation } from "react-native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient"
 //ATRIBUTS QUE ACEPTA
@@ -10,19 +10,19 @@ import { LinearGradient } from "expo-linear-gradient"
 //onPress - Funció que se gastará en el onPress
 //disabled - Si esta desactivat
 //flex - Per a ferlo flex i llevarli el padding
-//cargando - si el boto esta carregant algo
+const BotonPequenoConBorde = (props:any) =>{
 
-const Boton = (props:any) =>{
-
+    LayoutAnimation.configureNext({
+        duration:600,
+        create: {type: "easeInEaseOut", property: "scaleXY"},
+        delete: {type: "easeInEaseOut", property: 'opacity'},
+      });
    
         return(
 
                 <Pressable onPress={props.onPress} disabled={props.disabled} style={{flex:1,justifyContent:"center", opacity:props.disabled?0.7:1}}>
                     <View style={[styles.fondoDegradado, {backgroundColor:props.color+"", paddingHorizontal:props.flex?0:60}]}>
-                       
-                        {props.cargando?<ActivityIndicator color={"white"}></ActivityIndicator>
-                        :
-                        <Text style={styles.texto}>{props.texto}</Text>}
+                        <Text style={styles.texto}>{props.texto}</Text>
                     </View>
                 </Pressable>
 
@@ -32,16 +32,16 @@ const Boton = (props:any) =>{
 }
 
 
-export default Boton
+export default BotonPequenoConBorde
 
 const styles = StyleSheet.create({
 
 
     fondoDegradado: {
         paddingHorizontal:60,
-        paddingVertical:23.4,
+        paddingVertical:13.4,
         alignItems: 'center',
-        borderRadius: 22,
+        borderRadius: 16,
         borderCurve: "continuous",
     },
 

@@ -1,3 +1,4 @@
+import { recibirAsistencias } from '@/api/asistencias';
 import { Evento } from '@/assets/types';
 import Boton from '@/components/Boton';
 import ImagenRemotaEvento from '@/components/ImagenRemotaEvento';
@@ -20,7 +21,7 @@ const DetallesEvento = () => {
     //CARREGUEM ELS EVENTOS
     const [evento, setEvento] = useState<Evento|null>(null)
     const [cargandoEvento, setCargandoEvento] = useState(true)
-
+    const {data:asistencias,isLoading: cargandoAsistencias, error:errorAsistencias } = recibirAsistencias(evento?.id_evento, cargandoEvento)
     useEffect(()=>{
 
       const recibirEvento = async ()=>{
@@ -46,7 +47,7 @@ const DetallesEvento = () => {
     },[])
 
 
-    if(cargandoEvento){
+    if(cargandoEvento||cargandoAsistencias){
 
       return <ActivityIndicator >
         <Stack.Screen options={{headerTintColor:colorTexto as any ,contentStyle:{backgroundColor:colorFondo}as any}}/>
@@ -55,6 +56,14 @@ const DetallesEvento = () => {
 
     }
 
+    if(errorAsistencias){
+
+      console.log(errorAsistencias.message)
+
+    }
+
+    console.log(asistencias)
+
 
     //Ara agarrem el mes
     let mes = numeroAMes(evento?.fecha_evento.split("-")[1])
@@ -62,17 +71,17 @@ const DetallesEvento = () => {
     let fecha=evento?.fecha_evento.split("-")[2]+" "+mes+" "+evento?.fecha_evento.split("-")[0]
 
     return (
-      <SafeAreaView style={{backgroundColor:colorFondo+"", flex:1, paddingHorizontal:42}}>
+      <SafeAreaView style={{backgroundColor:colorFondo+"",flex:1, rowGap:20, paddingHorizontal:42}}>
       
         <Stack.Screen options={{headerTintColor:colorTexto as any ,contentStyle:{backgroundColor:colorFondo}as any}}/>
 
         {/* Contenedor título */}
-        <View style={{flexBasis:80, flexGrow:0, justifyContent:"center" }}>
+        <View style={{flexBasis:60, flexGrow:0, justifyContent:"center" }}>
           <Text style={{color:colorTexto+"", fontWeight:"700", textAlign:"center", fontSize:30}}>{evento?.titulo_evento}</Text>
         </View>
-
+      
         {/* Contenedor Imagen */}
-        <View style={{flexGrow:2.8, justifyContent:"center", alignItems:"center",shadowOpacity:0.1, shadowColor:colorTexto+"", shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
+        <View style={{flexBasis:380, flexShrink:1, justifyContent:"center", alignItems:"center",shadowOpacity:0.1, shadowColor:colorTexto+"", shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
          
            {/* ContenedorInteriorImagen */}
           <View style={{flex:1}}>
@@ -80,29 +89,25 @@ const DetallesEvento = () => {
               
           </View>
         </View>
-        
+        <View style={{flexGrow:1, justifyContent:"center"}}>
+          {/* Contenedor número asistencias */}
+          <View style={{flexBasis:130, backgroundColor:colorTexto+"",alignSelf:"center",paddingHorizontal:26, borderRadius:20, borderCurve:"continuous", alignItems:"center", justifyContent:"center", paddingVertical:3 }}>
+            
+            {/* Numero */}
+            <View style={{flex:1,  justifyContent:"flex-end"}}>
+              <Text style={{color:"white", fontWeight:"700", textAlign:"left", fontSize:42, letterSpacing:2}}>{asistencias*1200}</Text>
+            </View>
+            <View style={{flex:1,marginTop:-4, justifyContent:"center"}}>
+              <Text style={{color:"white", fontWeight:"600", textAlign:"left", fontSize:16}}>Asistencias confirmadas</Text>
+            </View>
 
-        {/* Contenedor fecha y hora */}
-        <View style={{flexGrow:0.3, flexDirection:"row", alignItems:"center", paddingVertical:3 }}>
-          
-          {/* Fecha */}
-          <View style={{flex:1}}>
-            <Text style={{color:colorTexto+"", fontWeight:"700", textAlign:"left", fontSize:16}}>{fecha}</Text>
-          </View>
-
-          {/* Hora */}
-          <View style={{flex:1}}>
-            <Text style={{color:colorTexto+"", fontWeight:"700", textAlign:"right", fontSize:16}}>{evento?.hora_evento.substring(0, 5)}</Text>
           </View>
         </View>
+        
 
-        {/* Contenedor descripcion */}
-        <ScrollView showsVerticalScrollIndicator={false} style={{flexGrow:0.6, flexBasis:48, flexShrink:1 }}>
-          <Text style={{color:colorTexto+"", fontWeight:"500",lineHeight:24, textAlign:"center", fontSize:15}}>{evento?.descripcion_evento}</Text>
-        </ScrollView>
 
         {/* Contenedor ubicacion gratis y publico */}
-        <View style={{flexGrow:0.3, flexDirection:"row", alignItems:"center", paddingVertical:3}}>
+        <View style={{flexBasis:40, flexDirection:"row", alignItems:"center", paddingVertical:3}}>
           
           {/* Fecha */}
           <View style={{flex:1, paddingTop:1.7}}>
@@ -122,10 +127,6 @@ const DetallesEvento = () => {
 
         </View>
 
-        {/* Contenedor boton */}
-        <View style={{flexGrow:0.71,paddingVertical:6, alignItems:"center", justifyContent:"center"}}>
-          <Boton texto="Notificar asistencia" color={colorTexto+""}></Boton>
-        </View>
       
       </SafeAreaView>
   );

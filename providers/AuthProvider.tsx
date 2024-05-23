@@ -8,7 +8,8 @@ type AuthData = {
     session : Session |null
     cargando:boolean
     cargandoUsuario:boolean
-    setUsuario: any
+    setUsuario: any,
+    setSession:any
 }
 
 //Inicialitzem el context en null
@@ -18,7 +19,8 @@ const AuthContext = createContext<AuthData>({
     cargando:true,
     usuario:null,
     cargandoUsuario:true,
-    setUsuario:null
+    setUsuario:null,
+    setSession:null
 
 })
 
@@ -88,7 +90,7 @@ export default function AuthProvider({children}:PropsWithChildren){
     },[session])
 
 
-    return <AuthContext.Provider value = {{session,cargando, usuario, cargandoUsuario, setUsuario}}>{children}</AuthContext.Provider>
+    return <AuthContext.Provider value = {{session,cargando, usuario, cargandoUsuario, setUsuario, setSession}}>{children}</AuthContext.Provider>
 
 }
 

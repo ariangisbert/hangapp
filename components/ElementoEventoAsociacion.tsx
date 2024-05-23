@@ -1,5 +1,5 @@
 import { Evento } from '@/assets/types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Platform, Pressable, LayoutAnimation, Animated } from 'react-native';
 import ImagenRemotaLogoAsociacion from './ImagenRemotaLogoAsociacion';
 import Colors from '@/constants/Colors';
@@ -7,12 +7,15 @@ import { asignarColor, numeroAMes } from "../constants/funciones"
 import { router } from 'expo-router';
 import MiniCuadradoVerde from './MiniCuadradoVerde';
 import { BlurView } from 'expo-blur';
+import { useAuth } from '@/providers/AuthProvider';
+import { recibirAsistencias } from '@/api/asistencias';
 
 interface ElementoEventoProps {
     evento: Evento | null,
     borroso:boolean,
-    pulsacionLarga:any,
-    ampliado:boolean
+    pulsacionLarga?:any,
+    ampliado:boolean,
+    setEventoAmpliadoLayout?:any
 }
 //Props que acepta
 //evento, el qual te tots els atributs de la tabla de eventos més el logo de les asociacioms
@@ -20,36 +23,58 @@ interface ElementoEventoProps {
 //Fallback es la imatge que gastarem si no carrega
 //borroso - si esta borros o no
 //onLongPress - li pasem desde el home pa cambiar el hook del evento ampliat
-const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borroso, pulsacionLarga,ampliado }) => { //Pa que lo que se pase siga de tipo evento
+//setEventoAmpliadoLayout
+const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borroso, pulsacionLarga,ampliado,setEventoAmpliadoLayout}) => { //Pa que lo que se pase siga de tipo evento
 
     
 
     //Comprovem el color que te
-
+    const [expandidoAsistencias, setExpandidoAsistencias] = useState(false)
+    const {usuario, cargandoUsuario} = useAuth()
+    
+    const {data:asistencias,isLoading: cargandoAsistencias, error:errorAsistencias } = recibirAsistencias(evento?.id_evento, false)
     let color = asignarColor(evento?.color_evento)
     
-
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     //Ara agarrem el mes
     let mes = numeroAMes(evento?.fecha_evento.split("-")[1])
     //I fem la fecha
     let fecha=evento?.fecha_evento.split("-")[2]+" "+mes+" "+evento?.fecha_evento.split("-")[0]
 
+    const itemRef = useRef<View>(null);
 
-    useEffect(() => {
+
+    useEffect(()=>{
+
+        LayoutAnimation.configureNext({
+            duration:300,
+            create: {type: "easeInEaseOut", property: 'opacity'},
+            delete: {type: "easeInEaseOut", property: 'opacity'},
+          });
+
+        if(ampliado){
+
+            itemRef.current?.measure((fx, fy, width, height, px, py) => {
+                setEventoAmpliadoLayout(py)
+            });
+            
+        }
+
+    }, [ampliado])
+
+    function clickExpandir(){
+
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    }, [borroso]);
+        setExpandidoAsistencias(!expandidoAsistencias)
+    }
+
 
     //DISENY
     return (
         
-            <Pressable onLongPress={()=>pulsacionLarga(evento?.id_evento)} onPress={borroso?null:()=>router.navigate({pathname:`/EventosAsociacion/[id_evento]`, params:{id_evento:evento?.id_evento, colorFondo : color.colorFondo, colorTexto: color.colorTitulo}}as any)} style={[styles.contenedorElemento, { backgroundColor: color.colorFondo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.525, elevation: 2, transform:ampliado?[{scale:1.05}]:[{scale:1}] }]}>
-                {/* <BlurView
-                style={{ flex: 1, position: 'absolute', width: '100%', height: "100%", zIndex: 1,borderRadius:20,overflow:"hidden" }}
-                tint="regular"
-                intensity={40}
-                > */}
-                    {/* Parte izquierdas */}
+            <Pressable ref={itemRef} onLongPress={()=>pulsacionLarga?pulsacionLarga(evento?.id_evento):null} onPress={clickExpandir} style={[styles.contenedorElemento, {height:expandidoAsistencias?210:105, flexDirection:"column",marginBottom:expandidoAsistencias?0:17 }]}>
+                    
+                    <View style={[styles.contenedorElemento, {flex:1,backgroundColor: color.colorFondo,flexDirection:"row", height:105,marginBottom:0, borderRadius: 22,borderCurve: "continuous",shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity:expandidoAsistencias?0.25: 0.525, elevation: 2}]}>
+                        {/* Parte izquierdas */}
                         <View style={styles.contenedorIzquierda}>
                             
                             {/* Titulo i gratuidad */}
@@ -89,7 +114,28 @@ const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borro
                         <View style={styles.contenedorDerecha}>
                             <ImagenRemotaLogoAsociacion style={styles.imagenLogoAsociacion} fallback="../assets.images.fallbackLogoAsociacion.png" ruta={evento?.asociaciones.logo_asociacion}></ImagenRemotaLogoAsociacion>
                         </View>
-                {/* </BlurView>          */}
+
+                     </View>
+
+                    
+                     <View style={{ flexDirection:"row", opacity:expandidoAsistencias?1:0, justifyContent:"space-evenly",paddingTop:expandidoAsistencias?22:0, height:expandidoAsistencias?105:0,top:-22,zIndex:-1,borderRadius:22,borderCurve:"continuous", marginHorizontal:22,backgroundColor:color.colorTitulo}}>
+                        
+
+                        <View style={{ justifyContent:"center"}}>
+                            <Text style={{color:color.colorFondo,fontSize:20,fontWeight:"700", textAlign:"left"}}>
+                                Asistentes{"\n"}confirmados
+                            </Text>
+                        </View>
+
+                        {/* Numero asistencies */}
+                        <View style={{ justifyContent:"center"}}>
+                             <Text numberOfLines={1} adjustsFontSizeToFit style={{color:color.colorFondo,fontSize:33,letterSpacing:0.5,fontWeight:"700", textAlign:"center"}}>
+                                {asistencias*1200}
+                            </Text>
+                        </View>        
+                     </View> 
+                      
+                       
             </Pressable>
     );
 };
@@ -101,10 +147,6 @@ const styles = StyleSheet.create({
 
     contenedorElemento: {
 
-        height: 105,
-        marginBottom: 17,
-        borderRadius: 22,
-        borderCurve: "continuous",
         display: "flex",
         flexDirection: "row"
 

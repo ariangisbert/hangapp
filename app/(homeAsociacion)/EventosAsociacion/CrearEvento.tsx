@@ -1,5 +1,5 @@
 import FieldBordePequenoRosa from '@/components/FieldBordePequenoRosa';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, ScrollView, Pressable, TouchableWithoutFeedback, Keyboard, Platform, Alert, ActivityIndicator, Image } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -54,13 +54,9 @@ const CrearEvento = () => {
     const [horaPickerAbierta, setHoraPickerAbierta] = useState(false)
 
 
-    if(cargandoUsuario){
-        return <ActivityIndicator></ActivityIndicator>
-    }
+    const {data:asociacion, isLoading:cargandoAsociacion, error:errorAsociacion} = recibirAsociacion(usuario.id, cargandoUsuario)
 
-    const {data:asociacion, isLoading:cargandoAsociacion, error:errorAsociacion} = recibirAsociacion(usuario.id)
-
-    if(cargandoAsociacion){
+    if(cargandoAsociacion||cargandoUsuario){
         return <ActivityIndicator></ActivityIndicator>
     }
 
@@ -160,7 +156,7 @@ const CrearEvento = () => {
 
         insertEvento(
         {titulo_evento:titulo, mini_descripcion_evento:miniDescripcio,ubicacion_evento:ubicacion, descripcion_evento:desripcion, fecha_evento:fechaSeleccionada, hora_evento:horaSeleecionada, id_asociacion:asociacion.id_asociacion, id_municipio:asociacion.id_municipio, imagen_evento:rutaSubida, publico_evento:publicoSeleccionado, color_evento:colorSeleccionado}as any,
-        {onSuccess:()=>Alert.alert("Evento creado con éxito")})
+        {onSuccess:()=>{Alert.alert("Evento creado con éxito");router.back()}})
         
         
     }

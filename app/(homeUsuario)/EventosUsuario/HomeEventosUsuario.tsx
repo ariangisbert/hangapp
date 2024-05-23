@@ -21,7 +21,7 @@ import Animated from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
 const HomeEventosUsuario = () => {
 
-  const { usuario, cargandoUsuario, setUsuario } = useAuth() //Carreguem el usuari
+  const { session,usuario, cargandoUsuario, setUsuario, setSession } = useAuth() //Carreguem el usuari
   const [expandidoMunicipio, setExpandidoMunicipio] = useState(false);
   const alturaSafe = useSafeAreaInsets().top
 
@@ -61,6 +61,12 @@ const HomeEventosUsuario = () => {
 
 
   async function salir() {
+
+    if(!session){
+      router.replace("/UserLogin")
+      setUsuario(null)
+      return
+    }
 
     const { error } = await supabase.auth.signOut()
 

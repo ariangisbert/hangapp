@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 
-export const recibirAsociacion = (usuario_id:any)=>{  
+export const recibirAsociacion = (usuario_id:any, cargandoUsuario:boolean)=>{  
 
     return useQuery<any>({
       queryKey: ['asociacion', usuario_id],
@@ -15,6 +15,7 @@ export const recibirAsociacion = (usuario_id:any)=>{
         }
         return data;
       },
+      enabled:!cargandoUsuario
     });
   
 }
