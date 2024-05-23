@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { Evento, Loteria, Rifa } from '@/assets/types';
 
 
-export const recibirListaLoteria = (id_municipio:any) => {
+export const recibirListaLoteria = (id_municipio:any, cargandoUsuario:boolean) => {
   
     let dateHoy =  new Date()
     let fecha = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
@@ -24,8 +24,33 @@ export const recibirListaLoteria = (id_municipio:any) => {
         throw new Error(error.message);
       }
       return data;
-    },
+    },enabled:!cargandoUsuario
   });
+};
+
+export const recibirListaLoteriaByAsociacion = (id_asociacion:any, cargandoAsociacion:boolean) => {
+  
+  let dateHoy =  new Date()
+  let fecha = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
+  
+  
+
+  return useQuery<Loteria[]>({
+  queryKey: ['loteria'],
+  queryFn: async () => {
+    const { data, error } =  await supabase.from("loteria")
+    .select("*")//Seleccionem els eventos i els logos de les asocicions
+    .eq("id_asociacion",id_asociacion). //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+    gt("fecha", fecha)//Que tinguen lloc en un futur
+    .order("fecha")
+
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  },enabled:!cargandoAsociacion
+});
 };
 
 export const recibirLoteria = (id:any)=>{  

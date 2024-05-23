@@ -63,7 +63,12 @@ const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borro
 
     function clickExpandir(){
 
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        LayoutAnimation.configureNext({
+            duration: 600,
+            create: {type: 'linear', property: 'opacity'},
+            update: {type: 'spring', springDamping: 0.6},
+            delete: {type: 'linear', property: 'opacity'},
+          });
         setExpandidoAsistencias(!expandidoAsistencias)
     }
 

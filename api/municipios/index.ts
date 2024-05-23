@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { Evento } from '@/assets/types';
 
 
-export const recibirNombreMunicipio = (id_municipio:number) => {
+export const recibirNombreMunicipio = (id_municipio:number,) => {
   
     return useQuery<any>({
     queryKey: ['municipios', id_municipio],
@@ -20,7 +20,7 @@ export const recibirNombreMunicipio = (id_municipio:number) => {
   });
 };
 
-export const recibirMunicipioyProvincia = (id_municipio:number) => {
+export const recibirMunicipioyProvincia = (id_municipio:number, cargandoUsuario:boolean) => {
   
   return useQuery<any>({
   queryKey: ['municipios', id_municipio],
@@ -33,6 +33,6 @@ export const recibirMunicipioyProvincia = (id_municipio:number) => {
       throw new Error(error.message);
     }
     return data;
-  },
+  }, enabled:!cargandoUsuario
 });
 };

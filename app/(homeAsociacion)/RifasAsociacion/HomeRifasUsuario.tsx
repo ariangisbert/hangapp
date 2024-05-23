@@ -12,23 +12,25 @@ import { useAuth } from '@/providers/AuthProvider';
 import ElementoEvento from '@/components/ElementoEvento';
 import { LinearGradient } from 'expo-linear-gradient';
 import { err } from 'react-native-svg';
-import { recibirListaRifas } from '@/api/rifas';
+import { recibirListaRifas, recibirListaRifasByAsociacion } from '@/api/rifas';
 import { recibirMunicipioyProvincia, recibirNombreMunicipio } from '@/api/municipios';
 import ElementoRifa from '@/components/ElementoRifa';
-import { recibirListaLoteria } from '@/api/loteria';
+import { recibirListaLoteria, recibirListaLoteriaByAsociacion } from '@/api/loteria';
 import ElementoLoteria from '@/components/ElementoLoteria';
 import IconoChevronBaix from '@/assets/iconos/IconoChevronBaix';
 import Colors from '@/constants/Colors';
+import { recibirAsociacion } from '@/api/asociaciones';
 
 const HomeRifasUsuario = () => {
 
   const {usuario, cargandoUsuario} = useAuth() //Carreguem el usuari
   const alturaSafe = useSafeAreaInsets().top
-  const [expandidoMunicipio, setExpandidoMunicipio] = useState(false);
-
+  const {data:asociacion, isLoading:cargandoAsociacion, error:errorAsociacion} = recibirAsociacion(usuario.id, cargandoUsuario)
+  const {data:rifas, isLoading:cargandoRifas, error:errorRifas} = recibirListaRifasByAsociacion(asociacion?.id_asociacion, cargandoAsociacion)
+  const {data:loterias, isLoading:cargandoLoterias, error:errorLoteria} = recibirListaLoteriaByAsociacion(asociacion?.id_asociacion, cargandoAsociacion)
   //RECARREGUEM EL USUARI
   //Esperem a que se carreguen els usuaris
-  if(cargandoUsuario){
+  if(cargandoUsuario||cargandoRifas||cargandoLoterias||cargandoAsociacion){
 
     return <ActivityIndicator></ActivityIndicator>
 
@@ -42,37 +44,30 @@ const HomeRifasUsuario = () => {
   }
 
   //Carreguem rifes i municipi
-  const {data:rifas, isLoading:cargandoRifas, error:errorRifas} = recibirListaRifas(usuario.municipio_defecto)
-  const {data:municipio, isLoading:cargandoMunicipio, error:errorMunicipio} = recibirMunicipioyProvincia(usuario.municipio_defecto)
-  const {data:loterias, isLoading:cargandoLoterias, error:errorLoteria} = recibirListaLoteria(usuario.municipio_defecto)
+
+ 
   //Si nia un error tirem paca arrere
-  if(errorRifas||errorMunicipio||errorLoteria){
+  if(errorRifas||errorLoteria){
 
     router.back()
 
   }
-  //Esperem a que se carreguen els eventos i el municipi
-  if(cargandoRifas||cargandoMunicipio||cargandoLoterias){
-
-   return <ActivityIndicator></ActivityIndicator>
-
-  }
  
-  function clickMunicipio() {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut,
-                                  ()=>router.push("/SeleccionarMunicipio"));
-    setExpandidoMunicipio(!expandidoMunicipio);
-};
 
   return (
     <View style={{flex:1, marginTop: Platform.OS==="ios"? alturaSafe:20, backgroundColor:"white"}}>
       
-      {/* RIFA */}
-      <Pressable onPress={clickMunicipio} style={[styles.contenedorNombreMunicipio, {height:expandidoMunicipio?850:50}]}>
-        <Text style={styles.textoMunicipio}>{municipio.nombre_municipio}, {municipio.provincias.nombre_provincia}</Text>
-        <IconoChevronBaix style={{marginBottom:5}}/>
-      </Pressable>
-      <CabeceraDegradado color={Colors.DegradatRosa} title="Rifas"></CabeceraDegradado>
+      {/* Cabacera Rifas */}
+      <View style={{flexDirection:"row",justifyContent:"space-between", alignItems:"flex-end"}}>
+      <CabeceraDegradado color={Colors.DegradatRosa} alto title="Mis rifas"></CabeceraDegradado>
+
+        {/* Boton para añadir rifa */}
+        <Pressable onPress={()=>router.push("/RifasAsociacion/CrearRifa")} style={{ marginRight:20}}>
+          <Text style={{color:"#DC82F5", fontSize:48, marginBottom:-6.5,fontWeight:"300" }}>+</Text>
+        </Pressable>
+      </View>
+
+
       <View style={styles.contenedorListaRifas}>
        <FlatList style={{overflow:"visible",paddingHorizontal:20, } } data={rifas}
         renderItem={({item, index, separators}) => (
