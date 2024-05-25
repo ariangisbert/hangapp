@@ -19,9 +19,11 @@ import { recibirListaLoteria } from '@/api/loteria';
 import ElementoLoteria from '@/components/ElementoLoteria';
 import IconoChevronBaix from '@/assets/iconos/IconoChevronBaix';
 import Colors from '@/constants/Colors';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 
 const HomeRifasUsuario = () => {
 
+  const queryClient = useQueryClient();
   const {usuario, cargandoUsuario} = useAuth() //Carreguem el usuari
   const alturaSafe = useSafeAreaInsets().top
   const [expandidoMunicipio, setExpandidoMunicipio] = useState(false);
@@ -30,7 +32,7 @@ const HomeRifasUsuario = () => {
    const {data:rifas, isLoading:cargandoRifas, error:errorRifas} = recibirListaRifas(usuario.municipio_defecto, cargandoUsuario)
    const {data:municipio, isLoading:cargandoMunicipio, error:errorMunicipio} = recibirMunicipioyProvincia(usuario.municipio_defecto,cargandoUsuario)
    const {data:loterias, isLoading:cargandoLoterias, error:errorLoteria} = recibirListaLoteria(usuario.municipio_defecto, cargandoMunicipio)
-   
+   const [refrescado, setRefrescando] = useState(false)
 
   //RECARREGUEM EL USUARI
   //Esperem a que se carreguen els usuaris
@@ -64,6 +66,28 @@ const HomeRifasUsuario = () => {
     setExpandidoMunicipio(!expandidoMunicipio);
 };
 
+  async function clickEjecutar(){
+
+    const {data, error} = await supabase.rpc("crearGanador")
+
+    if(error){
+      console.log(error.message)
+      return
+    }
+
+    console.log(data)
+
+  }
+
+  async function refrescar(){
+
+    setRefrescando(true)
+
+    await queryClient.invalidateQueries(["rifas"] as any)
+
+    setRefrescando(false)
+  }
+
   return (
     <View style={{flex:1, marginTop: Platform.OS==="ios"? alturaSafe:20, backgroundColor:"white"}}>
       
@@ -74,11 +98,12 @@ const HomeRifasUsuario = () => {
       </Pressable>
       <CabeceraDegradado color={Colors.DegradatMorat}  title="Rifas"></CabeceraDegradado>
       <View style={styles.contenedorListaRifas}>
-       <FlatList style={{overflow:"visible",paddingHorizontal:20, } } data={rifas}
+       <FlatList refreshing={refrescado} onRefresh={refrescar} style={{overflow:"visible",paddingHorizontal:20, } } data={rifas}
         renderItem={({item, index, separators}) => (
           <ElementoRifa rifa={item}></ElementoRifa>
         )}
       />
+
         <LinearGradient
           colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
           style={styles.fadeTop}

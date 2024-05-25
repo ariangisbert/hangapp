@@ -12,9 +12,9 @@ import Colors from '@/constants/Colors';
 import { numeroAMes } from '@/constants/funciones';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvider';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, Text, Alert, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Alert, ActivityIndicator, StyleSheet, ScrollView, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { err } from 'react-native-svg';
 
@@ -37,7 +37,7 @@ const DetallesRifa = () => {
     
     const [subiendoRifa, setSubiendoRifa] = useState(false)
     
-
+    const [modalVisible, setModalVisible] = useState(false)
 
 
     let colorFondo = Colors.MoradoElemento.colorFondo
@@ -171,7 +171,7 @@ const DetallesRifa = () => {
         {tieneComprado?
         //Si ja hem comprat un numeret apareix un boto per a vore les nostres participacions i seguit un modal que mostra estes particioacions
         <View style={{flexGrow:0.01, flexDirection:"row",justifyContent:"center",alignItems:"center",paddingVertical:0, columnGap:20}}>
-        <Boton onPress={clickComprar} flex texto="Ver mis participaciones" color={colorTexto+""}></Boton>
+        <Boton onPress={()=>router.push("/RifasUsuario/Participaciones")} flex texto="Ver mis participaciones" color={colorTexto+""}></Boton>
         </View>
 
         :
@@ -181,8 +181,9 @@ const DetallesRifa = () => {
           <BotonMasMenos onPressMas={clickMas} onPressMenos={clickMenos} valor = {cantidadSeleccionada} color={Colors.MoradoElemento}/>
       </View>}
         
-
       </SafeAreaView>
+
+      
   );
 };
 
