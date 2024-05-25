@@ -26,32 +26,33 @@ const HomeEventosUsuario = () => {
   const alturaSafe = useSafeAreaInsets().top
 
   //Esperem a que se carreguen els usuaris
-  if (cargandoUsuario) {
+
+
+  //Comprovem que tinga un poble per defecto, si no el te el enviem a que trie poble
+ 
+  
+
+  //READS
+  const { data: eventos, isLoading: cargandoEventos, error: errorEventos } = useListaEventos(usuario.municipio_defecto, cargandoUsuario)
+  const { data: municipio, isLoading: cargandoMunicipio, error: errorMunicipio } = recibirMunicipioyProvincia(parseInt(usuario.municipio_defecto), cargandoUsuario)
+  //const {data:nombreProvincia, isLoading:cargandoProvincia, error:errorProvincia} = recibirNombreProvincia(usuario.municipio_defecto)
+
+ 
+
+  if (cargandoEventos || cargandoMunicipio||cargandoUsuario) {
 
     return <ActivityIndicator></ActivityIndicator>
 
   }
 
-  //Comprovem que tinga un poble per defecto, si no el te el enviem a que trie poble
   if (usuario.municipio_defecto == null) {
 
     return <Redirect href={"/SeleccionarMunicipio"} />
 
   }
 
-  //READS
-  const { data: eventos, isLoading: cargandoEventos, error: errorEventos } = useListaEventos(usuario.municipio_defecto)
-  const { data: municipio, isLoading: cargandoMunicipio, error: errorMunicipio } = recibirMunicipioyProvincia(parseInt(usuario.municipio_defecto))
-  //const {data:nombreProvincia, isLoading:cargandoProvincia, error:errorProvincia} = recibirNombreProvincia(usuario.municipio_defecto)
 
-
-
-
-  if (cargandoEventos || cargandoMunicipio) {
-
-    return <ActivityIndicator></ActivityIndicator>
-
-  }
+ 
 
   if (errorMunicipio || errorEventos) {
     router.back

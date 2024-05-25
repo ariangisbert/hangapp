@@ -26,13 +26,21 @@ const HomeRifasUsuario = () => {
   const alturaSafe = useSafeAreaInsets().top
   const [expandidoMunicipio, setExpandidoMunicipio] = useState(false);
 
+   //Carreguem rifes i municipi
+   const {data:rifas, isLoading:cargandoRifas, error:errorRifas} = recibirListaRifas(usuario.municipio_defecto, cargandoUsuario)
+   const {data:municipio, isLoading:cargandoMunicipio, error:errorMunicipio} = recibirMunicipioyProvincia(usuario.municipio_defecto,cargandoUsuario)
+   const {data:loterias, isLoading:cargandoLoterias, error:errorLoteria} = recibirListaLoteria(usuario.municipio_defecto, cargandoMunicipio)
+   
+
   //RECARREGUEM EL USUARI
   //Esperem a que se carreguen els usuaris
-  if(cargandoUsuario){
+  
+
+  if(cargandoRifas||cargandoMunicipio||cargandoLoterias||cargandoUsuario){
 
     return <ActivityIndicator></ActivityIndicator>
-
-  }
+ 
+   }
   
   //Comprovem que tinga un poble per defecto, si no el te el enviem a que trie poble
   if(usuario.municipio_defecto==null){
@@ -41,22 +49,14 @@ const HomeRifasUsuario = () => {
     
   }
 
-  //Carreguem rifes i municipi
-  const {data:rifas, isLoading:cargandoRifas, error:errorRifas} = recibirListaRifas(usuario.municipio_defecto)
-  const {data:municipio, isLoading:cargandoMunicipio, error:errorMunicipio} = recibirMunicipioyProvincia(usuario.municipio_defecto)
-  const {data:loterias, isLoading:cargandoLoterias, error:errorLoteria} = recibirListaLoteria(usuario.municipio_defecto)
-  //Si nia un error tirem paca arrere
+ //Si nia un error tirem paca arrere
   if(errorRifas||errorMunicipio||errorLoteria){
 
     router.back()
 
   }
   //Esperem a que se carreguen els eventos i el municipi
-  if(cargandoRifas||cargandoMunicipio||cargandoLoterias){
-
-   return <ActivityIndicator></ActivityIndicator>
-
-  }
+  
  
   function clickMunicipio() {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut,

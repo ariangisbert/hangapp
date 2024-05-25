@@ -85,5 +85,65 @@ export const recibirRifa = (id:any)=>{
     },
   });
 
+  
+
+}
+
+export const useInsertRifa = () =>{
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn(data: Omit<Rifa, 'id'>) {
+      const { error } = await supabase.from('rifas').insert({
+        titulo: data.titulo,
+        descripcion: data.descripcion,
+        fecha: data.fecha,
+        id_asociacion: data.id_asociacion,
+        id_municipio: data.id_municipio,
+        imagen: data.imagen,
+        precio:data.precio,
+        numero_maximo_fisico:data.numero_maximo_fisico
+
+      });
+
+      if (error) {
+        throw error
+      }
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries(["rifas"] as any);
+    },
+    onError(error) {
+      console.log(error.message);
+    },
+  });
+
+}
+
+export const useInsertCompraRifa = () =>{
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn(data: Omit<{id_usuario:any, id_rifa:any, cantidad:number}, 'id'>) {
+      const { error } = await supabase.from('comprasRifas').insert({
+        id_usuario: data.id_usuario,
+        id_rifa: data.id_rifa,
+        cantidad: data.cantidad,
+
+      });
+
+      if (error) {
+        throw error
+      }
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries(["rifas"] as any);
+    },
+    onError(error) {
+      console.log(error.message);
+    },
+  })
 
 }

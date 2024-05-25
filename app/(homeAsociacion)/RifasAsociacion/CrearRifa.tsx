@@ -1,7 +1,7 @@
 import FieldBordePequenoRosa from '@/components/FieldBordePequenoRosa';
 import { Stack, router } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Pressable, TouchableWithoutFeedback, Keyboard, Platform, Alert, ActivityIndicator, Image } from 'react-native';
+import { View, Text, ScrollView, Pressable, TouchableWithoutFeedback, Keyboard, Platform, Alert, ActivityIndicator, Image, Switch } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import Colors from '@/constants/Colors';
@@ -17,12 +17,13 @@ import {decode} from "base64-arraybuffer"
 import { useAuth } from '@/providers/AuthProvider';
 import { recibirAsociacion } from '@/api/asociaciones';
 import { useInsertEvento } from '@/api/eventos';
+import { useInsertRifa } from '@/api/rifas';
 
 const CrearRifa = () => {
 
     const alturaSafe = useSafeAreaInsets().top
     const {usuario, cargandoUsuario} = useAuth()
-    const {mutate:insertEvento} = useInsertEvento()
+    const {mutate:insertRifa} = useInsertRifa()
 
 
     let dateHoy = new Date()
@@ -33,11 +34,27 @@ const CrearRifa = () => {
     const [titulo, setTitulo] = useState("")
     const manejarTitulo = (texto: string) => { setTitulo(texto) }
 
+    const [numeroMaximoFisico,setNumeroMaximoFisico] = useState<any>("")
+    const manejarNumeroMaximoFisico = (texto: string) => {
+        
+        setNumeroMaximoFisico(texto) 
+    
+    }
 
     const [desripcion, setDescripcion] = useState("")
     const manejarDescripcion = (texto: string) => { setDescripcion(texto) }
 
+    const [precio,setPrecio] = useState<any>("")
+    const manejarPrecio = (texto: string) => {
+        
+
+        let nuevoTexto = texto.replace(",", ".")
+
+        setPrecio(nuevoTexto) 
+    
+    }
     const [tieneRangoFisico,setTieneRangoFisico ] = useState(false)
+    
 
     const [fechaSeleccionada, setFechaSeleccionada] = useState(fechaActual)
 
@@ -78,7 +95,7 @@ const CrearRifa = () => {
         const contentType = 'image/png';
 
         const { data, error } = await supabase.storage
-            .from('imagenes_eventos')
+            .from('imagenes_rifas')
             .upload(rutaNueva, decode(base64), { contentType });
         if(error){
 
@@ -110,6 +127,67 @@ const CrearRifa = () => {
         if (imagenSeleccionada == null) {
             errores.push("Elige una imagen")
         }
+
+
+
+        //Comprobem el preu
+        if(precio==""){
+
+            errores.push("Establece un precio")
+
+        }else{
+
+
+            const regex = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
+            if(!regex.test(precio)){
+
+                errores.push("No es float")
+
+            }else{
+
+                let precioFloat = parseFloat(precio)
+
+                if(precioFloat<0.5){
+                    errores.push("El precio mínimo de la rifa es de 0.5 €")
+                }
+                if(precioFloat>20){
+
+                    errores.push("El precio máximo para una rifa es de 20€")
+
+                }
+            }
+        }
+
+        //Si hay un numero máximo físico
+        if(tieneRangoFisico){
+
+            
+
+            if(numeroMaximoFisico==""){
+
+                
+                errores.push("Introduce el número máximo físico.")
+
+            }else{
+
+                const soloNumeros = /^[0-9]+$/;
+
+                if(!soloNumeros.test(numeroMaximoFisico)){
+
+                    errores.push("Introduce un número máximo válido.")
+
+                }
+
+            }
+
+        }
+
+        if(tieneRangoFisico==false){
+
+            setNumeroMaximoFisico(null)
+
+        }
+        
         
         
 
@@ -131,9 +209,9 @@ const CrearRifa = () => {
         }
 
 
-        insertEvento(
-        {titulo_evento:titulo,  descripcion_evento:desripcion, fecha_evento:fechaSeleccionada, id_asociacion:asociacion.id_asociacion, id_municipio:asociacion.id_municipio, imagen_evento:rutaSubida, color_evento:colorSeleccionado}as any,
-        {onSuccess:()=>{Alert.alert("Evento creado con éxito");router.back()}})
+        insertRifa(
+        {titulo:titulo,  descripcion:desripcion, fecha:fechaSeleccionada, id_asociacion:asociacion.id_asociacion, id_municipio:asociacion.id_municipio, imagen:rutaSubida, precio:precio, numero_maximo_fisico:numeroMaximoFisico}as any,
+        {onSuccess:()=>{Alert.alert("Rifa creado con éxito");router.back()}})
         
         
     }
@@ -193,9 +271,30 @@ const CrearRifa = () => {
                             <FieldBordePequenoRosa multiline onChangeText={manejarDescripcion} style={{ marginTop: 25, fontSize: 16, paddingVertical: 10 }} placeholder={"Descripción"} altura={120} />
                         </View>       
 
-                        <View style={{alignSelf:"center"}}>
-                            <FieldBordePequenoRosa style={{marginTop:25, width:100}} onChangeText={manejarTitulo} placeholder={"0,0€"} altura={60} />
-                        </View>        
+                        {/* Fila PRECIO */}
+                        <View style={{justifyContent:"center", alignItems:"center",columnGap:20, flexDirection:"row"}}>
+                            <FieldBordePequenoRosa numerico style={{marginTop:25, width:100, fontSize:20, letterSpacing:0.5}} onChangeText={manejarPrecio} placeholder={"0,0 €"} altura={60} />
+                            
+                            <View style={{justifyContent:"center",columnGap:10,flexDirection:"row", marginTop:22, alignItems:"center", }}>
+                                <Text style={{ fontSize: 19, fontWeight: "600", color: "#BC77EE" }}>Rango físico?</Text>
+                                <Switch
+                                    trackColor={{ false: "#FCF0FE", true: "#DEC5F0" }}
+                                    thumbColor={tieneRangoFisico ? "#BC77EE" : "white"}
+                                    ios_backgroundColor="#FCF0FE"
+                                    onValueChange={() => setTieneRangoFisico(previousState => !previousState)}
+                                    value={tieneRangoFisico}
+                                />
+                            </View>
+                        
+                        </View>
+
+                        {/* Si te un rango físic mostrem el camp */}
+                        {tieneRangoFisico?
+                        <View style={{justifyContent:"center", alignItems:"center",columnGap:20, flexDirection:"row"}}>
+                            <FieldBordePequenoRosa numerico style={{marginTop:25, width:200, fontSize:16, letterSpacing:0.5}} onChangeText={manejarNumeroMaximoFisico} placeholder={"Número máximo"} altura={50} />
+                        </View>:null}
+
+
 
                         {/* Fecha */}
 

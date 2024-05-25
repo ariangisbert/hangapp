@@ -45,6 +45,7 @@ export type Rifa = {
     imagen:any,
     precio:Float,
     asociaciones:any,
+    numero_maximo_fisico:any
 
 }
 

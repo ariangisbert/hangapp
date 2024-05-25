@@ -7,7 +7,7 @@ import { View, Text, StyleSheet } from 'react-native';
 const MiniCuadradoVerde = (props:any) => {
   return (
     <View style={[styles.contenedorPrincipal, {paddingVertical:props.grande?1.9:0.5, width:props.grande?null:55}]}>
-        <Text style={[styles.texto, {fontSize:props.grande?16:14}]}>{props.texto}</Text>
+        <Text numberOfLines={1} adjustsFontSizeToFit style={[styles.texto, {fontSize:props.grande?16:14}]}>{props.texto}</Text>
     </View>
   );
 };

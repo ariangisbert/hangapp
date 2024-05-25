@@ -1,4 +1,5 @@
-import { recibirRifa } from '@/api/rifas';
+import { comprobarCompra } from '@/api/comprasRifas';
+import { recibirRifa, useInsertCompraRifa } from '@/api/rifas';
 import { Evento } from '@/assets/types';
 import Boton from '@/components/Boton';
 import BotonMasMenos from '@/components/BotonMasMenos';
@@ -10,6 +11,7 @@ import TextoDegradado from '@/components/TextoDegradado';
 import Colors from '@/constants/Colors';
 import { numeroAMes } from '@/constants/funciones';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/providers/AuthProvider';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, Text, Alert, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
@@ -20,19 +22,31 @@ import { err } from 'react-native-svg';
 const DetallesRifa = () => {
 
     const {id} = useLocalSearchParams()
+
+    const {data:rifa, isLoading:cargandoRifa, error} = recibirRifa(id)
+    const {usuario, cargandoUsuario} = useAuth()
+    const {data:tieneComprado, isLoading:cargandoTieneComprado} = comprobarCompra(rifa?.id, usuario.id, cargandoRifa, cargandoUsuario) 
+    
+    const {mutate:insertarCompra} = useInsertCompraRifa()
     const [diasRestantes, setDiasRestantes] = useState<any>("")
     const [horasRestantes, setHorasRestantes] = useState<any>("")
     const [minutosRestantes, setMinutosRestantes] = useState<any>("")
     const [segundosRestantes, setSegundosRestantes] = useState<any>("")
+   
     const [cantidadSeleccionada, setCantidadSeleccionada] = useState(1)
+    
+    const [subiendoRifa, setSubiendoRifa] = useState(false)
+    
+
+
+
     let colorFondo = Colors.MoradoElemento.colorFondo
     let colorTexto = Colors.MoradoElemento.colorTitulo
 
     
     //Carreguem la rifa
 
-    const {data:rifa, isLoading:cargandoRifa, error} = recibirRifa(id)
-
+    
     //CONTADOR
     useEffect(()=>{
 
@@ -55,7 +69,7 @@ const DetallesRifa = () => {
     }, [cargandoRifa])
 
 
-    if(cargandoRifa){
+    if(cargandoRifa||cargandoTieneComprado){
 
       return <ActivityIndicator >
         {/* Pa que mentres se carreguen tinga igual el color de fondo */}
@@ -82,6 +96,15 @@ const DetallesRifa = () => {
         
       setCantidadSeleccionada(cantidadSeleccionada-1)
 
+    }
+
+    function clickComprar(){
+
+
+      setSubiendoRifa(true)
+
+      insertarCompra({id_usuario:usuario?.id, id_rifa:rifa?.id, cantidad:cantidadSeleccionada}, {onSuccess:()=>setSubiendoRifa(false)})
+    
     }
     
 
@@ -144,12 +167,19 @@ const DetallesRifa = () => {
         </View>
 
         {/* Contenedor boton */}
+
+        {tieneComprado?
+        //Si ja hem comprat un numeret apareix un boto per a vore les nostres participacions i seguit un modal que mostra estes particioacions
         <View style={{flexGrow:0.01, flexDirection:"row",justifyContent:"center",alignItems:"center",paddingVertical:0, columnGap:20}}>
-          <Boton flex texto="Comprar número" color={colorTexto+""}></Boton>
-          <BotonMasMenos onPressMas={clickMas} onPressMenos={clickMenos} valor = {cantidadSeleccionada} color={Colors.MoradoElemento}/>
-
-
+        <Boton onPress={clickComprar} flex texto="Ver mis participaciones" color={colorTexto+""}></Boton>
         </View>
+
+        :
+
+          <View style={{flexGrow:0.01, flexDirection:"row",justifyContent:"center",alignItems:"center",paddingVertical:0, columnGap:20}}>
+          <Boton cargando={subiendoRifa} onPress={clickComprar} flex texto="Comprar número" color={colorTexto+""}></Boton>
+          <BotonMasMenos onPressMas={clickMas} onPressMenos={clickMenos} valor = {cantidadSeleccionada} color={Colors.MoradoElemento}/>
+      </View>}
         
 
       </SafeAreaView>

@@ -8,6 +8,7 @@ import { View, Text, TextInput } from 'react-native';
 //multiline
 //longitudMaxima
 //onChangeText
+//numerico
 const FieldBordePequenoRosa = (props:any) => {
   
   const [enfocado, setEnfocado] = useState(false)
@@ -21,6 +22,7 @@ const FieldBordePequenoRosa = (props:any) => {
         setTexto(nuevoTexto)
         props.onChangeText(nuevoTexto)}
       }
+      inputMode={props.numerico?"decimal":"text"}
       value={texto}
       onBlur={()=>setEnfocado(false)} 
       onFocus={()=>setEnfocado(true)}  

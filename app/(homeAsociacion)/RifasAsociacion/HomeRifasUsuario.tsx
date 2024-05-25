@@ -20,6 +20,7 @@ import ElementoLoteria from '@/components/ElementoLoteria';
 import IconoChevronBaix from '@/assets/iconos/IconoChevronBaix';
 import Colors from '@/constants/Colors';
 import { recibirAsociacion } from '@/api/asociaciones';
+import ElementoRifaAsociacion from '@/components/ElementoRifaAsociacion';
 
 const HomeRifasUsuario = () => {
 
@@ -71,7 +72,7 @@ const HomeRifasUsuario = () => {
       <View style={styles.contenedorListaRifas}>
        <FlatList style={{overflow:"visible",paddingHorizontal:20, } } data={rifas}
         renderItem={({item, index, separators}) => (
-          <ElementoRifa rifa={item}></ElementoRifa>
+          <ElementoRifaAsociacion rifa={item}></ElementoRifaAsociacion>
         )}
       />
         <LinearGradient

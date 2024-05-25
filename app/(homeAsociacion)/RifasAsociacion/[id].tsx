@@ -24,7 +24,6 @@ const DetallesRifa = () => {
     const [horasRestantes, setHorasRestantes] = useState<any>("")
     const [minutosRestantes, setMinutosRestantes] = useState<any>("")
     const [segundosRestantes, setSegundosRestantes] = useState<any>("")
-    const [cantidadSeleccionada, setCantidadSeleccionada] = useState(1)
     let colorFondo = Colors.MoradoElemento.colorFondo
     let colorTexto = Colors.MoradoElemento.colorTitulo
 
@@ -65,25 +64,6 @@ const DetallesRifa = () => {
 
     }
 
-    //Funcions de clicks
-    
-    function clickMas(){
-
-      setCantidadSeleccionada(cantidadSeleccionada+1)
-
-    }
-
-    function clickMenos(){
-
-      if(cantidadSeleccionada==1){
-        return
-      }
-
-        
-      setCantidadSeleccionada(cantidadSeleccionada-1)
-
-    }
-    
 
     return (
       <SafeAreaView style={{backgroundColor:colorFondo+"",paddingBottom:8, flex:1, paddingHorizontal:42}}>
@@ -95,7 +75,7 @@ const DetallesRifa = () => {
         </View>
 
         {/* Contenedor Imagen */}
-        <View style={{flexGrow:2.8, justifyContent:"center", alignItems:"center",shadowOpacity:0.09, shadowColor:colorTexto, shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
+        <View style={{flexGrow:2.5, justifyContent:"center", alignItems:"center",shadowOpacity:0.09, shadowColor:colorTexto, shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
          
            {/* ContenedorInteriorImagen */}
           <View style={{flex:1}}>
@@ -106,7 +86,7 @@ const DetallesRifa = () => {
         
 
         {/* Contenedor contador atras */}
-        <View style={{flexGrow:0.4,flexBasis:40,flexShrink:0, columnGap:14, flexDirection:"row",alignItems:"center", paddingVertical:18, }}>
+        <View style={{flexGrow:0.4,flexBasis:44,flexShrink:0, columnGap:14, flexDirection:"row",alignItems:"center", paddingVertical:21, }}>
           
           
             {/* Dies */}
@@ -129,7 +109,7 @@ const DetallesRifa = () => {
       </View>
 
         {/* Contenedor descripcion */}
-        <View style={{flexGrow:0.1, flexShrink:1, justifyContent:"center" }}>
+        <View style={{flexGrow:0.4, flexShrink:1, justifyContent:"center" }}>
           <Text style={{color:colorTexto+"", fontWeight:"500",lineHeight:24, textAlign:"center", fontSize:15}}>{rifa?.descripcion}</Text>
         </View>
 
@@ -140,14 +120,6 @@ const DetallesRifa = () => {
           
             <Text style={{color:colorTexto+"", fontWeight:"700", textAlign:"center", fontSize:16}}>{rifa?.asociaciones.nombre_asociacion}</Text>
           
-
-        </View>
-
-        {/* Contenedor boton */}
-        <View style={{flexGrow:0.01, flexDirection:"row",justifyContent:"center",alignItems:"center",paddingVertical:0, columnGap:20}}>
-          <Boton flex texto="Comprar número" color={colorTexto+""}></Boton>
-          <BotonMasMenos onPressMas={clickMas} onPressMenos={clickMenos} valor = {cantidadSeleccionada} color={Colors.MoradoElemento}/>
-
 
         </View>
         

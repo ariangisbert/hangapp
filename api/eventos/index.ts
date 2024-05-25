@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { Evento } from '@/assets/types';
 
 
-export const useListaEventos = (id_municipio:any) => {
+export const useListaEventos = (id_municipio:any, cargandoUsuario:boolean) => {
   
     let dateHoy =  new Date()
     let fechaActual = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
@@ -23,7 +23,7 @@ export const useListaEventos = (id_municipio:any) => {
         throw new Error(error.message);
       }
       return data;
-    },
+    },enabled:!cargandoUsuario
   });
 };
 
