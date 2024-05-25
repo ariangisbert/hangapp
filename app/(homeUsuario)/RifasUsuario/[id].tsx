@@ -171,7 +171,7 @@ const DetallesRifa = () => {
         {tieneComprado?
         //Si ja hem comprat un numeret apareix un boto per a vore les nostres participacions i seguit un modal que mostra estes particioacions
         <View style={{flexGrow:0.01, flexDirection:"row",justifyContent:"center",alignItems:"center",paddingVertical:0, columnGap:20}}>
-        <Boton onPress={()=>router.push("/RifasUsuario/Participaciones")} flex texto="Ver mis participaciones" color={colorTexto+""}></Boton>
+        <Boton onPress={()=>router.navigate({pathname:`/RifasUsuario/Participaciones`, params:{idRifa:rifa?.id}}as any)} flex texto="Ver mis participaciones" color={colorTexto+""}></Boton>
         </View>
 
         :

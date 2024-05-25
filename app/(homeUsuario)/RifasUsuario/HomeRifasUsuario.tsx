@@ -12,7 +12,7 @@ import { useAuth } from '@/providers/AuthProvider';
 import ElementoEvento from '@/components/ElementoEvento';
 import { LinearGradient } from 'expo-linear-gradient';
 import { err } from 'react-native-svg';
-import { recibirListaRifas } from '@/api/rifas';
+import { recibirListaRifas, recibirListaRifasAnteriores } from '@/api/rifas';
 import { recibirMunicipioyProvincia, recibirNombreMunicipio } from '@/api/municipios';
 import ElementoRifa from '@/components/ElementoRifa';
 import { recibirListaLoteria } from '@/api/loteria';
@@ -20,6 +20,7 @@ import ElementoLoteria from '@/components/ElementoLoteria';
 import IconoChevronBaix from '@/assets/iconos/IconoChevronBaix';
 import Colors from '@/constants/Colors';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import ElementoRifaAnterior from '@/components/ElementoRifaAnterior';
 
 const HomeRifasUsuario = () => {
 
@@ -29,20 +30,25 @@ const HomeRifasUsuario = () => {
   const [expandidoMunicipio, setExpandidoMunicipio] = useState(false);
 
    //Carreguem rifes i municipi
+   const [anteriores, setAnteriores] = useState(false)
+
    const {data:rifas, isLoading:cargandoRifas, error:errorRifas} = recibirListaRifas(usuario.municipio_defecto, cargandoUsuario)
+   const {data:rifasAnteriores, isLoading:cargandoRifasAnteriores, error:errorRifasAnteriores} = recibirListaRifasAnteriores(usuario.municipio_defecto, cargandoUsuario)
    const {data:municipio, isLoading:cargandoMunicipio, error:errorMunicipio} = recibirMunicipioyProvincia(usuario.municipio_defecto,cargandoUsuario)
    const {data:loterias, isLoading:cargandoLoterias, error:errorLoteria} = recibirListaLoteria(usuario.municipio_defecto, cargandoMunicipio)
    const [refrescado, setRefrescando] = useState(false)
+
 
   //RECARREGUEM EL USUARI
   //Esperem a que se carreguen els usuaris
   
 
-  if(cargandoRifas||cargandoMunicipio||cargandoLoterias||cargandoUsuario){
+  if(cargandoRifas||cargandoMunicipio||cargandoLoterias||cargandoUsuario||cargandoRifasAnteriores){
 
     return <ActivityIndicator></ActivityIndicator>
  
    }
+
   
   //Comprovem que tinga un poble per defecto, si no el te el enviem a que trie poble
   if(usuario.municipio_defecto==null){
@@ -66,26 +72,20 @@ const HomeRifasUsuario = () => {
     setExpandidoMunicipio(!expandidoMunicipio);
 };
 
-  async function clickEjecutar(){
-
-    const {data, error} = await supabase.rpc("crearGanador")
-
-    if(error){
-      console.log(error.message)
-      return
-    }
-
-    console.log(data)
-
-  }
 
   async function refrescar(){
 
     setRefrescando(true)
 
-    await queryClient.invalidateQueries(["rifas"] as any)
+    await queryClient.invalidateQueries(["rifas", "rifasAnteriores"] as any)
 
     setRefrescando(false)
+  }
+
+  async function clickCambiarRifas(){
+
+    setAnteriores(!anteriores)
+
   }
 
   return (
@@ -96,13 +96,28 @@ const HomeRifasUsuario = () => {
         <Text style={styles.textoMunicipio}>{municipio.nombre_municipio}, {municipio.provincias.nombre_provincia}</Text>
         <IconoChevronBaix style={{marginBottom:5}}/>
       </Pressable>
-      <CabeceraDegradado color={Colors.DegradatMorat}  title="Rifas"></CabeceraDegradado>
+       <View style={{flexDirection:"row", alignItems:"flex-end"}}>
+          <CabeceraDegradado color={Colors.DegradatMorat}  title="Rifas"></CabeceraDegradado>
+          
+          <Pressable onPress={clickCambiarRifas} style={{ paddingHorizontal:20,marginBottom:1, paddingVertical:8,backgroundColor:"#f3f3f3", borderRadius:12, borderCurve:"continuous"}}> 
+               <Text numberOfLines={1} adjustsFontSizeToFit style={{fontSize:15.5,color:"black", fontWeight:"500", letterSpacing:0.1, opacity:0.85}}>{anteriores?"Anteriores":"Actuales"}</Text>
+          </Pressable>
+      </View>
       <View style={styles.contenedorListaRifas}>
-       <FlatList refreshing={refrescado} onRefresh={refrescar} style={{overflow:"visible",paddingHorizontal:20, } } data={rifas}
-        renderItem={({item, index, separators}) => (
-          <ElementoRifa rifa={item}></ElementoRifa>
-        )}
-      />
+       
+        
+          <FlatList refreshing={refrescado} onRefresh={refrescar} style={{overflow:"visible",paddingHorizontal:20, } } data={anteriores?rifasAnteriores:rifas}
+            renderItem={({item, index, separators}) => (
+              
+              anteriores?
+              <ElementoRifaAnterior rifa={item}></ElementoRifaAnterior>
+            
+              :
+
+              <ElementoRifa rifa={item}></ElementoRifa>
+            
+            )}
+          />
 
         <LinearGradient
           colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}

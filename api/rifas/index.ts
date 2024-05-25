@@ -36,6 +36,39 @@ export const recibirListaRifas = (id_municipio:any, cargandoUsuario:boolean) => 
   });
 };
 
+export const recibirListaRifasAnteriores = (id_municipio:any, cargandoUsuario:boolean) => {
+  
+  let dateHoy =  new Date()
+  let fecha = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
+  
+  
+  return useQuery<Rifa[]>({
+  queryKey: ['rifasAnteriores'],
+  queryFn: async () => {
+
+    const { data, error } =
+    
+    dateHoy.getHours()<12?
+    await supabase.from("rifas")
+    .select("*, asociaciones(logo_asociacion)")//Seleccionem els eventos i els logos de les asocicions
+    .eq("id_municipio",id_municipio). //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+    lt("fecha", fecha)//Que tinguen lloc en un futur
+    .order("fecha")
+    :await supabase.from("rifas")
+    .select("*, asociaciones(logo_asociacion)")//Seleccionem els eventos i els logos de les asocicions
+    .eq("id_municipio",id_municipio). //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+    lte("fecha", fecha)//Que tinguen lloc en un futur
+    .order("fecha")
+
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  },enabled:!cargandoUsuario
+});
+};
+
 export const recibirListaRifasByAsociacion = (id_asociacion:any, cargandoAsociacion:boolean) => {
   
   let dateHoy =  new Date()

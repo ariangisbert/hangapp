@@ -10,6 +10,7 @@ const MyComponent = () => {
         <Stack.Screen name="[id]" options={{ headerBackTitleVisible:false,headerTransparent:true,headerShadowVisible:false, title:""}}/>
         <Stack.Screen name="Loteria" options={{ headerBackTitleVisible:false,headerTransparent:true,headerShadowVisible:false, title:""}}/>
         <Stack.Screen name="Participaciones" options={{ headerShown:false,title:"Tus números", presentation:"transparentModal", contentStyle:{justifyContent:"flex-end", backgroundColor:"transparent"}  }}/>
+        <Stack.Screen name="ResultadoRifa" options={{ headerBackTitleVisible:false,headerTransparent:true,headerShadowVisible:false, title:""}}/>
         
     </Stack>
   );
