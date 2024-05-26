@@ -25,10 +25,11 @@ const ElementoReserva = (props:any) => { //Pa que lo que se pase siga de tipo ev
     const [cargandoUpdate, setCargandoUpdate] = useState(false)
     const {mutate:updateReserva} = useUpdateReservaGestionada()
 
+    
     if(cargandoUsuario){
         return<ActivityIndicator></ActivityIndicator>
     }
-
+    const idUsuario = usuario.id
     const reserva = props.reserva
 
     function clickAmpliar(){
@@ -46,29 +47,12 @@ const ElementoReserva = (props:any) => { //Pa que lo que se pase siga de tipo ev
 
     async function clickGestionar(){
 
-    setCargandoUpdate(true)    
-
-    const {error} = await supabase
-                  .from("reservasLoteria")
-                  .update({numero_telefono: "1234"})
-                  .eq("id_usuario", usuario.id)
-
-    if(error){
-
-      console.log(error.message)
-        setCargandoUpdate(false)
-    }else{
-
-      //Actualisem el usuari en local per a no fer un altra query a la base de datos
-      await queryClient.invalidateQueries(["rifas", "rifasAnteriores"] as any)
-        setCargandoUpdate(false)
-    }
-
+   
+    setCargandoUpdate(true)
+    updateReserva({id_usuario:reserva.id_usuario,id_loteria:reserva.id_loteria},
         
-        // setCargandoUpdate(true)
-        // updateReserva({id_usuario:usuario.id,id_loteria:reserva.id_loteria},
-            
-        //     {onSuccess:()=>setCargandoUpdate(false)})
+        {onSuccess:()=>{setCargandoUpdate(false);setAmpliado(false)}})
+
 
     }
 

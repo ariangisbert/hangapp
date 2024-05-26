@@ -157,7 +157,8 @@ export const useUpdateReservaGestionada = () =>{
       
       const { error } = await supabase.from('reservasLoteria')
         .update({gestionada:true}).
-        eq("id_usuario", id_usuario)
+        eq("id_usuario", id_usuario).
+        eq("id_loteria", id_loteria)
 
         if (error) {
         throw error;
