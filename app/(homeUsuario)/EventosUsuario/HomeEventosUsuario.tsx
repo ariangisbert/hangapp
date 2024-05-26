@@ -71,6 +71,8 @@ const HomeEventosUsuario = () => {
 
     const { error } = await supabase.auth.signOut()
 
+    console.log()
+
     if (error) {
 
       Alert.alert(error.message)
@@ -79,6 +81,7 @@ const HomeEventosUsuario = () => {
 
       router.replace("/UserLogin")
       setUsuario(null)
+      setSession(null)
     }
 
 

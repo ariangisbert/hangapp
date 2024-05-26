@@ -36,7 +36,7 @@ const Participaciones = () => {
       </View>
 
       {/* Asi renderitzem les participacions */}
-      <ScrollView contentContainerStyle={{paddingBottom:14}} style={{marginHorizontal:12, marginTop:14}}>
+      <ScrollView contentContainerStyle={{paddingBottom:54}} style={{marginHorizontal:12, marginTop:14}}>
         <View style={{flex:1, flexWrap:"wrap", columnGap:10, rowGap:10, flexDirection:"row"}}>
           {participaciones.map((p:any)=><Participacion key={p.numero} numero={p.numero}></Participacion>)}
         </View>

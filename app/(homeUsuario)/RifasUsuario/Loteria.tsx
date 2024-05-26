@@ -1,4 +1,4 @@
-import { recibirLoteria } from '@/api/loteria';
+import { comprobarReserva, recibirLoteria, useInsertReservaLoteria } from '@/api/loteria';
 import { recibirRifa } from '@/api/rifas';
 import { Evento } from '@/assets/types';
 import Boton from '@/components/Boton';
@@ -13,6 +13,7 @@ import TextoDegradado from '@/components/TextoDegradado';
 import Colors from '@/constants/Colors';
 import { numeroAMes } from '@/constants/funciones';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/providers/AuthProvider';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, Text, Alert, ActivityIndicator, StyleSheet, ScrollView, Image } from 'react-native';
@@ -22,9 +23,28 @@ import { err } from 'react-native-svg';
 
 const DetallesLoteria = () => {
 
+
     const {id, colorPasado} = useLocalSearchParams()
     const [cantidadSeleccionada, setCantidadSeleccionada] = useState(1)
+    //Carreguem la rifa
+
+    const {data:loteria, isLoading:cargandoLoteria, error} = recibirLoteria(id)
+    const {usuario,cargandoUsuario} = useAuth()
+    const {data:tieneReservado, isLoading:cargandoTieneReservado} = comprobarReserva(loteria?.id, usuario.id, cargandoLoteria, cargandoUsuario) 
     
+
+    
+    const [telefono, setTelefono] = useState("")
+    function manejarTelefono(nuevoTexto:any){
+
+      setTelefono(nuevoTexto)
+
+    }
+
+    const [cargandoInsert, setCargandoInsert] = useState(false)
+
+    const {mutate:insertarReserva} = useInsertReservaLoteria()
+
     let color
 
     switch (colorPasado) {
@@ -46,13 +66,8 @@ const DetallesLoteria = () => {
     let colorTexto = color.colorTitulo
     let colorFondo = color.colorFondo
     
-    //Carreguem la rifa
 
-    const {data:loteria, isLoading:cargandoLoteria, error} = recibirLoteria(id)
-
-
-
-    if(cargandoLoteria){
+    if(cargandoLoteria||cargandoUsuario||cargandoTieneReservado){
 
       
       return <ActivityIndicator >
@@ -87,6 +102,32 @@ const DetallesLoteria = () => {
 
     }
     
+    function clickReservar(){
+
+      if(telefono===""){
+
+        Alert.alert("Introduce un número de teléfono.")
+        return
+      }
+
+      const soloNumeros = /^[0-9]+$/;
+
+
+      if((telefono.length!=9)||(!soloNumeros.test(telefono))){
+
+        Alert.alert("Introduce un número de teléfono válido.")
+        return
+      }
+
+      
+      
+   
+        setCargandoInsert(true)
+        insertarReserva({id_usuario:usuario.id, id_loteria:loteria?.id, cantidad:cantidadSeleccionada, numero_telefono:telefono}, {onSuccess:()=>setCargandoInsert(false)})
+  
+      
+
+    }
 
     return (
       <SafeAreaView style={{backgroundColor:"white",paddingBottom:8,justifyContent:"center", flex:1, paddingHorizontal:42}}>
@@ -98,7 +139,7 @@ const DetallesLoteria = () => {
         </View>
 
         {/* Contenedor Loteria */}
-        <View style={{flexGrow:0,flexBasis:400, flexShrink:1, paddingHorizontal:24,borderRadius:24, borderCurve:"continuous", backgroundColor:color.colorTitulo, shadowOpacity:0.09, shadowColor:colorTexto+"", shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
+        <View style={{flexGrow:1.2,flexBasis:300, flexShrink:1, paddingHorizontal:24,borderRadius:24, borderCurve:"continuous", backgroundColor:color.colorTitulo, shadowOpacity:0.09, shadowColor:colorTexto+"", shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
           {/* Contenedor logo loteria */}
           <View style={{flex:1.15, alignItems:"center"}}>
             <Image style={styles.logo} source={require("../../../assets/images/logos/loteria.png")} />
@@ -140,8 +181,16 @@ const DetallesLoteria = () => {
         </View>
 
         {/* Contenedor telefono */}
+       
+       
         <View style={{flexGrow:0.8, paddingVertical:20,justifyContent:"center"}}>
-          <Field width={250} placeholder="Teléfono" color={colorTexto}></Field>
+          
+          {tieneReservado?
+            null
+            :
+            <Field onChangeText={manejarTelefono} width={250} placeholder="Teléfono" color={colorTexto}></Field>
+          }
+
         </View>
         
 
@@ -151,9 +200,14 @@ const DetallesLoteria = () => {
 
         {/* Contenedor boton */}
         <View style={{flexGrow:0.01, flexDirection:"row",justifyContent:"center",alignItems:"center",paddingVertical:0, columnGap:20}}>
-          <Boton flex texto="Reservar" color={colorTexto+""}></Boton>
-          <BotonMasMenos onPressMas={clickMas} onPressMenos={clickMenos} valor = {cantidadSeleccionada} color={color}/>
+          <Boton cargando={cargandoInsert} onPress={clickReservar} flex texto={tieneReservado?"Reservada":"Reservar"} disabled={tieneReservado} color={colorTexto+""}></Boton>
+          
+          {tieneReservado?
+          null
+          :
 
+          <BotonMasMenos onPressMas={clickMas} onPressMenos={clickMenos} valor = {cantidadSeleccionada} color={color}/>
+          }
 
         </View>
         

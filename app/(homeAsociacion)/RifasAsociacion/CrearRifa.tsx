@@ -208,6 +208,8 @@ const CrearRifa = () => {
             return
         }
 
+        
+
 
         insertRifa(
         {titulo:titulo,  descripcion:desripcion, fecha:fechaSeleccionada, id_asociacion:asociacion.id_asociacion, id_municipio:asociacion.id_municipio, imagen:rutaSubida, precio:precio, numero_maximo_fisico:numeroMaximoFisico}as any,

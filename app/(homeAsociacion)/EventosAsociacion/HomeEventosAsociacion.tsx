@@ -29,7 +29,7 @@ import BotonPequenoConBorde from '@/components/BotonPequenoConBorde';
 import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 const HomeEventosAsociacion = () => {
 
-  const { usuario, cargandoUsuario } = useAuth() //Carreguem el usuari
+  const { session,usuario, cargandoUsuario,setUsuario } = useAuth() //Carreguem el usuari
   const alturaSafe = useSafeAreaInsets().top
   const [eventoAmpliado, setEventoAmpliado] = useState<any>(null)
   const [posicionEventoAmpliado, setPosicionEventoAmpliado] = useState<any>(0)
@@ -71,6 +71,12 @@ const HomeEventosAsociacion = () => {
 
   async function salir() {
 
+    if(!session){
+      router.replace("/UserLogin")
+      setUsuario(null)
+      return
+    }
+
     const { error } = await supabase.auth.signOut()
 
     if (error) {
@@ -79,8 +85,9 @@ const HomeEventosAsociacion = () => {
 
     } else {
 
-      router.replace("/UserLogin")
-
+      router.replace("/")
+      setUsuario(null)
+      
     }
 
 
