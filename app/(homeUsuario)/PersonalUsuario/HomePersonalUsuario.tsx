@@ -18,11 +18,12 @@ const HomePersonalUsuario = () => {
   //VALORS DE CANVI
   const [nuevoNombre, setNuevoNombre] = useState<string>("")
   const [nuevoApellido, setNuevoApellido] = useState<string>("")
+  const { data: municipio, isLoading: cargandoMunicipio, error: errorMunicipio } = recibirMunicipioyProvincia(parseInt(usuario?.municipio_defecto), cargandoUsuario)
 
   const alturaSafe = useSafeAreaInsets().top
 
   //Esperem a que se carreguen els usuaris
-  if (cargandoUsuario) {
+  if (cargandoUsuario||cargandoMunicipio) {
 
     return <ActivityIndicator></ActivityIndicator>
 
@@ -37,14 +38,7 @@ const HomePersonalUsuario = () => {
 
   //Carreguem el poble 
   //FALTEN CARREAGAR ELS EVENTOS PENDENTS I LES RIFES
-  const { data: municipio, isLoading: cargandoMunicipio, error: errorMunicipio } = recibirMunicipioyProvincia(parseInt(usuario.municipio_defecto))
-
-
-  if ( cargandoMunicipio) {
-
-    return <ActivityIndicator></ActivityIndicator>
-    
-  }
+ 
 
 
   function clickExpandirNombre(){

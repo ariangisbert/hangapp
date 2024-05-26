@@ -23,8 +23,6 @@ import { err } from 'react-native-svg';
 const DetallesLoteria = () => {
 
     const {id, colorPasado} = useLocalSearchParams()
-    const [cantidadSeleccionada, setCantidadSeleccionada] = useState(1)
-    
     let color
 
     switch (colorPasado) {
@@ -69,24 +67,7 @@ const DetallesLoteria = () => {
 
 
     //Funcions de clicks
-    
-    function clickMas(){
-
-      setCantidadSeleccionada(cantidadSeleccionada+1)
-
-    }
-
-    function clickMenos(){
-
-      if(cantidadSeleccionada==1){
-        return
-      }
-
-        
-      setCantidadSeleccionada(cantidadSeleccionada-1)
-
-    }
-    
+   
 
     return (
       <SafeAreaView style={{backgroundColor:"white",paddingBottom:8,justifyContent:"center", flex:1, paddingHorizontal:42}}>
@@ -98,7 +79,7 @@ const DetallesLoteria = () => {
         </View>
 
         {/* Contenedor Loteria */}
-        <View style={{flexGrow:0,flexBasis:400, flexShrink:1, paddingHorizontal:24,borderRadius:24, borderCurve:"continuous", backgroundColor:color.colorTitulo, shadowOpacity:0.09, shadowColor:colorTexto+"", shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
+        <View style={{flexGrow:1.2,flexBasis:300, flexShrink:1, paddingHorizontal:24,borderRadius:24, borderCurve:"continuous", backgroundColor:color.colorTitulo, shadowOpacity:0.09, shadowColor:colorTexto+"", shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
           {/* Contenedor logo loteria */}
           <View style={{flex:1.15, alignItems:"center"}}>
             <Image style={styles.logo} source={require("../../../assets/images/logos/loteria.png")} />
@@ -139,23 +120,20 @@ const DetallesLoteria = () => {
 
         </View>
 
-        {/* Contenedor telefono */}
-        <View style={{flexGrow:0.8, paddingVertical:20,justifyContent:"center"}}>
-          <Field width={250} placeholder="Teléfono" color={colorTexto}></Field>
+        
+
+
+        <View style={{flexGrow:1, justifyContent:"center"}}>
+          {/* Contenedor boton */}
+          <View style={{flexGrow:0.01, flexDirection:"row",justifyContent:"center",alignItems:"center",paddingVertical:0, columnGap:20}}>
+            <Boton onPress={()=>router.navigate({pathname:`/RifasAsociacion/ReservasLoteria`, params:{id:id, colorPasado:colorPasado}}as any)} flex texto="Ver reservas" color={colorTexto+""}></Boton>
+            
+          </View>
+          
         </View>
         
 
         
-
-
-
-        {/* Contenedor boton */}
-        <View style={{flexGrow:0.01, flexDirection:"row",justifyContent:"center",alignItems:"center",paddingVertical:0, columnGap:20}}>
-          <Boton flex texto="Reservar" color={colorTexto+""}></Boton>
-          <BotonMasMenos onPressMas={clickMas} onPressMenos={clickMenos} valor = {cantidadSeleccionada} color={color}/>
-
-
-        </View>
         
 
       </SafeAreaView>

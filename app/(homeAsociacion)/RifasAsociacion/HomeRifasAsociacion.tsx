@@ -21,8 +21,9 @@ import IconoChevronBaix from '@/assets/iconos/IconoChevronBaix';
 import Colors from '@/constants/Colors';
 import { recibirAsociacion } from '@/api/asociaciones';
 import ElementoRifaAsociacion from '@/components/ElementoRifaAsociacion';
+import ElementoLoteriaAsociacion from '@/components/ElementoLoteriaAsociacion';
 
-const HomeRifasUsuario = () => {
+const HomeRifasAsociacion = () => {
 
   const {usuario, cargandoUsuario} = useAuth() //Carreguem el usuari
   const alturaSafe = useSafeAreaInsets().top
@@ -92,7 +93,7 @@ const HomeRifasUsuario = () => {
           <View style={styles.contenedorListaLoteria}>
             <FlatList showsHorizontalScrollIndicator={false}  contentContainerStyle={{paddingHorizontal:20}} horizontal style={{overflow:"hidden", marginTop:-9}} data={loterias}
               renderItem={({item, index, separators}) => (
-                <ElementoLoteria loteria={item}></ElementoLoteria>
+                <ElementoLoteriaAsociacion loteria={item}></ElementoLoteriaAsociacion>
               )}
             />
 
@@ -117,7 +118,7 @@ const HomeRifasUsuario = () => {
   );
 };
 
-export default HomeRifasUsuario;
+export default HomeRifasAsociacion;
 
 const styles = StyleSheet.create({
 

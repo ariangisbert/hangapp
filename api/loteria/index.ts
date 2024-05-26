@@ -123,3 +123,52 @@ export const comprobarReserva = (id_loteria:any, id_usuario:any, cargandoLoteria
     });
 
 }
+
+export const recibirListaReservas = (id_loteria:any) => {
+  
+  let dateHoy =  new Date()
+  let fecha = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
+  
+  
+
+  return useQuery<any>({
+  queryKey: ['reservas'],
+  queryFn: async () => {
+    const { data, error } =  await supabase.from("reservasLoteria")
+    .select("*, profiles(nombre, apellidos)")//Seleccionem els eventos i els logos de les asocicions
+    .eq("id_loteria",id_loteria) //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+    .order("gestionada")
+
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  },
+});
+};
+
+export const useUpdateReservaGestionada = () =>{
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn({ id_usuario, id_loteria }: any) {
+      
+      const { error } = await supabase.from('reservasLoteria')
+        .update({gestionada:true}).
+        eq("id_usuario", id_usuario)
+
+        if (error) {
+        throw error;
+      }
+    }, 
+    async onSuccess() {
+      await queryClient.invalidateQueries(['reservas'] as any);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+
+}

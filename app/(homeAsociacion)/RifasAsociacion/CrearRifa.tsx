@@ -34,7 +34,7 @@ const CrearRifa = () => {
     const [titulo, setTitulo] = useState("")
     const manejarTitulo = (texto: string) => { setTitulo(texto) }
 
-    const [numeroMaximoFisico,setNumeroMaximoFisico] = useState<any>("")
+    const [numeroMaximoFisico,setNumeroMaximoFisico] = useState<any>(0)
     const manejarNumeroMaximoFisico = (texto: string) => {
         
         setNumeroMaximoFisico(texto) 
@@ -198,9 +198,17 @@ const CrearRifa = () => {
         }
 
         
-
-        
-       const rutaSubida = await subirImagen()
+        Alert.alert("Comprueba los datos", "Una vez creada la rifa no se puede modificar ni eliminar.",
+            
+        //Botons
+        [
+        {text:"Cancelar"
+        },
+        {
+            text:"Crear rifa",
+            onPress:async ()=>{
+                
+                const rutaSubida = await subirImagen()
 
         //Si la ruta esta buida tirem arrere
         
@@ -208,13 +216,20 @@ const CrearRifa = () => {
             return
         }
 
-        
-
-
         insertRifa(
         {titulo:titulo,  descripcion:desripcion, fecha:fechaSeleccionada, id_asociacion:asociacion.id_asociacion, id_municipio:asociacion.id_municipio, imagen:rutaSubida, precio:precio, numero_maximo_fisico:numeroMaximoFisico}as any,
         {onSuccess:()=>{Alert.alert("Rifa creado con éxito");router.back()}})
         
+
+
+            },
+            style:"default"
+        }] )
+
+        console.log("Aqui llega")
+
+        
+       
         
     }
 
