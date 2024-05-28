@@ -12,7 +12,7 @@ import { useAuth } from '@/providers/AuthProvider';
 import ElementoEvento from '@/components/ElementoEvento';
 import { LinearGradient } from 'expo-linear-gradient';
 import { err } from 'react-native-svg';
-import { useEliminarEvento, useListaEventos, useListaEventosByAsociacion } from '@/api/eventos';
+import { useEliminarEvento, useListaEventos, useListaEventosByAsociacion, useListaEventosByAsociacionAnterior } from '@/api/eventos';
 import { recibirMunicipioyProvincia, recibirNombreMunicipio } from '@/api/municipios';
 import { recibirNombreProvincia } from '@/api/provincias';
 import IconoChevronBaix from "../../../assets/iconos/IconoChevronBaix"
@@ -27,9 +27,11 @@ import { asignarColor } from '@/constants/funciones';
 import BotonPequeno from '@/components/BotonPequeno';
 import BotonPequenoConBorde from '@/components/BotonPequenoConBorde';
 import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import LottieView from 'lottie-react-native';
 const HomeEventosAsociacion = () => {
 
   const { session,usuario, cargandoUsuario,setUsuario } = useAuth() //Carreguem el usuari
+  const [anteriores, setAnteriores] = useState(false)
   const alturaSafe = useSafeAreaInsets().top
   const [eventoAmpliado, setEventoAmpliado] = useState<any>(null)
   const [posicionEventoAmpliado, setPosicionEventoAmpliado] = useState<any>(0)
@@ -37,10 +39,12 @@ const HomeEventosAsociacion = () => {
   //READS
   const {data:asociacion, isLoading:cargandoAsociacion, error:errorAsociacion} = recibirAsociacion(usuario.id, cargandoUsuario)
   const { data: eventos, isLoading: cargandoEventos, error: errorEventos } = useListaEventosByAsociacion(asociacion?.id_asociacion, cargandoAsociacion)
+  const { data: eventosAnteriores, isLoading: cargandoEventosAnteriores, error: errorEventosAnteriores } = useListaEventosByAsociacionAnterior(asociacion?.id_asociacion, cargandoAsociacion)
+  
   
   //Esperem a que se carreguen els usuaris
   
-  if (cargandoEventos||cargandoAsociacion||cargandoUsuario) {
+  if (cargandoEventos||cargandoAsociacion||cargandoUsuario||cargandoEventosAnteriores) {
 
     return <ActivityIndicator></ActivityIndicator>
 
@@ -69,30 +73,7 @@ const HomeEventosAsociacion = () => {
 
 
 
-  async function salir() {
-
-    if(!session){
-      router.replace("/UserLogin")
-      setUsuario(null)
-      return
-    }
-
-    const { error } = await supabase.auth.signOut()
-
-    if (error) {
-
-      Alert.alert(error.message)
-
-    } else {
-
-      router.replace("/")
-      setUsuario(null)
-      
-    }
-
-
-  }
-
+  
   function manejarEventoAmpliado(id_evento:any){
 
     setEventoAmpliado(id_evento)
@@ -131,6 +112,12 @@ const HomeEventosAsociacion = () => {
      )
   }
 
+  async function clickCambiarRifas(){
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setAnteriores(!anteriores)
+
+  }
+
 
 
   return (
@@ -149,7 +136,7 @@ const HomeEventosAsociacion = () => {
 
       {/* Si hi ha un evento ampliat s'aplica el blur*/}
       {eventoAmpliado && (
-        <BlurView style={styles.absolute} tint="light" intensity={20}>
+        <BlurView style={styles.absolute} experimentalBlurMethod="dimezisBlurView" tint="light" intensity={20}>
           <Pressable onPress={desampliarEvento} style={styles.contenedorListaEventos}>
            {eventoAmpliado && (
               <View style={[styles.selectedItemContainer, {top:posicionEventoAmpliado}]}>
@@ -166,17 +153,34 @@ const HomeEventosAsociacion = () => {
       )}
 
       
-      <Pressable onPress={desampliarEvento} style={styles.contenedorListaEventos}>
-        <FlatList style={{ overflow: "visible", paddingHorizontal: 20, }} data={eventos}
+      <Pressable onPress={desampliarEvento} style={[styles.contenedorListaEventos]}>
+        {/* Comprobem si te eventos anteriors o normals i si no els tenen mostrem una animació */}
+        {anteriores?
+        eventosAnteriores?.length as any<=0?
+          <View style={{flex:1, justifyContent:"center", rowGap:20}}>  
+         
+          <LottieView  style={{ height:200, width:"100%", alignSelf:"center",  }} source={require('../../../assets/animacions/chicacaja.json')} autoPlay loop />
+          <Text style={{color:Colors.ColorRosaNeutro, fontSize:18, fontWeight:"400", opacity:0.9, textAlign:"center"}}>No parece haber eventos anteriores</Text>
+          </View>  
+        :
+            <FlatList style={{ overflow: "visible", paddingHorizontal: 20, }} data={eventosAnteriores}
           renderItem={({ item, index, separators }) => (
             <ElementoEventoAsociacion setEventoAmpliadoLayout={asignarUbicacionAmpliado} ampliado={eventoAmpliado?eventoAmpliado===item.id_evento:false} borroso={eventoAmpliado?eventoAmpliado!==item.id_evento:false} pulsacionLarga={manejarEventoAmpliado} evento={item}></ElementoEventoAsociacion>
           )}
-        />
-
-
-        <View style={{ marginBottom: 20 }}>
-          <Button onPress={salir} title='Salir'></Button>
-        </View>
+          />
+         //SI no son anteriors
+        : eventos?.length as any<=0?
+            <LottieView  style={{ position: "absolute", zIndex: -1, height: "100%", width: 200,  }} source={require('../../../assets/animacions/perfavorfunciona.json')} autoPlay loop />
+            :
+            <FlatList style={{ overflow: "visible", paddingHorizontal: 20, }} data={eventos}
+              renderItem={({ item, index, separators }) => (
+              <ElementoEventoAsociacion setEventoAmpliadoLayout={asignarUbicacionAmpliado} ampliado={eventoAmpliado?eventoAmpliado===item.id_evento:false} borroso={eventoAmpliado?eventoAmpliado!==item.id_evento:false} pulsacionLarga={manejarEventoAmpliado} evento={item}></ElementoEventoAsociacion>
+              )}
+            />
+        }
+        
+       
+        
         
         <LinearGradient
           colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
@@ -189,6 +193,12 @@ const HomeEventosAsociacion = () => {
         />
 
       </Pressable>
+
+      <View style={{backgroundColor:"white",  flexBasis:50,flexGrow:0.03,paddingBottom:10, justifyContent:"center"}}>
+        <Pressable onPress={clickCambiarRifas} style={{ justifyContent:"center", paddingHorizontal:12, height:35, alignSelf:"center", paddingVertical:8,backgroundColor:"#f3f3f3", borderRadius:12, borderCurve:"continuous"}}> 
+               <Text numberOfLines={1} adjustsFontSizeToFit style={{fontSize:15.5,color:Colors.ColorRosaNeutro,textAlign:"center", fontWeight:"500", letterSpacing:0.1, opacity:0.85}}>{anteriores?"Anteriores":"Ver eventos finalizados"}</Text>
+        </Pressable>
+      </View>   
     </View>
   );
 };
@@ -216,7 +226,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 40, // Ajusta la altura según necesidad
+    height: 20, // Ajusta la altura según necesidad
   },
   contenedorNombreMunicipio: {
 

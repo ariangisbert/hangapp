@@ -51,6 +51,31 @@ export const useListaEventosByAsociacion = (id_asociacion:any, cargandoAsociacio
 },);
 };
 
+export const useListaEventosByAsociacionAnterior = (id_asociacion:any, cargandoAsociacion:boolean) => {
+  
+  let dateHoy =  new Date()
+  let fechaActual = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
+
+  let horaActual = (dateHoy.getHours()+":"+dateHoy.getMinutes()+":00")
+
+  return useQuery<Evento[]>({
+  queryKey: ['eventosAnteriores', id_asociacion],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("eventos")
+    .select("*, asociaciones(logo_asociacion)")//Seleccionem els eventos i els logos de les asocicions
+    .eq("id_asociacion",id_asociacion) //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+    .or(`fecha_evento.lt.${fechaActual},and(fecha_evento.eq.${fechaActual},hora_evento.lt.${horaActual})`)//Filtra soles els eventos que estiguen en hora i dia futur
+    .order("fecha_evento");
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  }, enabled:!cargandoAsociacion,
+},);
+};
+
+
 export const useInsertEvento = () =>{
 
   const queryClient = useQueryClient();

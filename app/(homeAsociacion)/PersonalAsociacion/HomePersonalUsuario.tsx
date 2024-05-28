@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvider';
 import { Redirect, router } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, Platform, Pressable, LayoutAnimation, TextInput, Alert } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Platform, Pressable, LayoutAnimation, TextInput, Alert, Button } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HomePersonalUsuario = () => {
@@ -89,6 +89,31 @@ const HomePersonalUsuario = () => {
 
   }
 
+  async function salir() {
+
+    if(!session){
+      router.replace("/UserLogin")
+      setUsuario(null)
+      return
+    }
+
+    const { error } = await supabase.auth.signOut()
+
+    if (error) {
+
+      Alert.alert(error.message)
+
+    } else {
+
+      router.replace("/")
+      setUsuario(null)
+      
+    }
+
+
+  }
+
+
   function clickGeneral(){
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
     setBotonNombreExpandido(false)
@@ -161,6 +186,10 @@ const HomePersonalUsuario = () => {
           </Pressable>
 
       </View>
+
+      <View style={{ marginBottom: 20 }}>
+          <Button onPress={salir} title='Salir'></Button>
+        </View>
 
 
     </Pressable>

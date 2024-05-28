@@ -12,7 +12,7 @@ import { useAuth } from '@/providers/AuthProvider';
 import ElementoEvento from '@/components/ElementoEvento';
 import { LinearGradient } from 'expo-linear-gradient';
 import { err } from 'react-native-svg';
-import { recibirListaRifas, recibirListaRifasByAsociacion } from '@/api/rifas';
+import { recibirListaRifas, recibirListaRifasAnterioresByAsociacion, recibirListaRifasByAsociacion } from '@/api/rifas';
 import { recibirMunicipioyProvincia, recibirNombreMunicipio } from '@/api/municipios';
 import ElementoRifa from '@/components/ElementoRifa';
 import { recibirListaLoteria, recibirListaLoteriaByAsociacion } from '@/api/loteria';
@@ -22,22 +22,25 @@ import Colors from '@/constants/Colors';
 import { recibirAsociacion } from '@/api/asociaciones';
 import ElementoRifaAsociacion from '@/components/ElementoRifaAsociacion';
 import ElementoLoteriaAsociacion from '@/components/ElementoLoteriaAsociacion';
+import ElementoRifaAnterior from '@/components/ElementoRifaAnterior';
 
 const HomeRifasAsociacion = () => {
 
+  const [anteriores, setAnteriores] = useState(false)
   const {usuario, cargandoUsuario} = useAuth() //Carreguem el usuari
   const alturaSafe = useSafeAreaInsets().top
   const {data:asociacion, isLoading:cargandoAsociacion, error:errorAsociacion} = recibirAsociacion(usuario.id, cargandoUsuario)
   const {data:rifas, isLoading:cargandoRifas, error:errorRifas} = recibirListaRifasByAsociacion(asociacion?.id_asociacion, cargandoAsociacion)
+  const {data: rifasAnteriores, isLoading: cargandoRifasAnteriores, error:errorRifasAnteriores} = recibirListaRifasAnterioresByAsociacion(asociacion?.id_asociacion, cargandoAsociacion)
   const {data:loterias, isLoading:cargandoLoterias, error:errorLoteria} = recibirListaLoteriaByAsociacion(asociacion?.id_asociacion, cargandoAsociacion)
   //RECARREGUEM EL USUARI
   //Esperem a que se carreguen els usuaris
-  if(cargandoUsuario||cargandoRifas||cargandoLoterias||cargandoAsociacion){
+  if(cargandoUsuario||cargandoRifas||cargandoLoterias||cargandoAsociacion||cargandoRifasAnteriores){
 
     return <ActivityIndicator></ActivityIndicator>
 
   }
-  
+
   //Comprovem que tinga un poble per defecto, si no el te el enviem a que trie poble
   if(usuario.municipio_defecto==null){
 
@@ -54,15 +57,26 @@ const HomeRifasAsociacion = () => {
     router.back()
 
   }
+
+  async function clickCambiarRifas(){
+
+    setAnteriores(!anteriores)
+
+  }
  
 
   return (
     <View style={{flex:1, marginTop: Platform.OS==="ios"? alturaSafe:20, backgroundColor:"white"}}>
       
       {/* Cabacera Rifas */}
-      <View style={{flexDirection:"row",justifyContent:"space-between", alignItems:"flex-end"}}>
-      <CabeceraDegradado color={Colors.DegradatRosa} alto title="Mis rifas"></CabeceraDegradado>
-
+     
+     <View style={{flexDirection:"row",justifyContent:"space-between", alignItems:"flex-end"}}>
+        
+        <View style={{flexDirection:"row", alignItems:"flex-end"}}><CabeceraDegradado color={Colors.DegradatRosa} alto title="Mis rifas"></CabeceraDegradado>
+        <Pressable onPress={clickCambiarRifas} style={{ paddingHorizontal:20,marginBottom:1, paddingVertical:8,backgroundColor:"#f3f3f3", borderRadius:12, borderCurve:"continuous"}}> 
+               <Text numberOfLines={1} adjustsFontSizeToFit style={{fontSize:15.5,color:"black", fontWeight:"500", letterSpacing:0.1, opacity:0.85}}>{anteriores?"Anteriores":"Actuales"}</Text>
+        </Pressable>
+        </View>
         {/* Boton para añadir rifa */}
         <Pressable onPress={()=>router.push("/RifasAsociacion/CrearRifa")} style={{ marginRight:20}}>
           <Text style={{color:"#DC82F5", fontSize:48, marginBottom:-6.5,fontWeight:"300" }}>+</Text>
@@ -71,8 +85,11 @@ const HomeRifasAsociacion = () => {
 
 
       <View style={styles.contenedorListaRifas}>
-       <FlatList style={{overflow:"visible",paddingHorizontal:20, } } data={rifas}
+       <FlatList style={{overflow:"visible",paddingHorizontal:20, } }  data={anteriores?rifasAnteriores:rifas}
         renderItem={({item, index, separators}) => (
+          anteriores?
+          <ElementoRifaAnterior esAsociacion rifa={item}></ElementoRifaAnterior>
+          :
           <ElementoRifaAsociacion rifa={item}></ElementoRifaAsociacion>
         )}
       />

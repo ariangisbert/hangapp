@@ -52,7 +52,7 @@ const ElementoLoteriaAsociacion: React.FC<ElementoLoteriaProps> = ({ loteria }) 
            </View>
 
            <View style={styles.contenedorNumero}>
-                <Text style={styles.numero}>{loteria?.numero}</Text>
+                <Text adjustsFontSizeToFit style={styles.numero}>{loteria?.numero}</Text>
            </View>
 
            <View style={styles.contenedorFecha}>
@@ -83,11 +83,12 @@ const styles = StyleSheet.create({
 
     contenedorTitulo: {
         flex: 1,
-        justifyContent:"center"
+        justifyContent:"center",
 
     },
     contenedorNumero: {
-        flex: 0.65,
+        flex: 0.85,
+        width:"100%",
         justifyContent:"center"
     },
     contenedorFecha: {
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
         textAlign:"center",
         color:"white",
         fontSize: 32,
-        letterSpacing:1
+        letterSpacing:1,
     },
     fecha: {
         textAlign:"center",

@@ -20,6 +20,28 @@ export const recibirNumeroGanador = (id_rifa:any,  cargandoRifa:boolean, )=>{
 
 }
 
+export const recibirUsuarioGanador = (id_rifa:any, numeroGanador:any )=>{
+
+  
+  return useQuery<any>({
+    
+      queryKey: ['ganadoresRifa', numeroGanador],
+      queryFn: async () => {
+        const { data, error } = await supabase.from("participacionesRifas")
+        .select("profiles(nombre,apellidos,email, municipios(nombre_municipio, provincias(*)))")//Seleccionem els eventos i els logos de les asocicions
+        .eq("id_rifa",id_rifa)
+        .eq("numero", numeroGanador).maybeSingle()//Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+        if (error) {
+          throw new Error(error.message);
+        }
+        return data;
+      },
+      
+  
+    });
+
+}
+
 export const comprobarGanador= (id_usuario:any, id_rifa:any,cargandoRifa:boolean, cargandoUsuario:boolean, numeroGanador:number, cargandoNumeroGanador:boolean)=>{
 
   return useQuery<any>({

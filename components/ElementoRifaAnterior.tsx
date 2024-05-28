@@ -9,13 +9,15 @@ import MiniCuadradoVerde from './MiniCuadradoVerde';
 
 interface ElementoRifaProps {
     rifa: Rifa | null,
+    esAsociacion?:boolean
 }
 
 //El unic prop que acepta es una rifa, el qual te tots els atributs de la tabla de rifes més el logo de les asociacioms
 //Al fer la consulta mos tornen un objecte asociaciones dins del evento i dins de este està la ruta de la imatge
 //Fallback es la imatge que gastarem si no carrega
 
-const ElementoRifaAnterior: React.FC<ElementoRifaProps> = ({ rifa }) => { //Pa que lo que se pase siga de tipo evento
+
+const ElementoRifaAnterior: React.FC<ElementoRifaProps> = ({ rifa, esAsociacion }) => { //Pa que lo que se pase siga de tipo evento
 
     
 
@@ -31,7 +33,7 @@ const ElementoRifaAnterior: React.FC<ElementoRifaProps> = ({ rifa }) => { //Pa q
 
     //DISENY
     return (
-        <Pressable onPress={()=>router.navigate({pathname:`/RifasUsuario/ResultadoRifa`, params:{id:rifa?.id}}as any)} style={[styles.contenedorElemento, { backgroundColor: color.colorFondo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.525, elevation: 2 }]}>
+        <Pressable onPress={()=>router.navigate({pathname: esAsociacion?`/RifasAsociacion/ResultadoRifa`:`/RifasUsuario/ResultadoRifa`, params:{id:rifa?.id}}as any)} style={[styles.contenedorElemento, { backgroundColor: color.colorFondo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.525, elevation: 2 }]}>
            
             {/* Parte izquierdas */}
             <View style={styles.contenedorIzquierda}>
