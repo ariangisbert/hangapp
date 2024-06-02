@@ -28,6 +28,7 @@ import BotonPequeno from '@/components/BotonPequeno';
 import BotonPequenoConBorde from '@/components/BotonPequenoConBorde';
 import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import LottieView from 'lottie-react-native';
+import ElementoEventoAsociacionAnterior from '@/components/ElementoEventoAsociacionAnterior';
 const HomeEventosAsociacion = () => {
 
   const { session,usuario, cargandoUsuario,setUsuario } = useAuth() //Carreguem el usuari
@@ -155,28 +156,23 @@ const HomeEventosAsociacion = () => {
       
       <Pressable onPress={desampliarEvento} style={[styles.contenedorListaEventos]}>
         {/* Comprobem si te eventos anteriors o normals i si no els tenen mostrem una animació */}
-        {anteriores?
-        eventosAnteriores?.length as any<=0?
+        {(anteriores&&eventosAnteriores?.length as any<=0)||(!anteriores&&eventos?.length as any<=0)?
+        
           <View style={{flex:1, justifyContent:"center", rowGap:20}}>  
          
           <LottieView  style={{ height:200, width:"100%", alignSelf:"center",  }} source={require('../../../assets/animacions/chicacaja.json')} autoPlay loop />
-          <Text style={{color:Colors.ColorRosaNeutro, fontSize:18, fontWeight:"400", opacity:0.9, textAlign:"center"}}>No parece haber eventos anteriores</Text>
+          <Text style={{color:Colors.ColorRosaNeutro, fontSize:18, fontWeight:"400", opacity:0.9, textAlign:"center"}}>{anteriores?"No parece haber eventos anteriores":"No tienes eventos futuros"}</Text>
           </View>  
         :
-            <FlatList style={{ overflow: "visible", paddingHorizontal: 20, }} data={eventosAnteriores}
+            <FlatList style={{ overflow: "visible", paddingHorizontal: 20, }} data={anteriores?eventosAnteriores:eventos}
           renderItem={({ item, index, separators }) => (
+            anteriores?
+            <ElementoEventoAsociacionAnterior setEventoAmpliadoLayout={asignarUbicacionAmpliado} ampliado={eventoAmpliado?eventoAmpliado===item.id_evento:false} borroso={eventoAmpliado?eventoAmpliado!==item.id_evento:false} pulsacionLarga={manejarEventoAmpliado} evento={item}></ElementoEventoAsociacionAnterior>
+            :
             <ElementoEventoAsociacion setEventoAmpliadoLayout={asignarUbicacionAmpliado} ampliado={eventoAmpliado?eventoAmpliado===item.id_evento:false} borroso={eventoAmpliado?eventoAmpliado!==item.id_evento:false} pulsacionLarga={manejarEventoAmpliado} evento={item}></ElementoEventoAsociacion>
           )}
           />
-         //SI no son anteriors
-        : eventos?.length as any<=0?
-            <LottieView  style={{ position: "absolute", zIndex: -1, height: "100%", width: 200,  }} source={require('../../../assets/animacions/perfavorfunciona.json')} autoPlay loop />
-            :
-            <FlatList style={{ overflow: "visible", paddingHorizontal: 20, }} data={eventos}
-              renderItem={({ item, index, separators }) => (
-              <ElementoEventoAsociacion setEventoAmpliadoLayout={asignarUbicacionAmpliado} ampliado={eventoAmpliado?eventoAmpliado===item.id_evento:false} borroso={eventoAmpliado?eventoAmpliado!==item.id_evento:false} pulsacionLarga={manejarEventoAmpliado} evento={item}></ElementoEventoAsociacion>
-              )}
-            />
+       
         }
         
        

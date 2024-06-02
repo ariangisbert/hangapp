@@ -88,7 +88,7 @@ const ElementoReserva = (props:any) => { //Pa que lo que se pase siga de tipo ev
                 </View>
 
                 <View  style={{flex:1, alignItems:"flex-end"}}>
-                    <Pressable onPress={clickGestionar} disabled={cargandoUpdate||props.gestionada} style={{  justifyContent: "center", backgroundColor:"white", paddingHorizontal:20, opacity:0.7, paddingVertical:6, borderRadius:13, borderCurve:"continuous"}}>
+                    <Pressable onPress={clickGestionar} disabled={(cargandoUpdate||reserva.gestionada)} style={{  justifyContent: "center", backgroundColor:"white", paddingHorizontal:20, opacity:0.7, paddingVertical:6, borderRadius:13, borderCurve:"continuous"}}>
                         {cargandoUpdate?
                         <ActivityIndicator/>
                         :
