@@ -1,3 +1,4 @@
+import { recibirEventosFuturosByUsuario } from '@/api/eventos';
 import { recibirMunicipioyProvincia } from '@/api/municipios';
 import CabeceraDegradado from '@/components/CabeceraDegradado';
 import FieldDegradado from '@/components/FieldDegradado';
@@ -20,10 +21,12 @@ const HomePersonalUsuario = () => {
   const [nuevoApellido, setNuevoApellido] = useState<string>("")
   const { data: municipio, isLoading: cargandoMunicipio, error: errorMunicipio } = recibirMunicipioyProvincia(parseInt(usuario?.municipio_defecto), cargandoUsuario)
 
+  const {data:eventosFuturos, isLoading:cargandoEventosFuturos, error:errorEventos } = recibirEventosFuturosByUsuario(usuario.id, cargandoUsuario)
+
   const alturaSafe = useSafeAreaInsets().top
 
   //Esperem a que se carreguen els usuaris
-  if (cargandoUsuario||cargandoMunicipio) {
+  if (cargandoUsuario||cargandoMunicipio||cargandoEventosFuturos) {
 
     return <ActivityIndicator></ActivityIndicator>
 
@@ -36,9 +39,8 @@ const HomePersonalUsuario = () => {
 
   }
 
-  //Carreguem el poble 
-  //FALTEN CARREAGAR ELS EVENTOS PENDENTS I LES RIFES
- 
+  
+  console.log(eventosFuturos)
 
 
   function clickExpandirNombre(){
@@ -154,6 +156,10 @@ const HomePersonalUsuario = () => {
               <Text adjustsFontSizeToFit numberOfLines={1} style={styles.textoBoton}>Cambiar contraseña</Text>
           </Pressable>
 
+      </View>
+
+      <View style={{marginHorizontal:20, paddingVertical:10}}>
+        <Text style={{fontSize:26, color:Colors.MoradoElemento.colorTitulo, fontWeight:"600"}}>Eventos futuros</Text>
       </View>
 
 

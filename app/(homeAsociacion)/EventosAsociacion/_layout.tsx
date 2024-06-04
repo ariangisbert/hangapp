@@ -9,6 +9,7 @@ const MyComponent = () => {
         <Stack.Screen name="HomeEventosAsociacion" options={{title:"Eventos", contentStyle:{backgroundColor:"white"}, headerShown:false}}/>
         <Stack.Screen name="[id_evento]" options={{headerShown:true, headerBackTitleVisible:false,headerTransparent:true,headerShadowVisible:false, title:""}}/>
         <Stack.Screen name="CrearEvento" options={{animation:"slide_from_bottom",headerShown:true, headerBackTitleVisible:false,headerTransparent:true,headerShadowVisible:false, title:""}}/>
+        <Stack.Screen name="Comentarios" options={{headerShown:true, headerBackTitleVisible:false,headerTransparent:true,headerShadowVisible:false, title:""}}/>
         
     </Stack>
   );

@@ -138,3 +138,31 @@ export const useEliminarEvento = ()=>{
 
 }
 
+export const recibirEventosFuturosByUsuario = (id_usuario:any, cargandoUsuario:boolean) =>{
+
+  let dateHoy =  new Date()
+  let fechaActual = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
+
+  let horaActual = (dateHoy.getHours()+":"+dateHoy.getMinutes()+":00")
+
+  return useQuery<any>({
+  queryKey: ['eventosFuturos'],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("asistencias")
+    .select("eventos(*)")//Seleccionem els eventos i els logos de les asocicions
+    .eq("id_usuario",id_usuario) //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+    // .or(`fecha_evento.gt.${fechaActual},and(fecha_evento.eq.${fechaActual},hora_evento.gt.${horaActual})`)//Filtra soles els eventos que estiguen en hora i dia futur
+    // .order("fecha_evento");
+
+    if (error) {
+      console.log(error.message)
+      throw new Error(error.message);
+    }
+    
+    return data;
+  },enabled:!cargandoUsuario
+});
+  
+
+}
+

@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 35, // Ajusta la altura según necesidad
+    height: 30, // Ajusta la altura según necesidad
   },
   fadeBottom: {
     position: 'absolute',

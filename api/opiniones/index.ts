@@ -38,3 +38,46 @@ export const recibirOpinionesPositivas = (id_evento:any) => {
     }, 
   },);
   };
+
+  export const recibirNumeroComentarios = (id_evento:any) => {
+  
+    return useQuery<any>({
+    queryKey: ['numeroComentarios', id_evento],
+    queryFn: async () => {
+      const { count,data, error } = await supabase.from("opinionesEventos")
+      .select("*", {count:"exact", head:true})//Seleccionem els eventos i els logos de les asocicions
+      .eq("id_evento",id_evento)
+      .neq("comentario", "") //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      if(count){
+      return count
+      }else{
+
+        return 0
+
+      };
+    }, 
+  },);
+  };
+
+  export const recibirComentarios = (id_evento:any) => {
+  
+    return useQuery<any>({
+    queryKey: ['numeroComentarios', id_evento],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("opinionesEventos")
+      .select("comentario,gustado, profiles(nombre,apellidos, avatar_url)")//Seleccionem els eventos i els logos de les asocicions
+      .eq("id_evento",id_evento)
+      .neq("comentario", "") //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data
+    }, 
+  },);
+  };
+
