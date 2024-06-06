@@ -130,7 +130,8 @@ const UserRegistro = () => {
                     data: {
                         nombre: nombre,
                         apellidos: apellidos,
-                        grupo:"USER"
+                        grupo:"USER",
+                        email:email,
                     }
                 }
             }

@@ -52,7 +52,7 @@ const ElementoLoteria: React.FC<ElementoLoteriaProps> = ({ loteria }) => { //Pa 
            </View>
 
            <View style={styles.contenedorNumero}>
-                <Text style={styles.numero}>{loteria?.numero}</Text>
+                <Text adjustsFontSizeToFit numberOfLines={1} style={styles.numero}>{loteria?.numero}</Text>
            </View>
 
            <View style={styles.contenedorFecha}>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
 
     },
     contenedorNumero: {
-        flex: 0.65,
+        flex: 0.70,
         justifyContent:"center"
     },
     contenedorFecha: {

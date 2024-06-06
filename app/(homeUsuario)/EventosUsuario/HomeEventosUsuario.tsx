@@ -12,15 +12,21 @@ import { useAuth } from '@/providers/AuthProvider';
 import ElementoEvento from '@/components/ElementoEvento';
 import { LinearGradient } from 'expo-linear-gradient';
 import { err } from 'react-native-svg';
-import { useListaEventos } from '@/api/eventos';
+import { recibirEventosAsistidosByUsuario, recibirEventosNoOpinados, useListaEventos } from '@/api/eventos';
 import { recibirMunicipioyProvincia, recibirNombreMunicipio } from '@/api/municipios';
 import { recibirNombreProvincia } from '@/api/provincias';
 import IconoChevronBaix from "../../../assets/iconos/IconoChevronBaix"
 import { AnimatedText } from 'react-native-reanimated/lib/typescript/reanimated2/component/Text';
 import Animated from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
+import { useQueryClient } from '@tanstack/react-query';
+import { BlurView } from 'expo-blur';
+import ElementoEventoAsociacionAnterior from '@/components/ElementoEventoAsociacionAnterior';
+import ElementoEventoUsuarioAnterior from '@/components/ElementoEventoUsuarioOpinion';
+import Boton from '@/components/Boton';
 const HomeEventosUsuario = () => {
 
+  const queryClient = useQueryClient();
   const { session,usuario, cargandoUsuario, setUsuario, setSession } = useAuth() //Carreguem el usuari
   const [expandidoMunicipio, setExpandidoMunicipio] = useState(false);
   const alturaSafe = useSafeAreaInsets().top
@@ -35,15 +41,23 @@ const HomeEventosUsuario = () => {
   //READS
   const { data: eventos, isLoading: cargandoEventos, error: errorEventos } = useListaEventos(usuario.municipio_defecto, cargandoUsuario)
   const { data: municipio, isLoading: cargandoMunicipio, error: errorMunicipio } = recibirMunicipioyProvincia(parseInt(usuario.municipio_defecto), cargandoUsuario)
-  //const {data:nombreProvincia, isLoading:cargandoProvincia, error:errorProvincia} = recibirNombreProvincia(usuario.municipio_defecto)
+  const {data:eventosAsistidos, isLoading:cargandoEventosAsistidos, error:errorEventosAsistidos} = recibirEventosAsistidosByUsuario(usuario.id, cargandoUsuario)
+  const {data:eventosOpinados, isLoading:cargandoEventosOpinados, error:errorEventosOpinados} = recibirEventosNoOpinados(usuario.id, cargandoUsuario)
+  const [pulsadoTerminar, setPulsadoTerminar] = useState(false)
+  const [refrescado, setRefrescando] = useState(false)
 
- 
-
-  if (cargandoEventos || cargandoMunicipio||cargandoUsuario) {
+  if (cargandoEventos || cargandoMunicipio||cargandoUsuario||cargandoEventosAsistidos||cargandoEventosOpinados) {
 
     return <ActivityIndicator></ActivityIndicator>
 
   }
+
+  //Comprobem els eventos que NO estiguen opinats
+  const eventosNoOpinados = eventosAsistidos.filter((eventoAsistido:any) =>
+    !eventosOpinados.some((eventoOpinado:any) =>
+      eventoAsistido.eventos.id_evento === eventoOpinado.eventos.id_evento
+    )
+  );
 
   if (usuario.municipio_defecto == null) {
 
@@ -61,37 +75,22 @@ const HomeEventosUsuario = () => {
 
 
 
-  async function salir() {
-
-    if(!session){
-      router.replace("/UserLogin")
-      setUsuario(null)
-      return
-    }
-
-    const { error } = await supabase.auth.signOut()
-
-    console.log()
-
-    if (error) {
-
-      Alert.alert(error.message)
-
-    } else {
-
-      router.replace("/UserLogin")
-      setUsuario(null)
-      setSession(null)
-    }
-
-
-  }
+  
 
   function clickMunicipio() {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut,
                                   ()=>router.push("/SeleccionarMunicipio"));
     setExpandidoMunicipio(!expandidoMunicipio);
 };
+
+async function refrescar(){
+
+  setRefrescando(true)
+
+  await queryClient.invalidateQueries(["eventos"] as any)
+
+  setRefrescando(false)
+}
 
 
   return (
@@ -103,14 +102,12 @@ const HomeEventosUsuario = () => {
       </Pressable>
       <CabeceraDegradado color={Colors.DegradatMorat} title="Eventos próximos"></CabeceraDegradado>
       <View style={styles.contenedorListaEventos}>
-        <FlatList style={{ overflow: "visible", paddingHorizontal: 20, }} data={eventos}
+        <FlatList refreshing={refrescado} onRefresh={refrescar} style={{ overflow: "visible", paddingHorizontal: 20, }} data={eventos}
           renderItem={({ item, index, separators }) => (
             <ElementoEvento evento={item}></ElementoEvento>
           )}
         />
-        <View style={{ marginBottom: 20 }}>
-          <Button onPress={salir} title='Salir'></Button>
-        </View>
+        
         
         <LinearGradient
           colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
@@ -123,6 +120,28 @@ const HomeEventosUsuario = () => {
         />
 
       </View>
+      {/* Si hi han eventos no opinats, mostrem el BlurView*/}
+      {eventosNoOpinados.length>0?
+      <BlurView  experimentalBlurMethod="dimezisBlurView" intensity={9} style={{position:"absolute", paddingHorizontal:20,  justifyContent:"center", top:0, bottom:0, left:0, right:0,}}>
+      <View style={{borderRadius:22, borderCurve:"continuous",alignItems:"center" , justifyContent:"space-between", paddingVertical:25, shadowColor: Colors.MoradoElemento.colorTitulo, shadowOffset: { width: 0, height: 0 }, shadowRadius: 8, shadowOpacity: 0.2, elevation: 2,  backgroundColor:"white", height:"72%", opacity:0.97}}>
+
+          <Text  style={{fontSize:25,marginBottom:30,paddingHorizontal:25, backgroundColor:"white", color:Colors.MoradoElemento.colorTitulo, textAlign:"center", fontWeight:"700"}}>¿Qué te parecieron estos eventos?</Text>
+          <View style={{overflow:"hidden", paddingHorizontal:25,marginBottom:15, flex:1,}}>
+            <FlatList showsVerticalScrollIndicator={false} refreshing={refrescado} onRefresh={refrescar} style={{ overflow: "visible", flex:1, width:"100%",  }} data={eventosNoOpinados}
+              renderItem={({ item, index, separators }) => (
+              <ElementoEventoUsuarioAnterior debeSubir ={pulsadoTerminar}  eventoAsistido={item}></ElementoEventoUsuarioAnterior>
+              )}/>
+            </View>
+            <View style={{flexBasis:70,}}>
+              <Boton onPress={()=>setPulsadoTerminar(!pulsadoTerminar)} color={Colors.MoradoElemento.colorTitulo} texto={"Terminar"}></Boton>
+            </View>    
+        </View>
+
+    </BlurView>
+    :
+    null
+    }
+      
     </View>
   );
 };

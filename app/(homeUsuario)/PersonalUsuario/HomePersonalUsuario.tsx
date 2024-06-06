@@ -1,18 +1,20 @@
 import { recibirEventosFuturosByUsuario } from '@/api/eventos';
 import { recibirMunicipioyProvincia } from '@/api/municipios';
 import CabeceraDegradado from '@/components/CabeceraDegradado';
+import ElementoEventoFuturo from '@/components/ElementoEventoFuturo';
 import FieldDegradado from '@/components/FieldDegradado';
 import Colors from '@/constants/Colors';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvider';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Redirect, router } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, Platform, Pressable, LayoutAnimation, TextInput, Alert } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Platform, Pressable, LayoutAnimation, TextInput, Alert, FlatList, Button } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HomePersonalUsuario = () => {
 
-  const { usuario, cargandoUsuario, session, setUsuario } = useAuth() //Carreguem el usuari
+  const { usuario, cargandoUsuario, session, setUsuario, setSession } = useAuth() //Carreguem el usuari
   const [botonNombreExpandido, setBotonNombreExpandido] = useState(false)
   const [botonPasswordExpandido, setBotonPasswordExpandido] = useState(false)
 
@@ -38,9 +40,6 @@ const HomePersonalUsuario = () => {
     return <Redirect href={"/SeleccionarMunicipio"} />
 
   }
-
-  
-  console.log(eventosFuturos)
 
 
   function clickExpandirNombre(){
@@ -89,6 +88,32 @@ const HomePersonalUsuario = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
     setBotonNombreExpandido(false)
     setBotonPasswordExpandido(false)
+  }
+
+  async function salir() {
+
+    if(!session){
+      router.replace("/UserLogin")
+      setUsuario(null)
+      return
+    }
+
+    const { error } = await supabase.auth.signOut()
+
+    console.log()
+
+    if (error) {
+
+      Alert.alert(error.message)
+
+    } else {
+
+      router.replace("/UserLogin")
+      setUsuario(null)
+      setSession(null)
+    }
+
+
   }
 
   return (
@@ -158,9 +183,46 @@ const HomePersonalUsuario = () => {
 
       </View>
 
-      <View style={{marginHorizontal:20, paddingVertical:10}}>
-        <Text style={{fontSize:26, color:Colors.MoradoElemento.colorTitulo, fontWeight:"600"}}>Eventos futuros</Text>
+      {/* Eventos futuros */}
+      <View style={{marginHorizontal:20, paddingVertical:15, rowGap:20}}>
+        <Text style={{fontSize:26, color:Colors.MoradoElemento.colorTitulo, fontWeight:"700"}}>Eventos futuros</Text>
+        {/* Contenedor flatlist */}
+        <View style={{height:115}}>
+          
+          <FlatList horizontal showsHorizontalScrollIndicator={false} data={eventosFuturos} style={{overflow:"visible"}}
+            contentContainerStyle={{}}
+            renderItem={({ item, index, separators }) => (
+              //Mostrem soles els eventos que no siguen null
+              item.eventos?
+              <ElementoEventoFuturo eventoFuturo = {item}></ElementoEventoFuturo>
+              :null
+            )}
+          />
+
+        <LinearGradient
+
+        start={{ x: -1, y: 1 }}
+        end={{ x: 1, y: 1 }}
+          colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
+          style={styles.fadeLeft}
+        />
+
+        <LinearGradient
+
+          start={{ x:0, y: 1 }}
+          end={{ x: 2, y: 1 }}
+          colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
+          style={styles.fadeRight}
+        />  
+
+        </View>
       </View>
+
+      <View style={{ marginBottom: 20 }}>
+          <Button onPress={salir} title='Salir'></Button>
+        </View>
+
+        
 
 
     </Pressable>
@@ -185,7 +247,7 @@ const styles = StyleSheet.create({
     flexBasis:120,
     backgroundColor:"#F6F6F6",
     marginHorizontal:20,
-    marginVertical:15,
+    marginVertical:20,
     paddingHorizontal:12,
     borderRadius:21,
     borderCurve:"continuous",
@@ -226,7 +288,7 @@ const styles = StyleSheet.create({
   },
   contenedorBotonesCambiar:{
     marginHorizontal:20,
-    marginVertical:5,
+    marginVertical:6,
     flexDirection:"row"
 
   },
@@ -281,7 +343,21 @@ const styles = StyleSheet.create({
     opacity:0.8,
     fontWeight:"600"
 
-  }
+  },
+  fadeLeft: {
+    position: 'absolute',
+    top: 0,
+    left: -20,
+    bottom: 0,
+    width: 20, // Ajusta la altura según necesidad
+  },
+  fadeRight: {
+    position: 'absolute',
+    bottom: 0,
+    top: 0,
+    right: -20,
+    width: 20, // Ajusta la altura según necesidad
+  },
 
 
 

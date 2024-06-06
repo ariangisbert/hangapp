@@ -26,23 +26,23 @@ const Participaciones = () => {
       <Pressable onPress={router.back} style={{flex:1}}>
 
       </Pressable>
-    <View style={styles.contenedorPrincipal}>
+      <View style={styles.contenedorPrincipal}>
 
-      {/* CAIXA TITUlO */}
-      <View style={{height:70,borderRadius:16,marginTop:14,marginHorizontal:12, alignItems:"center",justifyContent:"center",borderCurve:"continuous",backgroundColor:Colors.MoradoElemento.colorTitulo, shadowOpacity:0.2,  shadowColor:"black", shadowRadius:9,shadowOffset:{width:0, height:-2}}}>
+        {/* CAIXA TITUlO */}
+        <View style={{height:70,borderRadius:16,marginTop:14,marginHorizontal:12, alignItems:"center",justifyContent:"center",borderCurve:"continuous",backgroundColor:Colors.MoradoElemento.colorTitulo, shadowOpacity:0.2,  shadowColor:"black", shadowRadius:9,shadowOffset:{width:0, height:-2}}}>
 
-        <Text style={{fontWeight:"600", color:"white", fontSize:22}}>Mis números</Text>
+          <Text style={{fontWeight:"600", color:"white", fontSize:22}}>Mis números</Text>
 
-      </View>
-
-      {/* Asi renderitzem les participacions */}
-      <ScrollView contentContainerStyle={{paddingBottom:54}} style={{marginHorizontal:12, marginTop:14}}>
-        <View style={{flex:1, flexWrap:"wrap", columnGap:10, rowGap:10, flexDirection:"row"}}>
-          {participaciones.map((p:any)=><Participacion key={p.numero} numero={p.numero}></Participacion>)}
         </View>
-      </ScrollView>
-      
-    </View>
+
+        {/* Asi renderitzem les participacions */}
+        <ScrollView contentContainerStyle={{paddingBottom:54}} style={{marginHorizontal:12, marginTop:14}}>
+          <View style={{flex:1, flexWrap:"wrap", columnGap:10, rowGap:10, flexDirection:"row"}}>
+            {participaciones.map((p:any)=><Participacion key={p.numero} numero={p.numero}></Participacion>)}
+          </View>
+        </ScrollView>
+        
+      </View>
     </View>
   );
 };

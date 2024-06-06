@@ -29,8 +29,10 @@ import BotonPequenoConBorde from '@/components/BotonPequenoConBorde';
 import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import LottieView from 'lottie-react-native';
 import ElementoEventoAsociacionAnterior from '@/components/ElementoEventoAsociacionAnterior';
+import { useQueryClient } from '@tanstack/react-query';
 const HomeEventosAsociacion = () => {
 
+  const queryClient = useQueryClient();
   const { session,usuario, cargandoUsuario,setUsuario } = useAuth() //Carreguem el usuari
   const [anteriores, setAnteriores] = useState(false)
   const alturaSafe = useSafeAreaInsets().top
@@ -41,7 +43,8 @@ const HomeEventosAsociacion = () => {
   const {data:asociacion, isLoading:cargandoAsociacion, error:errorAsociacion} = recibirAsociacion(usuario.id, cargandoUsuario)
   const { data: eventos, isLoading: cargandoEventos, error: errorEventos } = useListaEventosByAsociacion(asociacion?.id_asociacion, cargandoAsociacion)
   const { data: eventosAnteriores, isLoading: cargandoEventosAnteriores, error: errorEventosAnteriores } = useListaEventosByAsociacionAnterior(asociacion?.id_asociacion, cargandoAsociacion)
-  
+  const [refrescado, setRefrescando] = useState(false)
+
   
   //Esperem a que se carreguen els usuaris
   
@@ -119,6 +122,15 @@ const HomeEventosAsociacion = () => {
 
   }
 
+  async function refrescar(){
+
+    setRefrescando(true)
+  
+    await queryClient.invalidateQueries(["eventos", "eventosAnteriores"] as any)
+  
+    setRefrescando(false)
+  }
+
 
 
   return (
@@ -164,7 +176,7 @@ const HomeEventosAsociacion = () => {
           <Text style={{color:Colors.ColorRosaNeutro, fontSize:18, fontWeight:"400", opacity:0.9, textAlign:"center"}}>{anteriores?"No parece haber eventos anteriores":"No tienes eventos futuros"}</Text>
           </View>  
         :
-            <FlatList style={{ overflow: "visible", paddingHorizontal: 20, }} data={anteriores?eventosAnteriores:eventos}
+            <FlatList refreshing={refrescado} onRefresh={refrescar} style={{ overflow: "visible", paddingHorizontal: 20, }} data={anteriores?eventosAnteriores:eventos}
           renderItem={({ item, index, separators }) => (
             anteriores?
             <ElementoEventoAsociacionAnterior setEventoAmpliadoLayout={asignarUbicacionAmpliado} ampliado={eventoAmpliado?eventoAmpliado===item.id_evento:false} borroso={eventoAmpliado?eventoAmpliado!==item.id_evento:false} pulsacionLarga={manejarEventoAmpliado} evento={item}></ElementoEventoAsociacionAnterior>

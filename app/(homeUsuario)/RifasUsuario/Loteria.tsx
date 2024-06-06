@@ -16,7 +16,7 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvider';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, Text, Alert, ActivityIndicator, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, Alert, ActivityIndicator, StyleSheet, ScrollView, Image, Pressable, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { err } from 'react-native-svg';
 
@@ -133,85 +133,82 @@ const DetallesLoteria = () => {
       <SafeAreaView style={{backgroundColor:"white",paddingBottom:8,justifyContent:"center", flex:1, paddingHorizontal:42}}>
         <Stack.Screen options={{headerTintColor:colorTexto+"",contentStyle:{backgroundColor:colorFondo}as any}}/>
 
-        {/* Contenedor título */}
-        <View style={{flexBasis:80, flexGrow:0.4, justifyContent:"center" }}>
-          <Text adjustsFontSizeToFit numberOfLines={1} style={{color:colorTexto+"", fontWeight:"700", textAlign:"center", fontSize:30}}>{loteria?.titulo}</Text>
-        </View>
+        <Pressable onPress={()=>Keyboard.dismiss()} style={{flex:1}}>
+          <KeyboardAvoidingView behavior="padding" style={{flex:1}}>
+            {/* Contenedor título */}
+            <View style={{flexBasis:80, flexGrow:0.4, justifyContent:"center" }}>
+              <Text adjustsFontSizeToFit numberOfLines={1} style={{color:colorTexto+"", fontWeight:"700", textAlign:"center", fontSize:30}}>{loteria?.titulo}</Text>
+            </View>
 
-        {/* Contenedor Loteria */}
-        <View style={{flexGrow:1.2,flexBasis:300, flexShrink:1, paddingHorizontal:24,borderRadius:24, borderCurve:"continuous", backgroundColor:color.colorTitulo, shadowOpacity:0.09, shadowColor:colorTexto+"", shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
-          {/* Contenedor logo loteria */}
-          <View style={{flex:1.15, alignItems:"center"}}>
-            <Image style={styles.logo} source={require("../../../assets/images/logos/loteria.png")} />
-          </View>
-
-          {/* Contenedor numero */}
-          <View style={{flex:1, justifyContent:"center"}}>
-            <Text style={{fontWeight:"700", textAlign:"center", color:"white", fontSize:56, letterSpacing:4.8}}>{loteria?.numero}</Text>
-          </View>
-
-          {/* Contenedor fecha */}
-          <View style={{flex:1, justifyContent:"center"}}>
-            <Text style={{fontWeight:"700", textAlign:"center",letterSpacing:0.5, color:"white", fontSize:17,}}>{fecha}</Text>
-          </View>
-
-          {/* Contenedor preu */}
-          <View style={{flexBasis:80,alignItems:"center"}}>
-            {/* Caixa preu */}
-            <View style={{flex:1,borderWidth:3,borderColor:"white",  width:98,}}>
-              
-              {/* TEXT PRECIO */}
-              <View style={{flex:1,backgroundColor:"white",}}>
-               <Text style={{fontWeight:"800", textAlign:"center",letterSpacing:2.48, color:"#3C3C3C", fontSize:17,}}>PRECIO</Text>
+            {/* Contenedor Loteria */}
+            <View style={{flexGrow:1.2,flexBasis:300, flexShrink:1, paddingHorizontal:24,borderRadius:24, borderCurve:"continuous", backgroundColor:color.colorTitulo, shadowOpacity:0.09, shadowColor:colorTexto+"", shadowRadius:9,shadowOffset:{width:0, height:4.5}}}>
+              {/* Contenedor logo loteria */}
+              <View style={{flex:1.15, alignItems:"center"}}>
+                <Image style={styles.logo} source={require("../../../assets/images/logos/loteria.png")} />
               </View>
-              {/* PRECIO */}
-              <View style={{flex:2.1, justifyContent:"center"}}>
-              <Text style={{fontWeight:"700", textAlign:"center",letterSpacing:3, color:"white", fontSize:22,}}>{loteria?.precio}€</Text>
+
+              {/* Contenedor numero */}
+              <View style={{flex:1, justifyContent:"center"}}>
+                <Text style={{fontWeight:"700", textAlign:"center", color:"white", fontSize:56, letterSpacing:4.8}}>{loteria?.numero}</Text>
+              </View>
+
+              {/* Contenedor fecha */}
+              <View style={{flex:1, justifyContent:"center"}}>
+                <Text style={{fontWeight:"700", textAlign:"center",letterSpacing:0.5, color:"white", fontSize:17,}}>{fecha}</Text>
+              </View>
+
+              {/* Contenedor preu */}
+              <View style={{flexBasis:80,alignItems:"center"}}>
+                {/* Caixa preu */}
+                <View style={{flex:1,borderWidth:3,borderColor:"white",  width:98,}}>
+                  
+                  {/* TEXT PRECIO */}
+                  <View style={{flex:1,backgroundColor:"white",}}>
+                  <Text style={{fontWeight:"800", textAlign:"center",letterSpacing:2.48, color:"#3C3C3C", fontSize:17,}}>PRECIO</Text>
+                  </View>
+                  {/* PRECIO */}
+                  <View style={{flex:2.1, justifyContent:"center"}}>
+                  <Text style={{fontWeight:"700", textAlign:"center",letterSpacing:3, color:"white", fontSize:22,}}>{loteria?.precio}€</Text>
+                  </View>
+
+                </View>
+
+              </View>
+
+              {/* Contenedor Asociacio */}
+              <View style={{flex:1, justifyContent:"center"}}>
+              <Text style={{fontWeight:"700", textAlign:"center",letterSpacing:0.5, color:"white", fontSize:17,}}>{loteria?.asociaciones.nombre_asociacion}</Text>
               </View>
 
             </View>
 
-          </View>
-
-          {/* Contenedor Asociacio */}
-          <View style={{flex:1, justifyContent:"center"}}>
-          <Text style={{fontWeight:"700", textAlign:"center",letterSpacing:0.5, color:"white", fontSize:17,}}>{loteria?.asociaciones.nombre_asociacion}</Text>
-          </View>
-
-        </View>
-
-        {/* Contenedor telefono */}
-       
-       
-        <View style={{flexGrow:0.8, paddingVertical:20,justifyContent:"center"}}>
+            {/* Contenedor telefono */}
           
-          {tieneReservado?
-            null
-            :
-            <Field onChangeText={manejarTelefono} width={250} placeholder="Teléfono" color={colorTexto}></Field>
-          }
-
-        </View>
-        
-
-        
-
-
-
-        {/* Contenedor boton */}
-        <View style={{flexGrow:0.01, flexDirection:"row",justifyContent:"center",alignItems:"center",paddingVertical:0, columnGap:20}}>
-          <Boton cargando={cargandoInsert} onPress={clickReservar} flex texto={tieneReservado?"Reservada":"Reservar"} disabled={tieneReservado} color={colorTexto+""}></Boton>
           
-          {tieneReservado?
-          null
-          :
+            <View style={{flexGrow:0.8, paddingVertical:20,justifyContent:"center"}}>
+              
+              {tieneReservado?
+                null
+                :
+                <Field onChangeText={manejarTelefono} width={250} placeholder="Teléfono" color={colorTexto}></Field>
+              }
 
-          <BotonMasMenos onPressMas={clickMas} onPressMenos={clickMenos} valor = {cantidadSeleccionada} color={color}/>
-          }
+            </View>
+            
+            {/* Contenedor boton */}
+            <View style={{flexGrow:0.01, flexDirection:"row",justifyContent:"center",alignItems:"center",paddingVertical:0, columnGap:20}}>
+              <Boton cargando={cargandoInsert} onPress={clickReservar} flex texto={tieneReservado?"Reservada":"Reservar"} disabled={tieneReservado} color={colorTexto+""}></Boton>
+              
+              {tieneReservado?
+              null
+              :
 
-        </View>
-        
+              <BotonMasMenos onPressMas={clickMas} onPressMenos={clickMenos} valor = {cantidadSeleccionada} color={color}/>
+              }
 
+            </View>
+          </KeyboardAvoidingView>
+        </Pressable>
       </SafeAreaView>
   );
 };

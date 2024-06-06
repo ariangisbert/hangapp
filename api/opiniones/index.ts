@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const recibirOpinionesPositivas = (id_evento:any) => {
   
@@ -80,4 +80,32 @@ export const recibirOpinionesPositivas = (id_evento:any) => {
     }, 
   },);
   };
+
+  export const useInsertOpinion = () =>{
+
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      async mutationFn(data: Omit<{id_evento:any, id_usuario:any, gustado:boolean, comentario:any}, 'id'>) {
+        const { error } = await supabase.from('opinionesEventos').insert({
+          id_evento:data.id_evento,
+          id_usuario:data.id_usuario,
+          gustado:data.gustado,
+          comentario:data.comentario
+        });
+  
+        if (error) {
+          throw error
+        }
+      },
+      async onSuccess() {
+        await queryClient.invalidateQueries(["eventosPasados", "eventosOpinados"] as any);
+      },
+      onError(error) {
+        console.log(error.message);
+      },
+    });
+  
+  
+  }
 

@@ -1,4 +1,5 @@
 import { comprobarCompra } from '@/api/comprasRifas';
+import { recibirParticipaciones } from '@/api/participacionesRifas';
 import { recibirRifa, useInsertCompraRifa } from '@/api/rifas';
 import { Evento } from '@/assets/types';
 import Boton from '@/components/Boton';
@@ -26,6 +27,7 @@ const DetallesRifa = () => {
     const {data:rifa, isLoading:cargandoRifa, error} = recibirRifa(id)
     const {usuario, cargandoUsuario} = useAuth()
     const {data:tieneComprado, isLoading:cargandoTieneComprado} = comprobarCompra(rifa?.id, usuario.id, cargandoRifa, cargandoUsuario) 
+    recibirParticipaciones(id, usuario.id, cargandoUsuario)
     
     const {mutate:insertarCompra} = useInsertCompraRifa()
     const [diasRestantes, setDiasRestantes] = useState<any>("")

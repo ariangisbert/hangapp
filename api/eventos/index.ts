@@ -145,15 +145,15 @@ export const recibirEventosFuturosByUsuario = (id_usuario:any, cargandoUsuario:b
 
   let horaActual = (dateHoy.getHours()+":"+dateHoy.getMinutes()+":00")
 
+  //Mos torna tot el numero de eventos en sí, pero els que no coincidixen en el filtro els  torna com a null
+
   return useQuery<any>({
   queryKey: ['eventosFuturos'],
   queryFn: async () => {
     const { data, error } = await supabase.from("asistencias")
     .select("eventos(*)")//Seleccionem els eventos i els logos de les asocicions
-    .eq("id_usuario",id_usuario) //Busquem tots els eventos que tinguen el municipi igual que el muncipi del usuari 
-    // .or(`fecha_evento.gt.${fechaActual},and(fecha_evento.eq.${fechaActual},hora_evento.gt.${horaActual})`)//Filtra soles els eventos que estiguen en hora i dia futur
-    // .order("fecha_evento");
-
+    .eq("id_usuario", id_usuario)
+    .gt("eventos.fecha_evento", fechaActual)
     if (error) {
       console.log(error.message)
       throw new Error(error.message);
@@ -162,7 +162,58 @@ export const recibirEventosFuturosByUsuario = (id_usuario:any, cargandoUsuario:b
     return data;
   },enabled:!cargandoUsuario
 });
-  
+}
 
+
+
+export const recibirEventosAsistidosByUsuario = (id_usuario:any, cargandoUsuario:boolean) =>{
+
+  let dateHoy =  new Date()
+  let fechaActual = (dateHoy.getFullYear()+"-"+(dateHoy.getMonth()+1)+"-"+dateHoy.getDate())
+
+  let horaActual = (dateHoy.getHours()+":"+dateHoy.getMinutes()+":00")
+
+  //Mos torna tot el numero de eventos en sí, pero els que no coincidixen en el filtro els  torna com a null
+
+  return useQuery<any>({
+  queryKey: ['eventosPasados'],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("asistencias")
+    .select("eventos(*)")
+    .eq("id_usuario", id_usuario)
+     .lt("eventos.fecha_evento", fechaActual)
+    if (error) {
+      console.log(error.message)
+      throw new Error(error.message);
+    }
+    //Eliminem els que siguen null
+    return data.filter(item => item.eventos !== null);
+
+  },enabled:!cargandoUsuario
+});
+}
+
+export const recibirEventosNoOpinados = (id_usuario:any, cargandoUsuario:boolean) =>{
+
+ 
+  //Mos torna tot el numero de eventos en sí, pero els que no coincidixen en el filtro els  torna com a null
+
+  return useQuery<any>({
+  queryKey: ['eventosOpinados'],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("opinionesEventos")
+    .select("eventos(*)")
+    .eq("id_usuario", id_usuario)
+
+    if (error) {
+      console.log(error.message)
+      throw new Error(error.message);
+    }
+    //Eliminem els que siguen null
+    
+    return data
+
+  },enabled:!cargandoUsuario
+});
 }
 
