@@ -51,7 +51,7 @@ const ElementoEventoAsociacionAnterior: React.FC<ElementoEventoProps> = ({ event
 
     const itemRef = useRef<View>(null);
 
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
     const handlePressIn = () => {
         Animated.spring(scaleAnim, {

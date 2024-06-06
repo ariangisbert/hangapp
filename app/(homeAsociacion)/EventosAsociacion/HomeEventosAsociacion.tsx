@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Platform, FlatList, Alert, ActivityIndicator, TouchableHighlight, Button, Pressable,LayoutAnimation } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, Platform, FlatList, Alert, ActivityIndicator, TouchableHighlight, Button, Pressable,LayoutAnimation, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, Stack, router } from 'expo-router';
 import { useHeaderHeight } from "@react-navigation/elements"
@@ -14,10 +14,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { err } from 'react-native-svg';
 import { useEliminarEvento, useListaEventos, useListaEventosByAsociacion, useListaEventosByAsociacionAnterior } from '@/api/eventos';
 import { recibirMunicipioyProvincia, recibirNombreMunicipio } from '@/api/municipios';
-import { recibirNombreProvincia } from '@/api/provincias';
-import IconoChevronBaix from "../../../assets/iconos/IconoChevronBaix"
-import { AnimatedText } from 'react-native-reanimated/lib/typescript/reanimated2/component/Text';
-import Animated from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
 import { recibirAsociacion } from '@/api/asociaciones';
 import ElementoEventoAsociacion from '@/components/ElementoEventoAsociacion';
@@ -25,13 +21,12 @@ import { BlurView } from 'expo-blur';
 import Boton from '@/components/Boton';
 import { asignarColor } from '@/constants/funciones';
 import BotonPequeno from '@/components/BotonPequeno';
-import BotonPequenoConBorde from '@/components/BotonPequenoConBorde';
-import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import LottieView from 'lottie-react-native';
 import ElementoEventoAsociacionAnterior from '@/components/ElementoEventoAsociacionAnterior';
 import { useQueryClient } from '@tanstack/react-query';
 const HomeEventosAsociacion = () => {
 
+  const opacityAnimation = useRef(new Animated.Value(0)).current;
   const queryClient = useQueryClient();
   const { session,usuario, cargandoUsuario,setUsuario } = useAuth() //Carreguem el usuari
   const [anteriores, setAnteriores] = useState(false)
@@ -46,6 +41,29 @@ const HomeEventosAsociacion = () => {
   const { data: eventos, isLoading: cargandoEventos, error: errorEventos } = useListaEventosByAsociacion(asociacion?.id_asociacion, cargandoAsociacion)
   const { data: eventosAnteriores, isLoading: cargandoEventosAnteriores, error: errorEventosAnteriores } = useListaEventosByAsociacionAnterior(asociacion?.id_asociacion, cargandoAsociacion)
   const [refrescado, setRefrescando] = useState(false)
+
+  useEffect(()=>{
+    if(eventoAmpliado==null){
+
+    Animated.timing(opacityAnimation, {
+      toValue: 0,
+      duration:200,
+      useNativeDriver: true,
+    }).start();
+
+    }else{
+
+    Animated.timing(opacityAnimation, {
+      toValue: 1,
+      duration:200,
+      useNativeDriver: true,
+    }).start();
+
+
+    }
+
+
+  },[eventoAmpliado])
 
   
   //Esperem a que se carreguen els usuaris
@@ -64,8 +82,9 @@ const HomeEventosAsociacion = () => {
 
   }
 
-  
+ 
 
+  
 
 
 
@@ -100,7 +119,7 @@ const HomeEventosAsociacion = () => {
   }
 
   function clickEliminarEvento(id:number){
-     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    //  LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     Alert.alert("¿Quieres eliminar este evento?", "Esta acción no se puede deshacer.",
     
     //Botons
@@ -119,7 +138,6 @@ const HomeEventosAsociacion = () => {
   }
 
   async function clickCambiarRifas(){
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setAnteriores(!anteriores)
 
   }
@@ -133,6 +151,7 @@ const HomeEventosAsociacion = () => {
     setRefrescando(false)
   }
 
+  
 
 
   return (
@@ -150,22 +169,23 @@ const HomeEventosAsociacion = () => {
 
 
       {/* Si hi ha un evento ampliat s'aplica el blur*/}
-      {eventoAmpliado && (
+      {eventoAmpliado? 
+        <Animated.View style={[styles.absolute, {opacity:opacityAnimation}]}>
         <BlurView style={styles.absolute} experimentalBlurMethod="dimezisBlurView" tint="light" intensity={20}>
           <Pressable onPress={desampliarEvento} style={styles.contenedorListaEventos}>
-           {eventoAmpliado && (
-              <View style={[styles.selectedItemContainer, {top:posicionEventoAmpliado}]}>
+           
+              <Animated.View style={[styles.selectedItemContainer, {top:posicionEventoAmpliado, opacity:opacityAnimation}]}>
                 <ElementoEventoAsociacion ampliado={false} borroso={false} evento={eventos?.find((evento)=>evento.id_evento===eventoAmpliado) as any} />
                 <View style={{flexDirection:"row",  columnGap:15,paddingHorizontal:5}}>
                   <BotonPequeno  flex style={{flex:1.5}} texto="Editar" color={asignarColor(eventos?.find((evento)=>evento.id_evento===eventoAmpliado)?.color_evento).colorTitulo}/>
                   <BotonPequeno onPress={()=>clickEliminarEvento(eventoAmpliado?eventoAmpliado:null)} flex texto="Eliminar" color={asignarColor(eventos?.find((evento)=>evento.id_evento===eventoAmpliado)?.color_evento).colorTitulo}/>
                 </View>
-              </View>
+              </Animated.View>
 
-            )}
           </Pressable>
         </BlurView>
-      )}
+       </Animated.View>
+      :null}
 
       
       <Pressable onPress={desampliarEvento} style={[styles.contenedorListaEventos]}>
@@ -266,8 +286,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 20,
     right: 20,
-    transform:"scale(1.03)",
     zIndex: 3,
+    transform:[{scale:1.01}]
   },
 
 

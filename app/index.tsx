@@ -37,7 +37,7 @@ const index = () =>{
 
             //Comprobem si te un poble per defecte
             //Si no el te el redirigim a seleccionar municipi
-            if(usuario){//Per a evitar errors, si hi ha una sesio pero no hi ha un usuari mos torna al login
+            if(usuario!==null){//Per a evitar errors, si hi ha una sesio pero no hi ha un usuari mos torna al login
 
                 if(usuario.grupo==="ASOCIACION"){
 

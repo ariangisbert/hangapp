@@ -130,12 +130,13 @@ const styles = StyleSheet.create({
     },
     cajaLogo: {
         alignItems: "center",
+        paddingHorizontal:35.5,
         flex: 1,
     },
     logo: {
 
         flex: 1,
-        resizeMode: "center",
+        resizeMode: "contain",
         width: "100%"
 
     },
