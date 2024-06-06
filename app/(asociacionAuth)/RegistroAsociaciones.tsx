@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { Link, router } from "expo-router";
 import TextoDegradado from "../../components/TextoDegradado";
+import FieldAreaDegradado from "@/components/FieldAreaDegradado";
 
 
 
@@ -176,19 +177,29 @@ const UserRegistro = () => {
 
 
                             <View style={[styles.elementoFormulario, {flexDirection:"row", justifyContent:"space-between", paddingHorizontal:10}]}>
-                           
-                            <View>
-                            <Text style={{color:"#8f67e4", fontWeight:"600", fontSize:16}}>Provincia</Text>
                             
-                            </View>
+                                <View style={{alignItems:"center", rowGap:12}}>
+                                    <Text style={{color:"#8f67e4", fontWeight:"600", fontSize:16}}>Provincia</Text>
+                                    <Pressable style={{backgroundColor:"#D8D8D8", opacity:0.8,paddingHorizontal:10, alignItems:"center",justifyContent:"center",height:25,borderRadius:12,borderCurve:"continuous", flex:1}}>
+                                            <Text adjustsFontSizeToFit numberOfLines={1} style={{fontWeight:"500", color:"#212121",fontSize:16}}>Seleccionar</Text>
+                                    </Pressable>
+                                </View>
 
-                            <View>
-                            <Text style={{color:"#8f67e4", fontWeight:"600", fontSize:16}}>Municipio</Text>
-                            
-                            </View>
+                                <View style={{alignItems:"center", rowGap:12}}>
+
+                                         <Text style={{color:"#8f67e4", fontWeight:"600", fontSize:16}}>Municipio</Text>
+                                        <Pressable style={{backgroundColor:"#D8D8D8",opacity:0.8,paddingHorizontal:10, alignItems:"center",justifyContent:"center",height:25,borderRadius:12,borderCurve:"continuous", flex:1}}>
+                                            <Text adjustsFontSizeToFit numberOfLines={1} style={{fontWeight:"500", color:"#212121",fontSize:16}}>Seleccionar</Text>
+                                        </Pressable>
+
+                                </View>
                             
 
                            </View>
+
+                           <View style={styles.elementoFormulario}>
+                                 <FieldAreaDegradado onChangeText={manejarEmail} width={280} color={Colors.DegradatRosa} placeholder="Descripcion" autoComplete="email" />
+                            </View>
 
                             <View style={styles.elementoFormulario}>
                                 <BotonDegradado onPress={clickEntrar} color={Colors.DegradatRosa} texto="Registrarse" />

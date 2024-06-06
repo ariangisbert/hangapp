@@ -6,6 +6,7 @@ import { useAuth } from '@/providers/AuthProvider';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator, ScrollView } from 'react-native';
+import email from 'react-native-email'
 
 const ModelGanador = () => {
 
@@ -22,6 +23,15 @@ const ModelGanador = () => {
 
   console.log(ganador.profiles.municipios)
 
+  const enviarMail = () => {
+    const to = [ganador.profiles.email] // string or array of email addresses
+    email(to, {
+        // Optional additional arguments
+        subject: '¡Has ganado la rifa!',
+        body: '',
+        checkCanOpen: false // Call Linking.canOpenURL prior to Linking.openURL
+    }).catch(console.error)
+}
 
   return (
     <View style={{ backgroundColor: "transparent", justifyContent: "flex-end", height: "100%" }}>
@@ -47,9 +57,9 @@ const ModelGanador = () => {
             <View style={{ paddingHorizontal:15}}>
               <Text numberOfLines={1} adjustsFontSizeToFit style={{ fontSize: 20, lineHeight: 40, color:Colors.MoradoElemento.colorTitulo, textAlign: "center", fontWeight: "500" }}>{ganador.profiles.municipios.nombre_municipio+", "+ ganador.profiles.municipios.provincias.nombre_provincia}</Text>
             </View>
-            <View style={{ paddingHorizontal:15, borderRadius:12, borderCurve:"continuous",backgroundColor:Colors.MoradoElemento.colorFondo}}>
+            <Pressable onPress={enviarMail} style={{ paddingHorizontal:15, borderRadius:12, borderCurve:"continuous",backgroundColor:Colors.MoradoElemento.colorFondo}}>
               <Text numberOfLines={1} adjustsFontSizeToFit style={{ fontSize: 20, lineHeight: 40, color:Colors.MoradoElemento.colorTitulo, textAlign: "center", fontWeight: "400" }}>{ganador.profiles.email}</Text>
-            </View>
+            </Pressable>
 
             
           </View>

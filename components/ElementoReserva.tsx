@@ -10,6 +10,7 @@ import { useUpdateReservaGestionada } from '@/api/loteria';
 import { useAuth } from '@/providers/AuthProvider';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
+import call from "react-native-phone-call"
 
 
 
@@ -71,6 +72,12 @@ const ElementoReserva = (props:any) => { //Pa que lo que se pase siga de tipo ev
 
     }
 
+    function llamar(){
+
+        call({number:reserva.numero_telefono,  skipCanOpen: true})
+
+    }
+
     //DISENY
     return (
         <TouchableWithoutFeedback onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={clickAmpliar}>
@@ -98,7 +105,7 @@ const ElementoReserva = (props:any) => { //Pa que lo que se pase siga de tipo ev
                 
                 {/* Titulo*/}
                 <View style={{flex:1, alignItems:"flex-start"}}>
-                    <Pressable style={{ justifyContent: "center", backgroundColor:"white", paddingHorizontal:20, opacity:0.7, paddingVertical:5, borderRadius:12, borderCurve:"continuous"}}>
+                    <Pressable onPress={llamar} style={{ justifyContent: "center", backgroundColor:"white", paddingHorizontal:20, opacity:0.7, paddingVertical:5, borderRadius:12, borderCurve:"continuous"}}>
                         <Text adjustsFontSizeToFit numberOfLines={1} style={[styles.titulo, { color: props.color, fontWeight:"600", fontSize:18  }]}>{reserva.numero_telefono}</Text>
                     </Pressable>
                 </View>
