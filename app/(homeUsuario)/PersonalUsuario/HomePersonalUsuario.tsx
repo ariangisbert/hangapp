@@ -3,20 +3,26 @@ import { recibirMunicipioyProvincia } from '@/api/municipios';
 import CabeceraDegradado from '@/components/CabeceraDegradado';
 import ElementoEventoFuturo from '@/components/ElementoEventoFuturo';
 import FieldDegradado from '@/components/FieldDegradado';
+import ImagenRemotaFotoPerfil from '@/components/ImagenRemotaFotoPerfil';
 import Colors from '@/constants/Colors';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvider';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Redirect, router } from 'expo-router';
-import React, { useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, Platform, Pressable, LayoutAnimation, TextInput, Alert, FlatList, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ActivityIndicator, StyleSheet, Platform, Pressable, LayoutAnimation, TextInput, Alert, FlatList, Button, TouchableWithoutFeedback } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from "expo-file-system"
+import { randomUUID } from 'expo-crypto';
+import { decode } from 'base64-arraybuffer';
 
 const HomePersonalUsuario = () => {
 
   const { usuario, cargandoUsuario, session, setUsuario, setSession } = useAuth() //Carreguem el usuari
   const [botonNombreExpandido, setBotonNombreExpandido] = useState(false)
   const [botonPasswordExpandido, setBotonPasswordExpandido] = useState(false)
+  const [imagenPerfilSeleccionada, setImagenPerfilSeleccionada] = useState<any>(null)
 
   //VALORS DE CANVI
   const [nuevoNombre, setNuevoNombre] = useState<string>("")
@@ -26,6 +32,55 @@ const HomePersonalUsuario = () => {
   const {data:eventosFuturos, isLoading:cargandoEventosFuturos, error:errorEventos } = recibirEventosFuturosByUsuario(usuario.id, cargandoUsuario)
 
   const alturaSafe = useSafeAreaInsets().top
+
+
+  useEffect(()=>{
+
+    if(imagenPerfilSeleccionada==null){
+      return
+    }
+
+    async function subirImagenDentroEffect(){
+
+      console.log(imagenPerfilSeleccionada)
+      const rutaSubida = await subirImagen()
+
+    console.log(rutaSubida)
+    //Si la ruta esta buida tirem arrere
+    
+    if(rutaSubida===""){
+        Alert.alert("Error al cambiar la foto de perfil")
+        return
+    }
+
+
+    const {error} = await supabase
+    .from("profiles")
+    .update({avatar_url: rutaSubida})
+    .eq("id", usuario.id)
+
+    if(error){
+
+    Alert.alert(error.message)
+
+    }else{
+
+    //Actualisem el usuari en local per a no fer un altra query a la base de datos
+
+    setUsuario({...usuario,avatar_url:rutaSubida})
+    Alert.alert("Imagen de perfil cambiada correctamente")
+    }    
+
+    }
+
+    subirImagenDentroEffect()
+    
+  
+    
+
+
+  }, [imagenPerfilSeleccionada])
+
 
   //Esperem a que se carreguen els usuaris
   if (cargandoUsuario||cargandoMunicipio||cargandoEventosFuturos) {
@@ -116,14 +171,75 @@ const HomePersonalUsuario = () => {
 
   }
 
+  async function abrirImagePicker() {
+
+    console.log(imagenPerfilSeleccionada)
+
+    let resultadoFoto = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+    });
+    // SI CANCELEM LA TRIA DE FOTO
+    if (resultadoFoto.canceled) {
+        Alert.alert("Error al cambiar la foto de perfil")
+        return
+    }
+    
+   
+
+    setImagenPerfilSeleccionada(resultadoFoto.assets[0].uri)
+
+    
+
+}
+
+  const subirImagen = async () => {
+
+    //SI LA RUTA ESTA MAL
+    if (!imagenPerfilSeleccionada?.startsWith('file://')) {
+        return;
+    }
+
+    const base64 = await FileSystem.readAsStringAsync(imagenPerfilSeleccionada, {
+        encoding: 'base64',
+    });
+
+    //Creem una ruta nova en nom aleatori
+    const rutaNueva = `${randomUUID()}.png`;
+
+    const contentType = 'image/png';
+
+    const { data, error } = await supabase.storage
+        .from('imagenesPerfil')
+        .upload(rutaNueva, decode(base64), { contentType });
+    if(error){
+
+        Alert.alert(error.message)
+        return ""
+    }
+
+    if (data) {
+        return data.path;
+    }
+  };
+
+  
   return (
     <Pressable onPress={clickGeneral} style={{ flex: 1, marginTop: Platform.OS === "ios" ? alturaSafe : 20, backgroundColor: "white" }}>
       {/* Contenedor nombre */}
       <View  style={[styles.contenedorNombreMunicipio, {height:50}]}>
         <Text style={styles.textoMunicipio}>{usuario.nombre} {usuario.apellidos}</Text>
       </View>
-      <CabeceraDegradado color={Colors.DegradatMorat} title="Zona personal"></CabeceraDegradado>
+      <View style={{flexDirection:"row",  alignItems:"flex-end", justifyContent:"space-between"}}>
+          <CabeceraDegradado color={Colors.DegradatMorat}  title="Zona personal"></CabeceraDegradado>
+          <TouchableWithoutFeedback onPress={abrirImagePicker}>
 
+            <ImagenRemotaFotoPerfil style={{height:55,marginRight:25, borderRadius:200, aspectRatio:1}} ruta={usuario.avatar_url} fallback={"../../assets.images.fallbackLogoAsociacion.png"}></ImagenRemotaFotoPerfil>
+         
+          </TouchableWithoutFeedback>
+      </View>
       {/* Contenedor email y municipio */}
       <View style={styles.contenedorDatos}>
         

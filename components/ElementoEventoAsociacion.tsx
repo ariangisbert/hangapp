@@ -29,9 +29,10 @@ const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borro
     
 
     //Comprovem el color que te
+    const scaleAnim = useRef(new Animated.Value(1)).current;
     const [expandidoAsistencias, setExpandidoAsistencias] = useState(false)
     const {usuario, cargandoUsuario} = useAuth()
-    
+   
     const {data:asistencias,isLoading: cargandoAsistencias, error:errorAsistencias } = recibirAsistencias(evento?.id_evento, false)
     let color = asignarColor(evento?.color_evento)
     
@@ -60,6 +61,25 @@ const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borro
         }
 
     }, [ampliado])
+    
+    useEffect(()=>{
+
+        LayoutAnimation.configureNext({
+            duration:300,
+            create: {type: "easeInEaseOut", property: 'opacity'},
+            update: {type: "easeInEaseOut", property: 'opacity'},
+            delete: {type: "easeInEaseOut", property: 'opacity'},
+          });
+
+        if(ampliado){
+
+            itemRef.current?.measure((fx, fy, width, height, px, py) => {
+                setEventoAmpliadoLayout(py)
+            });
+            
+        }
+
+    }, [ampliado])
 
     function clickExpandir(){
 
@@ -72,13 +92,28 @@ const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borro
         setExpandidoAsistencias(!expandidoAsistencias)
     }
 
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, {
+          toValue: 0.96,
+          useNativeDriver: true,
+        }).start();
+      };
+    
+      const handlePressOut = () => {
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          useNativeDriver: true,
+        }).start();
+      };
+    
+
 
     //DISENY
     return (
         
-            <Pressable ref={itemRef} onLongPress={()=>pulsacionLarga?pulsacionLarga(evento?.id_evento):null} onPress={clickExpandir} style={[styles.contenedorElemento, {height:expandidoAsistencias?210:105, flexDirection:"column",marginBottom:expandidoAsistencias?0:17 }]}>
+            <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} ref={itemRef} onLongPress={()=>pulsacionLarga?pulsacionLarga(evento?.id_evento):null} onPress={clickExpandir} style={[styles.contenedorElemento, {height:expandidoAsistencias?210:105, flexDirection:"column",marginBottom:expandidoAsistencias?0:17 }]}>
                     
-                    <View style={[styles.contenedorElemento, {flex:1,backgroundColor: color.colorFondo,flexDirection:"row", height:105,marginBottom:0, borderRadius: 22,borderCurve: "continuous",shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity:expandidoAsistencias?0.25: 0.525, elevation: 2}]}>
+                    <Animated.View style={[styles.contenedorElemento, {transform: [{ scale: scaleAnim }],flex:1,backgroundColor: color.colorFondo,flexDirection:"row", height:105,marginBottom:0, borderRadius: 22,borderCurve: "continuous",shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity:expandidoAsistencias?0.25: 0.525, elevation: 2}]}>
                         {/* Parte izquierdas */}
                         <View style={styles.contenedorIzquierda}>
                             
@@ -120,7 +155,7 @@ const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borro
                             <ImagenRemotaLogoAsociacion style={styles.imagenLogoAsociacion} fallback="../assets.images.fallbackLogoAsociacion.png" ruta={evento?.asociaciones.logo_asociacion}></ImagenRemotaLogoAsociacion>
                         </View>
 
-                     </View>
+                     </Animated.View>
 
                     
                      <View style={{ flexDirection:"row", opacity:expandidoAsistencias?1:0, justifyContent:"space-evenly",paddingTop:expandidoAsistencias?22:0, height:expandidoAsistencias?105:0,top:-22,zIndex:-1,borderRadius:22,borderCurve:"continuous", marginHorizontal:22,backgroundColor:color.colorTitulo}}>
