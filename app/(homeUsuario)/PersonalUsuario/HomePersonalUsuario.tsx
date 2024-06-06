@@ -42,10 +42,8 @@ const HomePersonalUsuario = () => {
 
     async function subirImagenDentroEffect(){
 
-      console.log(imagenPerfilSeleccionada)
       const rutaSubida = await subirImagen()
 
-    console.log(rutaSubida)
     //Si la ruta esta buida tirem arrere
     
     if(rutaSubida===""){

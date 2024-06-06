@@ -39,6 +39,8 @@ const HomeEventosAsociacion = () => {
   const [eventoAmpliado, setEventoAmpliado] = useState<any>(null)
   const [posicionEventoAmpliado, setPosicionEventoAmpliado] = useState<any>(0)
   const {mutate:eliminarEvento} = useEliminarEvento()
+  const [pulsadoMas, setPulsadoMas] = useState(false)
+  const [pulsadoCambiarEventos, setPulsadoCambiarEventos] = useState(false)
   //READS
   const {data:asociacion, isLoading:cargandoAsociacion, error:errorAsociacion} = recibirAsociacion(usuario.id, cargandoUsuario)
   const { data: eventos, isLoading: cargandoEventos, error: errorEventos } = useListaEventosByAsociacion(asociacion?.id_asociacion, cargandoAsociacion)
@@ -141,7 +143,7 @@ const HomeEventosAsociacion = () => {
       <CabeceraDegradado color={Colors.DegradatRosa} alto title="Mis eventos"></CabeceraDegradado>
 
         {/* Boton para añadir evento */}
-        <Pressable onPress={()=>router.push("/EventosAsociacion/CrearEvento")} style={{ marginRight:20}}>
+        <Pressable onPressIn={()=>setPulsadoMas(true)} onPressOut={()=>setPulsadoMas(false)} onPress={()=>router.push("/EventosAsociacion/CrearEvento")} style={{ marginRight:20, opacity:pulsadoMas?0.6:1}}>
           <Text style={{color:"#DC82F5", fontSize:48, marginBottom:-6.5,fontWeight:"300" }}>+</Text>
         </Pressable>
       </View>
@@ -203,8 +205,8 @@ const HomeEventosAsociacion = () => {
       </Pressable>
 
       <View style={{backgroundColor:"white",  flexBasis:50,flexGrow:0.03,paddingBottom:10, justifyContent:"center"}}>
-        <Pressable onPress={clickCambiarRifas} style={{ justifyContent:"center", paddingHorizontal:12, height:35, alignSelf:"center", paddingVertical:8,backgroundColor:"#f3f3f3", borderRadius:12, borderCurve:"continuous"}}> 
-               <Text numberOfLines={1} adjustsFontSizeToFit style={{fontSize:15.5,color:Colors.ColorRosaNeutro,textAlign:"center", fontWeight:"500", letterSpacing:0.1, opacity:0.85}}>{anteriores?"Anteriores":"Ver eventos finalizados"}</Text>
+        <Pressable onPressIn={()=>setPulsadoCambiarEventos(true)} onPressOut={()=>setPulsadoCambiarEventos(false)} onPress={clickCambiarRifas} style={{  justifyContent:"center", paddingHorizontal:12, height:35, alignSelf:"center", paddingVertical:8,backgroundColor:"#f3f3f3", borderRadius:12, borderCurve:"continuous"}}> 
+               <Text numberOfLines={1} adjustsFontSizeToFit style={{opacity:pulsadoCambiarEventos?0.5:0.85,fontSize:15.5,color:Colors.ColorRosaNeutro,textAlign:"center", fontWeight:"500", letterSpacing:0.1, }}>{anteriores?"Anteriores":"Ver eventos finalizados"}</Text>
         </Pressable>
       </View>   
     </View>

@@ -25,6 +25,8 @@
     "@tanstack/react-query": "^5.34.1",
     "base64-arraybuffer": "^1.0.2",
     "expo": "^51.0.2",
+    "expo-blur": "~13.0.2",
+    "expo-crypto": "~13.0.2",
     "expo-dev-client": "~4.0.13",
     "expo-file-system": "~17.0.1",
     "expo-font": "~12.0.5",
@@ -37,6 +39,7 @@
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.4",
     "expo-web-browser": "~13.0.3",
+    "lottie-react-native": "6.7.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.1",
@@ -49,9 +52,7 @@
     "react-native-svg": "15.2.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.6",
-    "expo-crypto": "~13.0.2",
-    "expo-blur": "~13.0.2",
-    "lottie-react-native": "6.7.0"
+    "expo-calendar": "~13.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

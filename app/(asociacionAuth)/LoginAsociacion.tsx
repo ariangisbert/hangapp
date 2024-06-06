@@ -133,7 +133,7 @@ const LoginAsociacion = () => {
 
                     {/* Boto pa anar a registrarse */}
                     <View style={styles.elementoFormulario}>
-                        <Link href={"/UserRegistro"} asChild>
+                        <Link href={"/RegistroAsociaciones"} asChild>
                             <Pressable>
                                 <TextoDegradado color={Colors.DegradatRosa} style={styles.subtituloLogo}>Solicitar afiliación</TextoDegradado>
                             </Pressable>

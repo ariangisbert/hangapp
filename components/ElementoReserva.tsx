@@ -1,6 +1,6 @@
 import { Evento, Rifa } from '@/assets/types';
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform, Pressable, LayoutAnimation, ActivityIndicator, Alert } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, StyleSheet, Platform, Pressable, LayoutAnimation, ActivityIndicator, Alert, Animated, TouchableWithoutFeedback } from 'react-native';
 import ImagenRemotaLogoAsociacion from './ImagenRemotaLogoAsociacion';
 import Colors from '@/constants/Colors';
 import { numeroAMes } from "../constants/funciones"
@@ -24,11 +24,26 @@ const ElementoReserva = (props:any) => { //Pa que lo que se pase siga de tipo ev
     const [ampliado, setAmpliado] = useState(false)
     const [cargandoUpdate, setCargandoUpdate] = useState(false)
     const {mutate:updateReserva} = useUpdateReservaGestionada()
+    const scaleAnim = useRef(new Animated.Value(1)).current;
 
     
     if(cargandoUsuario){
         return<ActivityIndicator></ActivityIndicator>
     }
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, {
+          toValue: 0.96,
+          useNativeDriver: true,
+        }).start();
+      };
+    
+      const handlePressOut = () => {
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          useNativeDriver: true,
+        }).start();
+      };
+
     const idUsuario = usuario.id
     const reserva = props.reserva
 
@@ -58,7 +73,8 @@ const ElementoReserva = (props:any) => { //Pa que lo que se pase siga de tipo ev
 
     //DISENY
     return (
-        <Pressable onPress={clickAmpliar} style={[styles.contenedorElemento, {  height:ampliado?130:91, backgroundColor: props.color, shadowColor: props.color, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.15, elevation: 2, opacity:reserva.gestionada?0.7:1 }]}>
+        <TouchableWithoutFeedback onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={clickAmpliar}>
+        <Animated.View  style={[styles.contenedorElemento, {transform: [{ scale: scaleAnim }],  height:ampliado?130:91, backgroundColor: props.color, shadowColor: props.color, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.15, elevation: 2, opacity:reserva.gestionada?0.7:1 }]}>
            
             {/* Contenido no ampliado, sempre es estatic */}
             <View style={styles.contenedorNoAmpliado}>
@@ -106,7 +122,8 @@ const ElementoReserva = (props:any) => { //Pa que lo que se pase siga de tipo ev
 
            
             
-        </Pressable>
+        </Animated.View>
+        </TouchableWithoutFeedback>
     );
 };
 

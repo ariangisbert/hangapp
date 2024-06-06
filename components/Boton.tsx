@@ -14,10 +14,11 @@ import { LinearGradient } from "expo-linear-gradient"
 
 const Boton = (props:any) =>{
 
+        const [pulsado, setPulsado] = useState(false)
    
         return(
 
-                <Pressable onPress={props.onPress} disabled={props.disabled} style={{flex:1,justifyContent:"center", opacity:props.disabled?0.7:1}}>
+                <Pressable onPressIn={()=>setPulsado(true)} onPressOut={()=>setPulsado(false)} onPress={props.onPress} disabled={props.disabled} style={{flex:1,justifyContent:"center", opacity:props.disabled||pulsado?0.7:1}}>
                     <View style={[styles.fondoDegradado, {backgroundColor:props.color+"", paddingHorizontal:props.flex?0:60}]}>
                        
                         {props.cargando?<ActivityIndicator color={"white"}></ActivityIndicator>

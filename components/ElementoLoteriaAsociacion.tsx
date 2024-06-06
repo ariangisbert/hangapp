@@ -1,6 +1,6 @@
 import { Evento, Loteria } from '@/assets/types';
-import React from 'react';
-import { View, Text, StyleSheet, Platform, Pressable } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, StyleSheet, Platform, Pressable, Animated, TouchableWithoutFeedback } from 'react-native';
 import ImagenRemotaLogoAsociacion from './ImagenRemotaLogoAsociacion';
 import Colors from '@/constants/Colors';
 import { numeroAMes, numeroAMesShort } from "../constants/funciones"
@@ -11,11 +11,28 @@ interface ElementoLoteriaProps {
     loteria: Loteria | null,
 }
 
+
 //El unic prop que acepta es un evento, el qual te tots els atributs de la tabla de eventos més el logo de les asociacioms
 //Al fer la consulta mos tornen un objecte asociaciones dins del evento i dins de este està la ruta de la imatge
 //Fallback es la imatge que gastarem si no carrega
 
 const ElementoLoteriaAsociacion: React.FC<ElementoLoteriaProps> = ({ loteria }) => { //Pa que lo que se pase siga de tipo evento
+
+    const scaleAnim = useRef(new Animated.Value(1)).current;
+
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, {
+          toValue: 0.96,
+          useNativeDriver: true,
+        }).start();
+      };
+    
+      const handlePressOut = () => {
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          useNativeDriver: true,
+        }).start();
+      };
 
 
     //Comprovem el color que te
@@ -46,20 +63,22 @@ const ElementoLoteriaAsociacion: React.FC<ElementoLoteriaProps> = ({ loteria }) 
 
     //DISENY
     return (
-        <Pressable onPress={()=>router.navigate({pathname:`/RifasAsociacion/Loteria`, params:{id:loteria?.id, colorPasado:loteria?.color}}as any)} style={[styles.contenedorElemento, { backgroundColor: color.colorTitulo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.2, elevation: 2 }]}>
-           <View style={styles.contenedorTitulo}>
-                <Text style={styles.titulo}>{loteria?.titulo}</Text>
-           </View>
+        <TouchableWithoutFeedback onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={()=>router.navigate({pathname:`/RifasAsociacion/Loteria`, params:{id:loteria?.id, colorPasado:loteria?.color}}as any)}>
+            <Animated.View style={[styles.contenedorElemento, {transform: [{ scale: scaleAnim }], backgroundColor: color.colorTitulo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.2, elevation: 2 }]}>
+            <View style={styles.contenedorTitulo}>
+                    <Text style={styles.titulo}>{loteria?.titulo}</Text>
+            </View>
 
-           <View style={styles.contenedorNumero}>
-                <Text adjustsFontSizeToFit style={styles.numero}>{loteria?.numero}</Text>
-           </View>
+            <View style={styles.contenedorNumero}>
+                    <Text numberOfLines={1} adjustsFontSizeToFit style={styles.numero}>{loteria?.numero}</Text>
+            </View>
 
-           <View style={styles.contenedorFecha}>
-                 <Text style={styles.fecha}>{fecha}</Text>
-           </View>
+            <View style={styles.contenedorFecha}>
+                    <Text style={styles.fecha}>{fecha}</Text>
+            </View>
 
-        </Pressable>
+            </Animated.View>
+        </TouchableWithoutFeedback>
     );
 };
 
@@ -84,6 +103,7 @@ const styles = StyleSheet.create({
     contenedorTitulo: {
         flex: 1,
         justifyContent:"center",
+        paddingHorizontal:5
 
     },
     contenedorNumero: {

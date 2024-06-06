@@ -9,11 +9,11 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvider';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, Text, Alert, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Alert, ActivityIndicator, StyleSheet, ScrollView, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { err } from 'react-native-svg';
-
+import * as Calendar from 'expo-calendar';
 
 const DetallesEvento = () => {
 
@@ -62,19 +62,63 @@ const DetallesEvento = () => {
 
     }
 
-    
+   
 
-    function clickNotificar(){
-      setCargandoInsert(true)
-      insertarAsistencia({id_evento:evento?.id_evento,id_usuario: usuario.id}, {onSuccess:()=>setCargandoInsert(false)})
-
+    async function getDefaultCalendarSource() {
+      const defaultCalendar = await Calendar.getDefaultCalendarAsync();
+      return defaultCalendar.source as any;
     }
 
+    
+    
+
+    
+
+   
 
     //Ara agarrem el mes
     let mes = numeroAMes(evento?.fecha_evento.split("-")[1])
     //I fem la fecha
     let fecha=evento?.fecha_evento.split("-")[2]+" "+mes+" "+evento?.fecha_evento.split("-")[0]
+
+    function clickNotificar(){
+      setCargandoInsert(true)
+      insertarAsistencia({id_evento:evento?.id_evento,id_usuario: usuario.id}, {
+        onSuccess:()=>{
+
+          
+          setCargandoInsert(false)
+          async function crearEvento(){
+          
+            const { status } = await Calendar.requestCalendarPermissionsAsync();
+            if (status === 'granted') {
+              
+              const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT)
+            const defaultCalendar =
+            calendars.find((calendar) => calendar.isPrimary) || calendars[0]
+    
+            let fechaEventoCalendario = evento?.fecha_evento +" "+evento?.hora_evento.split(":")[0]+":"+evento?.hora_evento.split(":")[1]
+            let fechaEventoCalendarioFuturo = evento?.fecha_evento +" "+(parseInt(evento?.hora_evento.split(":")[0]as any)+1)+":"+evento?.hora_evento.split(":")[1]
+             
+            const eventIdInCalendar = await Calendar.createEventAsync(defaultCalendar.id,{title:evento?.titulo_evento,  startDate: new Date(fechaEventoCalendario),endDate:new Date(fechaEventoCalendarioFuturo)})
+            Alert.alert("Se ha notificado tu asistencia y se ha añadido el evento al calendario.")
+            }else{
+  
+              console.log(status)
+            }
+            
+          }
+          crearEvento()
+          
+          
+      
+        }})
+
+        
+      
+
+    }
+
 
     return (
       <SafeAreaView style={{backgroundColor:colorFondo+"", flex:1, paddingHorizontal:42}}>

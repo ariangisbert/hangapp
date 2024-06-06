@@ -1,7 +1,7 @@
 import FieldBordePequenoRosa from '@/components/FieldBordePequenoRosa';
 import { Stack, router } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Pressable, TouchableWithoutFeedback, Keyboard, Platform, Alert, ActivityIndicator, Image, Switch } from 'react-native';
+import { View, Text, ScrollView, Pressable, TouchableWithoutFeedback, Keyboard, Platform, Alert, ActivityIndicator, Image, Switch, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import Colors from '@/constants/Colors';
@@ -253,90 +253,94 @@ const CrearRifa = () => {
     return (
         <View style={{ flex: 1, marginTop: Platform.OS === "ios" ? alturaSafe : 20, }}>
             <TouchableWithoutFeedback >
-                <View style={{ flex: 1 }}>
-                    <Stack.Screen options={{ headerTintColor: "#BC77EE", contentStyle: { backgroundColor: "white" } }} />
+            <KeyboardAvoidingView behavior="padding" style={{flex:1}}>
+                    <View style={{ flex: 1 }}>
+                        <Stack.Screen options={{ headerTintColor: "#BC77EE", contentStyle: { backgroundColor: "white" } }} />
 
-                    {/* Cabecera */}
-                    <View style={{ alignItems: "center", flexBasis: 50, justifyContent: "center" }}>
-                        <Text style={{ fontSize: 30, fontWeight: "700", color: "#BC77EE" }}>Nueva rifa</Text>
-                    </View>
+                        {/* Cabecera */}
+                        <View style={{ alignItems: "center", flexBasis: 50, justifyContent: "center" }}>
+                            <Text style={{ fontSize: 30, fontWeight: "700", color: "#BC77EE" }}>Nueva rifa</Text>
+                        </View>
 
-                    {/* Contenedor crear */}
-                    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }} style={{ paddingHorizontal: 20, marginTop: 20 }}>
-                        {/* Fila 1 */}
-                        <View style={{ height: 250, columnGap: 20, marginBottom: 25, justifyContent:"center", flexDirection: "row" }}>
+                        {/* Contenedor crear */}
+                        
+                            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }} style={{ paddingHorizontal: 20, marginTop: 20 }}>
+                                {/* Fila 1 */}
+                                <View style={{ height: 250, columnGap: 20, marginBottom: 25, justifyContent:"center", flexDirection: "row" }}>
 
-                            {/* Image */}
-                            <Pressable onPress={abrirImagePicker} style={{overflow:"hidden", backgroundColor: "#E3C6F8", justifyContent: "center", alignItems: "center", borderRadius: 20, borderCurve: "continuous", aspectRatio: 1 }}>
+                                    {/* Image */}
+                                    <Pressable onPress={abrirImagePicker} style={{overflow:"hidden", backgroundColor: "#E3C6F8", justifyContent: "center", alignItems: "center", borderRadius: 20, borderCurve: "continuous", aspectRatio: 1 }}>
 
-                                {imagenSeleccionada?
-                                <Image style={{height:"100%", width:"100%"}} source={{uri:imagenSeleccionada}}></Image>
-                                    :
-                                <Text style={{ fontSize: 44, color: "#BC77EE" }}>+</Text>    
-                                }
+                                        {imagenSeleccionada?
+                                        <Image style={{height:"100%", width:"100%"}} source={{uri:imagenSeleccionada}}></Image>
+                                            :
+                                        <Text style={{ fontSize: 44, color: "#BC77EE" }}>+</Text>    
+                                        }
+                                        
+
+                                    </Pressable>
+
+                                </View>
+                                <View style={{paddingHorizontal:20}}>
+                                    <FieldBordePequenoRosa onChangeText={manejarTitulo} placeholder={"Titulo"} altura={40} />
+                                </View>        
                                 
+                                {/* Fila 4 DESCRIPCION */}
+                                <View style={{paddingHorizontal:20}}>
+                                    <FieldBordePequenoRosa multiline onChangeText={manejarDescripcion} style={{ marginTop: 25, fontSize: 16, paddingVertical: 10 }} placeholder={"Descripción"} altura={120} />
+                                </View>       
 
-                            </Pressable>
+                                {/* Fila PRECIO */}
+                                <View style={{justifyContent:"center", alignItems:"center",columnGap:20, flexDirection:"row"}}>
+                                    <FieldBordePequenoRosa numerico style={{marginTop:25, width:100, fontSize:20, letterSpacing:0.5}} onChangeText={manejarPrecio} placeholder={"0,0 €"} altura={60} />
+                                    
+                                    <View style={{justifyContent:"center",columnGap:10,flexDirection:"row", marginTop:22, alignItems:"center", }}>
+                                        <Text style={{ fontSize: 19, fontWeight: "600", color: "#BC77EE" }}>Rango físico?</Text>
+                                        <Switch
+                                            trackColor={{ false: "#FCF0FE", true: "#DEC5F0" }}
+                                            thumbColor={tieneRangoFisico ? "#BC77EE" : "white"}
+                                            ios_backgroundColor="#FCF0FE"
+                                            onValueChange={() => setTieneRangoFisico(previousState => !previousState)}
+                                            value={tieneRangoFisico}
+                                        />
+                                    </View>
+                                
+                                </View>
 
-                        </View>
-                        <View style={{paddingHorizontal:20}}>
-                            <FieldBordePequenoRosa onChangeText={manejarTitulo} placeholder={"Titulo"} altura={40} />
-                        </View>        
+                                {/* Si te un rango físic mostrem el camp */}
+                                {tieneRangoFisico?
+                                <View style={{justifyContent:"center", alignItems:"center",columnGap:20, flexDirection:"row"}}>
+                                    <FieldBordePequenoRosa numerico style={{marginTop:25, width:200, fontSize:16, letterSpacing:0.5}} onChangeText={manejarNumeroMaximoFisico} placeholder={"Número máximo"} altura={50} />
+                                </View>:null}
+
+
+
+                                {/* Fecha */}
+
+                                <View style={{ marginTop: 27, height: 40, justifyContent: "center", columnGap: 20, flexDirection: "row" }}>
+
+                                    {/* Fecha */}
+                                    <Pressable onPress={() => setFechaPickerAbierta(true)} style={{ justifyContent: "center", backgroundColor: "#F6F6F6", borderRadius: 14, borderCurve: "continuous", paddingHorizontal: 22 }}>
+                                        <Text style={{ fontSize: 17, fontWeight: "600", color: "#C78EF0", textAlign: "center" }}>{fechaAString(fechaSeleccionada)}</Text>
+                                    </Pressable>
+
+                                    <DateTimePickerModal
+                                        isVisible={fechaPickerAbierta}
+                                        mode="date"
+                                        onConfirm={asignarFecha}
+                                        onCancel={() => setFechaPickerAbierta(false)}
+                                        minimumDate={new Date()}
+                                    />
+                                </View>
+
+                                {/* Boton crear */}
+                                <View style={{ marginTop: 28 }}>
+                                    <BotonDegradado onPress={clickCrear} grande color={Colors.DegradatRosa} texto="Crear"></BotonDegradado>
+                                </View>
+                            </ScrollView>
                         
-                        {/* Fila 4 DESCRIPCION */}
-                        <View style={{paddingHorizontal:20}}>
-                            <FieldBordePequenoRosa multiline onChangeText={manejarDescripcion} style={{ marginTop: 25, fontSize: 16, paddingVertical: 10 }} placeholder={"Descripción"} altura={120} />
-                        </View>       
-
-                        {/* Fila PRECIO */}
-                        <View style={{justifyContent:"center", alignItems:"center",columnGap:20, flexDirection:"row"}}>
-                            <FieldBordePequenoRosa numerico style={{marginTop:25, width:100, fontSize:20, letterSpacing:0.5}} onChangeText={manejarPrecio} placeholder={"0,0 €"} altura={60} />
-                            
-                            <View style={{justifyContent:"center",columnGap:10,flexDirection:"row", marginTop:22, alignItems:"center", }}>
-                                <Text style={{ fontSize: 19, fontWeight: "600", color: "#BC77EE" }}>Rango físico?</Text>
-                                <Switch
-                                    trackColor={{ false: "#FCF0FE", true: "#DEC5F0" }}
-                                    thumbColor={tieneRangoFisico ? "#BC77EE" : "white"}
-                                    ios_backgroundColor="#FCF0FE"
-                                    onValueChange={() => setTieneRangoFisico(previousState => !previousState)}
-                                    value={tieneRangoFisico}
-                                />
-                            </View>
-                        
-                        </View>
-
-                        {/* Si te un rango físic mostrem el camp */}
-                        {tieneRangoFisico?
-                        <View style={{justifyContent:"center", alignItems:"center",columnGap:20, flexDirection:"row"}}>
-                            <FieldBordePequenoRosa numerico style={{marginTop:25, width:200, fontSize:16, letterSpacing:0.5}} onChangeText={manejarNumeroMaximoFisico} placeholder={"Número máximo"} altura={50} />
-                        </View>:null}
-
-
-
-                        {/* Fecha */}
-
-                        <View style={{ marginTop: 27, height: 40, justifyContent: "center", columnGap: 20, flexDirection: "row" }}>
-
-                            {/* Fecha */}
-                            <Pressable onPress={() => setFechaPickerAbierta(true)} style={{ justifyContent: "center", backgroundColor: "#F6F6F6", borderRadius: 14, borderCurve: "continuous", paddingHorizontal: 22 }}>
-                                <Text style={{ fontSize: 17, fontWeight: "600", color: "#C78EF0", textAlign: "center" }}>{fechaAString(fechaSeleccionada)}</Text>
-                            </Pressable>
-
-                            <DateTimePickerModal
-                                isVisible={fechaPickerAbierta}
-                                mode="date"
-                                onConfirm={asignarFecha}
-                                onCancel={() => setFechaPickerAbierta(false)}
-                                minimumDate={new Date()}
-                            />
-                        </View>
-
-                        {/* Boton crear */}
-                        <View style={{ marginTop: 28 }}>
-                            <BotonDegradado onPress={clickCrear} grande color={Colors.DegradatRosa} texto="Crear"></BotonDegradado>
-                        </View>
-                    </ScrollView>
-                </View>
+                    </View>
+                </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
         </View>
     );

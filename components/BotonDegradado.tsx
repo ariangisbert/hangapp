@@ -13,10 +13,12 @@ import { LinearGradient } from "expo-linear-gradient"
 
 const BotonDegradado = (props:any) =>{
 
+    const [pulsado, setPulsado] = useState(false)
+
    
         return(
 
-                <Pressable onPress={props.onPress} disabled={props.disabled} style={{alignSelf:"center", opacity:props.disabled?0.7:1}}>
+                <Pressable onPressIn={()=>setPulsado(true)} onPressOut={()=>setPulsado(false)} onPress={props.onPress} disabled={props.disabled} style={{alignSelf:"center", opacity:props.disabled||pulsado?0.7:1}}>
                     <LinearGradient
                         // Button Linear Gradient
                         start={{ x: 0, y: 0 }}

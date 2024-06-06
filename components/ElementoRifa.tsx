@@ -1,6 +1,6 @@
 import { Evento, Rifa } from '@/assets/types';
-import React from 'react';
-import { View, Text, StyleSheet, Platform, Pressable } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, StyleSheet, Platform, Pressable, Animated, TouchableWithoutFeedback } from 'react-native';
 import ImagenRemotaLogoAsociacion from './ImagenRemotaLogoAsociacion';
 import Colors from '@/constants/Colors';
 import { numeroAMes } from "../constants/funciones"
@@ -17,6 +17,7 @@ interface ElementoRifaProps {
 
 const ElementoRifa: React.FC<ElementoRifaProps> = ({ rifa }) => { //Pa que lo que se pase siga de tipo evento
 
+    const scaleAnim = useRef(new Animated.Value(1)).current;
 
     //Comprovem el color que te
 
@@ -27,38 +28,53 @@ const ElementoRifa: React.FC<ElementoRifaProps> = ({ rifa }) => { //Pa que lo qu
     //I fem la fecha
     let fecha=rifa?.fecha.split("-")[2]+" "+mes+" "+rifa?.fecha.split("-")[0]
 
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, {
+          toValue: 0.96,
+          useNativeDriver: true,
+        }).start();
+      };
+    
+      const handlePressOut = () => {
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          useNativeDriver: true,
+        }).start();
+      };
 
     //DISENY
     return (
-        <Pressable onPress={()=>router.navigate({pathname:`/RifasUsuario/[id]`, params:{id:rifa?.id}}as any)} style={[styles.contenedorElemento, { backgroundColor: color.colorFondo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.525, elevation: 2 }]}>
-           
-            {/* Parte izquierdas */}
-            <View style={styles.contenedorIzquierda}>
-                
-                {/* Titulo*/}
-                <View style={{ justifyContent: "flex-end",flex:1.05}}>
-                    <Text numberOfLines={1} style={[styles.titulo, { color: color.colorTitulo }]}>Rifa {rifa?.titulo}</Text>
-                    
-                </View>
-
-                {/*Fecha*/}
-                <View style={{flex:1,justifyContent:"flex-start"}}>
-                    
-                        <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{fecha}</Text>
-                    
-                </View>
-            </View>
-
-
-            {/* Parte derecha */}
-            <View style={styles.contenedorDerecha}>
-                <ImagenRemotaLogoAsociacion style={styles.imagenLogoAsociacion} fallback="../assets.images.fallbackLogoAsociacion.png" ruta={rifa?.asociaciones.logo_asociacion}></ImagenRemotaLogoAsociacion>
-            </View>
-
-
-           
+        <TouchableWithoutFeedback onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={()=>router.navigate({pathname:`/RifasUsuario/[id]`, params:{id:rifa?.id}}as any)}>
+            <Animated.View style={[styles.contenedorElemento, { transform: [{ scale: scaleAnim }],backgroundColor: color.colorFondo, shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity: 0.525, elevation: 2 }]}>
             
-        </Pressable>
+                {/* Parte izquierdas */}
+                <View style={styles.contenedorIzquierda}>
+                    
+                    {/* Titulo*/}
+                    <View style={{ justifyContent: "flex-end",flex:1.05}}>
+                        <Text numberOfLines={1} style={[styles.titulo, { color: color.colorTitulo }]}>Rifa {rifa?.titulo}</Text>
+                        
+                    </View>
+
+                    {/*Fecha*/}
+                    <View style={{flex:1,justifyContent:"flex-start"}}>
+                        
+                            <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{fecha}</Text>
+                        
+                    </View>
+                </View>
+
+
+                {/* Parte derecha */}
+                <View style={styles.contenedorDerecha}>
+                    <ImagenRemotaLogoAsociacion style={styles.imagenLogoAsociacion} fallback="../assets.images.fallbackLogoAsociacion.png" ruta={rifa?.asociaciones.logo_asociacion}></ImagenRemotaLogoAsociacion>
+                </View>
+
+
+            
+                
+            </Animated.View>
+        </TouchableWithoutFeedback>
     );
 };
 

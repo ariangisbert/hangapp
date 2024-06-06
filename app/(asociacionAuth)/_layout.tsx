@@ -18,6 +18,8 @@ const AuthLayout= ()=>{
 
         <Stack>
             <Stack.Screen name="LoginAsociacion" options={{headerShown:false}}></Stack.Screen>
+            <Stack.Screen name="RegistroAsociaciones" options={{headerShown:false}}></Stack.Screen>
+      
         </Stack>
 
     )

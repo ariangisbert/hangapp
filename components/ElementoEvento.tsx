@@ -70,7 +70,7 @@ const ElementoEvento: React.FC<ElementoEventoProps> = ({ evento }) => { //Pa que
                         {/* Hora fecha y publico */}
                         <View style={{flex:0.9,flexDirection: "row" }}>
                             <View style={{ flex: 0.35, flexShrink:0,flexBasis:14 }}>
-                                <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{evento?.hora_evento.substring(0, 5)}</Text>
+                                <Text numberOfLines={1} adjustsFontSizeToFit style={[styles.subtexto, { color: color.colorTitulo }]}>{evento?.hora_evento.substring(0, 5)}</Text>
                             </View>
 
                             <View style={{ flex: 1.55, alignItems:"center"}}>
@@ -78,7 +78,7 @@ const ElementoEvento: React.FC<ElementoEventoProps> = ({ evento }) => { //Pa que
                             </View>
 
                             <View style={{ flex: 1.0, paddingLeft:0.2}}>
-                                <Text style={[styles.subtexto, { color: color.colorTitulo }]}>{evento?.publico_evento}</Text>
+                                <Text numberOfLines={1} adjustsFontSizeToFit style={[styles.subtexto, { color: color.colorTitulo }]}>{evento?.publico_evento}</Text>
                             </View>
 
 
@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     },
     contenedorDerecha: {
         flexGrow: 1,
+        padding:5,
     },
 
     imagenLogoAsociacion: {

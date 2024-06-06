@@ -161,39 +161,43 @@ const UserRegistro = () => {
 
                 <View style={styles.contenedorPrincipal}>
                     <View style={styles.cajaLogo}>
-                        <Image style={styles.logo} source={require("../../assets/images/logos/logoDegradat.png")} />
+                        <Image style={styles.logo} source={require("../../assets/images/logos/logoAsociaciones.png")} />
                     </View>
 
                     <View style={styles.cajaFormulario}>
                         <ScrollView>
                             <View style={[styles.elementoFormulario, { paddingTop: 0, paddingBottom:"5.9%" }]}>
-                                <FieldDegradado onChangeText={manejarNombre} width={280} color={Colors.DegradatMorat} placeholder="Nombre" autoComplete="name" />
+                                <FieldDegradado onChangeText={manejarNombre} width={280} color={Colors.DegradatRosa} placeholder="Nombre de la asociacion" autoComplete="name" />
                             </View>
 
                             <View style={styles.elementoFormulario}>
-                                <FieldDegradado onChangeText={manejarApellidos} width={280} color={Colors.DegradatMorat} placeholder="Apellidos" autoComplete="off" />
+                                <FieldDegradado onChangeText={manejarEmail} width={280} color={Colors.DegradatRosa} placeholder="Email" autoComplete="email" />
                             </View>
 
-                            <View style={styles.elementoFormulario}>
-                                <FieldDegradado onChangeText={manejarEmail} width={280} color={Colors.DegradatMorat} placeholder="Email" autoComplete="email" />
+
+                            <View style={[styles.elementoFormulario, {flexDirection:"row", justifyContent:"space-between", paddingHorizontal:10}]}>
+                           
+                            <View>
+                            <Text style={{color:"#8f67e4", fontWeight:"600", fontSize:16}}>Provincia</Text>
+                            
                             </View>
 
-                            <View style={styles.elementoFormulario}>
-                                <FieldDegradado secureTextEntry onChangeText={manejarPassword} width={280} color={Colors.DegradatMorat} placeholder="Contraseña" />
+                            <View>
+                            <Text style={{color:"#8f67e4", fontWeight:"600", fontSize:16}}>Municipio</Text>
+                            
                             </View>
+                            
+
+                           </View>
 
                             <View style={styles.elementoFormulario}>
-                                <FieldDegradado secureTextEntry onChangeText={manejarRepeatPassword} width={280} color={Colors.DegradatMorat} placeholder="Repite la contraseña" />
-                            </View>
-
-                            <View style={styles.elementoFormulario}>
-                                <BotonDegradado onPress={clickEntrar} color={Colors.DegradatMorat} texto="Registrarse" />
+                                <BotonDegradado onPress={clickEntrar} color={Colors.DegradatRosa} texto="Registrarse" />
                             </View>
 
                             <View style={styles.elementoFormulario}>
                                 <Link href={"/UserLogin"} asChild>
                                     <Pressable>
-                                        <TextoDegradado color={Colors.DegradatMorat} style={styles.subtituloLogo}>Ya tienes cuenta? Inicia sesión</TextoDegradado>
+                                        <TextoDegradado color={Colors.DegradatRosa} style={styles.subtituloLogo}>Ya tienes cuenta? Inicia sesión</TextoDegradado>
                                     </Pressable>
                                 </Link>
                              </View>

@@ -164,7 +164,7 @@ const DetallesLoteria = () => {
                   
                   {/* TEXT PRECIO */}
                   <View style={{flex:1,backgroundColor:"white",}}>
-                  <Text style={{fontWeight:"800", textAlign:"center",letterSpacing:2.48, color:"#3C3C3C", fontSize:17,}}>PRECIO</Text>
+                  <Text numberOfLines={1} adjustsFontSizeToFit style={{fontWeight:"800", textAlign:"center",letterSpacing:2.48, color:"#3C3C3C", fontSize:17,}}>PRECIO</Text>
                   </View>
                   {/* PRECIO */}
                   <View style={{flex:2.1, justifyContent:"center"}}>

@@ -24,10 +24,14 @@ import { BlurView } from 'expo-blur';
 import ElementoEventoAsociacionAnterior from '@/components/ElementoEventoAsociacionAnterior';
 import ElementoEventoUsuarioAnterior from '@/components/ElementoEventoUsuarioOpinion';
 import Boton from '@/components/Boton';
+import * as Calendar from 'expo-calendar';
+import LottieView from 'lottie-react-native';
+
 const HomeEventosUsuario = () => {
 
   const queryClient = useQueryClient();
   const { session,usuario, cargandoUsuario, setUsuario, setSession } = useAuth() //Carreguem el usuari
+  const [pulsadoMunicipio, setPulsadoMunicipio] = useState(false)
   const [expandidoMunicipio, setExpandidoMunicipio] = useState(false);
   const alturaSafe = useSafeAreaInsets().top
 
@@ -46,11 +50,16 @@ const HomeEventosUsuario = () => {
   const [pulsadoTerminar, setPulsadoTerminar] = useState(false)
   const [refrescado, setRefrescando] = useState(false)
 
+  //Preguntem els persmisos del calendari
+  
+
   if (cargandoEventos || cargandoMunicipio||cargandoUsuario||cargandoEventosAsistidos||cargandoEventosOpinados) {
 
     return <ActivityIndicator></ActivityIndicator>
 
   }
+
+  
 
   //Comprobem els eventos que NO estiguen opinats
   const eventosNoOpinados = eventosAsistidos.filter((eventoAsistido:any) =>
@@ -96,17 +105,32 @@ async function refrescar(){
   return (
     <View style={{ flex: 1, marginTop: Platform.OS === "ios" ? alturaSafe : 20, backgroundColor: "white" }}>
       {/* Contenedor nombre municipio */}
-      <Pressable onPress={clickMunicipio} style={[styles.contenedorNombreMunicipio, {height:expandidoMunicipio?850:50}]}>
+      <Pressable onPressIn={()=>setPulsadoMunicipio(true)} onPressOut={()=>setPulsadoMunicipio(false)} onPress={clickMunicipio} style={[styles.contenedorNombreMunicipio, {height:expandidoMunicipio?850:50, opacity:pulsadoMunicipio?0.5:1}]}>
         <Text style={styles.textoMunicipio}>{municipio.nombre_municipio}, {municipio.provincias.nombre_provincia}</Text>
         <IconoChevronBaix style={{marginBottom:5}}/>
       </Pressable>
       <CabeceraDegradado color={Colors.DegradatMorat} title="Eventos próximos"></CabeceraDegradado>
       <View style={styles.contenedorListaEventos}>
+        
+        {eventos?.length==0?
+        
+        <View style={{flex:1, justifyContent:"center",marginBottom:20, rowGap:20}}>  
+         
+        <LottieView  style={{ height:200, width:"100%", alignSelf:"center",  }} source={require('../../../assets/animacions/chicacajamorado.json')} autoPlay loop />
+        <Text style={{color:Colors.MoradoElemento.colorTitulo, fontSize:18, fontWeight:"400", opacity:0.9, textAlign:"center"}}>{"No hay eventos en este municipio"}</Text>
+        </View>  
+        
+        :
+        
         <FlatList refreshing={refrescado} onRefresh={refrescar} style={{ overflow: "visible", paddingHorizontal: 20, }} data={eventos}
           renderItem={({ item, index, separators }) => (
             <ElementoEvento evento={item}></ElementoEvento>
           )}
         />
+        
+        }
+        
+        
         
         
         <LinearGradient
