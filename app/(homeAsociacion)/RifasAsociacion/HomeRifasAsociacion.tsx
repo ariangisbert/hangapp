@@ -75,15 +75,16 @@ const HomeRifasAsociacion = () => {
      
      <View style={{flexDirection:"row",justifyContent:"space-between", alignItems:"flex-end"}}>
         
-        <View style={{flexDirection:"row", alignItems:"flex-end"}}><CabeceraDegradado color={Colors.DegradatRosa} alto title="Mis rifas"></CabeceraDegradado>
-        <Pressable onPressIn={()=>setPulsadoCambiarRifa(true)} onPressOut={()=>setPulsadoCambiarRifa(false)} onPress={clickCambiarRifas} style={{ paddingHorizontal:20,marginBottom:1, paddingVertical:8,backgroundColor:"#f3f3f3", borderRadius:12, borderCurve:"continuous"}}> 
-               <Text numberOfLines={1} adjustsFontSizeToFit style={{fontSize:15.5,color:"black", fontWeight:"500", letterSpacing:0.1,opacity:pulsadoCambiarRifa?0.5:0.85,}}>{anteriores?"Anteriores":"Actuales"}</Text>
-        </Pressable>
-        </View>
-        {/* Boton para añadir rifa */}
-        <Pressable onPressIn={()=>setPulsadoMas(true)} onPressOut={()=>setPulsadoMas(false)} onPress={()=>router.push("/RifasAsociacion/CrearRifa")} style={{ marginRight:20}}>
-          <Text style={{color:"#DC82F5", fontSize:48, marginBottom:-6.5,fontWeight:"300", opacity:pulsadoMas?0.7:1 }}>+</Text>
-        </Pressable>
+        <View style={{flexDirection:"row", alignItems:"flex-end"}}>
+          <CabeceraDegradado color={Colors.DegradatRosa} alto title="Mis rifas"></CabeceraDegradado>
+          <Pressable onPressIn={()=>setPulsadoCambiarRifa(true)} onPressOut={()=>setPulsadoCambiarRifa(false)} onPress={clickCambiarRifas} style={{ paddingHorizontal:20,marginBottom:1, paddingVertical:8,backgroundColor:"#f3f3f3", borderRadius:12, borderCurve:"continuous"}}> 
+                <Text numberOfLines={1} adjustsFontSizeToFit style={{fontSize:15.5,color:"black", fontWeight:"500", letterSpacing:0.1,opacity:pulsadoCambiarRifa?0.5:0.85,}}>{anteriores?"Anteriores":"Actuales"}</Text>
+          </Pressable>
+          </View>
+          {/* Boton para añadir rifa */}
+          <Pressable onPressIn={()=>setPulsadoMas(true)} onPressOut={()=>setPulsadoMas(false)} onPress={()=>router.push("/RifasAsociacion/CrearRifa")} style={{ marginRight:20}}>
+            <Text style={{color:"#DC82F5", fontSize:48, marginBottom:-6.5,fontWeight:"300", opacity:pulsadoMas?0.7:1 }}>+</Text>
+          </Pressable>
       </View>
 
 
@@ -108,8 +109,12 @@ const HomeRifasAsociacion = () => {
         
       </View>
       {/* LOTERIA */}
-      <CabeceraDegradado color={Colors.DegradatRosa} mediaAltura title="Lotería"></CabeceraDegradado>
-      
+      <View style={{flexDirection:"row", justifyContent:"space-between", alignItems:"flex-end"}}>
+        <CabeceraDegradado color={Colors.DegradatRosa} mediaAltura title="Lotería"></CabeceraDegradado>
+        <Pressable onPressIn={()=>setPulsadoMas(true)} onPressOut={()=>setPulsadoMas(false)} onPress={()=>router.push("/RifasAsociacion/CrearRifa")} style={{ marginRight:20}}>
+            <Text style={{color:"#DC82F5", fontSize:48, marginBottom:-6.5,fontWeight:"300", opacity:pulsadoMas?0.7:1 }}>+</Text>
+          </Pressable>
+      </View>
           <View style={styles.contenedorListaLoteria}>
             <FlatList showsHorizontalScrollIndicator={false}  contentContainerStyle={{paddingHorizontal:20}} horizontal style={{overflow:"hidden", marginTop:-9}} data={loterias}
               renderItem={({item, index, separators}) => (

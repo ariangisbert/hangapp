@@ -337,7 +337,7 @@ const HomePersonalUsuario = () => {
         </View>
 
         
-
+          <Text style={{textAlign:"center", opacity:0.1, color:Colors.MoradoElemento.colorTitulo,fontWeight:"500", fontSize:17, bottom:40, position:"absolute",right:0, left:0}}>HangApp, Arian Gisbert</Text>
 
     </Pressable>
   );

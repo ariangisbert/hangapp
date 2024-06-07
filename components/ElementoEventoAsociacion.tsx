@@ -41,8 +41,6 @@ const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borro
     //I fem la fecha
     let fecha=evento?.fecha_evento.split("-")[2]+" "+mes+" "+evento?.fecha_evento.split("-")[0]
 
-    const [pulsado, setPulsado] = useState(false)
-
     const itemRef = useRef<View>(null);
 
     useEffect(()=>{
@@ -61,6 +59,7 @@ const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borro
 
         LayoutAnimation.configureNext({
             duration: 600,
+            create:{type: 'linear', property: 'opacity'},
             update: {type: 'spring', springDamping: 0.6},
             delete: {type: 'linear', property: 'opacity'},
           });
@@ -92,9 +91,9 @@ const ElementoEventoAsociacion: React.FC<ElementoEventoProps> = ({ evento, borro
     //DISENY
     return (
         
-            <Pressable onPressIn={()=>setPulsado(true)} onPressOut={()=>setPulsado(false)} ref={itemRef} onLongPress={()=>pulsacionLarga?pulsacionLarga(evento?.id_evento):null} onPress={clickExpandir} style={[styles.contenedorElemento, {height:expandidoAsistencias?210:105, flexDirection:"column",marginBottom:expandidoAsistencias?0:17 }]}>
+            <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} ref={itemRef} onLongPress={()=>pulsacionLarga?pulsacionLarga(evento?.id_evento):null} onPress={clickExpandir} style={[styles.contenedorElemento, {height:expandidoAsistencias?210:105, flexDirection:"column",marginBottom:expandidoAsistencias?0:17 }]}>
                     
-                    <Animated.View style={[styles.contenedorElemento, {transform: [{ scale: pulsado?0.99:1 }],flex:1,backgroundColor: color.colorFondo,flexDirection:"row", height:105,marginBottom:0, borderRadius: 22,borderCurve: "continuous",shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity:expandidoAsistencias?0.25: 0.525, elevation: 2}]}>
+                    <Animated.View style={[styles.contenedorElemento, {transform: [{ scale: scaleAnim }],flex:1,backgroundColor: color.colorFondo,flexDirection:"row", height:105,marginBottom:0, borderRadius: 22,borderCurve: "continuous",shadowColor: color.colorFondo, shadowOffset: { width: 0, height: 6 }, shadowRadius: 8, shadowOpacity:expandidoAsistencias?0.25: 0.525, elevation: 2}]}>
                         {/* Parte izquierdas */}
                         <View style={styles.contenedorIzquierda}>
                             

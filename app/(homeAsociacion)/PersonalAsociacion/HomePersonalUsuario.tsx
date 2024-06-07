@@ -1,6 +1,8 @@
+import { recibirAsociacion } from '@/api/asociaciones';
 import { recibirMunicipioyProvincia } from '@/api/municipios';
 import CabeceraDegradado from '@/components/CabeceraDegradado';
 import FieldDegradado from '@/components/FieldDegradado';
+import ImagenRemotaLogoAsociacion from '@/components/ImagenRemotaLogoAsociacion';
 import Colors from '@/constants/Colors';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvider';
@@ -14,6 +16,9 @@ const HomePersonalUsuario = () => {
   const { usuario, cargandoUsuario, session, setUsuario } = useAuth() //Carreguem el usuari
   const [botonNombreExpandido, setBotonNombreExpandido] = useState(false)
   const [botonPasswordExpandido, setBotonPasswordExpandido] = useState(false)
+  const {data:asociacion, isLoading:cargandoAsociacion, error:errorAsociacion} = recibirAsociacion(usuario.id, cargandoUsuario)
+  const { data: municipio, isLoading: cargandoMunicipio, error: errorMunicipio } = recibirMunicipioyProvincia(parseInt(usuario.municipio_defecto), cargandoUsuario)
+
 
   //VALORS DE CANVI
   const [nuevoNombre, setNuevoNombre] = useState<string>("")
@@ -22,7 +27,7 @@ const HomePersonalUsuario = () => {
   const alturaSafe = useSafeAreaInsets().top
 
   //Esperem a que se carreguen els usuaris
-  if (cargandoUsuario) {
+  if (cargandoUsuario||cargandoAsociacion||cargandoMunicipio) {
 
     return <ActivityIndicator></ActivityIndicator>
 
@@ -37,14 +42,8 @@ const HomePersonalUsuario = () => {
 
   //Carreguem el poble 
   //FALTEN CARREAGAR ELS EVENTOS PENDENTS I LES RIFES
-  const { data: municipio, isLoading: cargandoMunicipio, error: errorMunicipio } = recibirMunicipioyProvincia(parseInt(usuario.municipio_defecto))
-
-
-  if ( cargandoMunicipio) {
-
-    return <ActivityIndicator></ActivityIndicator>
-    
-  }
+  
+  
 
 
   function clickExpandirNombre(){
@@ -126,8 +125,13 @@ const HomePersonalUsuario = () => {
       <View  style={[styles.contenedorNombreMunicipio, {height:50}]}>
         <Text style={styles.textoMunicipio}>{usuario.nombre} {usuario.apellidos}</Text>
       </View>
-      <CabeceraDegradado color={Colors.DegradatRosa} title="Zona personal"></CabeceraDegradado>
-
+      <View style={{flexDirection:"row",  alignItems:"flex-end", justifyContent:"space-between"}}>
+          <CabeceraDegradado color={Colors.DegradatRosa}  title="Zona personal"></CabeceraDegradado>
+          
+            <ImagenRemotaLogoAsociacion style={{height:60,marginRight:25,   borderRadius:200, aspectRatio:1}} ruta={asociacion.logo_asociacion} fallback={"../../assets.images.fallbackLogoAsociacion.png"}></ImagenRemotaLogoAsociacion>
+         
+          
+      </View>
       {/* Contenedor email y municipio */}
       <View style={styles.contenedorDatos}>
         
@@ -190,6 +194,8 @@ const HomePersonalUsuario = () => {
       <View style={{ marginBottom: 20 }}>
           <Button onPress={salir} title='Salir'></Button>
         </View>
+
+        <Text style={{textAlign:"center", opacity:0.1, color:Colors.MoradoElemento.colorTitulo,fontWeight:"500", fontSize:17, bottom:40, position:"absolute",right:0, left:0}}>HangApp, Arian Gisbert</Text>
 
 
     </Pressable>

@@ -119,7 +119,7 @@ const HomeEventosAsociacion = () => {
   }
 
   function clickEliminarEvento(id:number){
-    //  LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     Alert.alert("¿Quieres eliminar este evento?", "Esta acción no se puede deshacer.",
     
     //Botons
